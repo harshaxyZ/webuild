@@ -1,15 +1,24 @@
 import { NextResponse } from "next/server";
-import { prisma } from "@/lib/db";
+import { db } from "@/lib/firebase-admin";
 
-// GET: List all submissions with user info
+// GET: List all submissions from Firestore
 export async function GET() {
   try {
-    const submissions = await prisma.submission.findMany({
-      include: { 
-        user: { select: { name: true, email: true, phoneNumber: true } },
-        uploads: true 
-      },
-      orderBy: { createdAt: "desc" },
+    const snapshot = await db.collection("submissions")
+      .orderBy("createdAt", "desc")
+      .get();
+
+    const submissions = snapshot.docs.map(doc => {
+      const data = doc.data();
+      return {
+        ...data,
+        // Map Firestore data to the expected UI format if necessary
+        user: { 
+          name: data.userName, 
+          email: data.userEmail, 
+          phoneNumber: data.userPhone 
+        }
+      };
     });
 
     return NextResponse.json({ submissions });
@@ -19,7 +28,7 @@ export async function GET() {
   }
 }
 
-// PATCH: Update submission status
+// PATCH: Update submission status in Firestore
 export async function PATCH(req: Request) {
   try {
     const { id, status } = await req.json();
@@ -33,12 +42,9 @@ export async function PATCH(req: Request) {
       return NextResponse.json({ error: "Invalid status" }, { status: 400 });
     }
 
-    const updated = await prisma.submission.update({
-      where: { id },
-      data: { status },
-    });
+    await db.collection("submissions").doc(id).update({ status });
 
-    return NextResponse.json({ success: true, submission: updated });
+    return NextResponse.json({ success: true });
   } catch (error: any) {
     console.error("Admin submissions PATCH error:", error.message);
     return NextResponse.json({ error: "Failed to update submission" }, { status: 500 });

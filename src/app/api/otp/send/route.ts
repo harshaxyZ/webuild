@@ -1,7 +1,7 @@
 import { NextResponse } from "next/server";
-import { prisma } from "@/lib/db";
 import crypto from "crypto";
 import { Resend } from "resend";
+import { db } from "@/lib/firebase-admin";
 
 const resend = new Resend(process.env.RESEND_API_KEY);
 
@@ -18,15 +18,15 @@ export async function POST(req: Request) {
     const otpHash = crypto.createHash("sha256").update(otp).digest("hex");
     
     // Set expiration to 10 minutes from now
-    const expiresAt = new Date(Date.now() + 10 * 60 * 1000);
+    const expiresAt = new Date(Date.now() + 10 * 60 * 1000).toISOString();
 
-    await prisma.otpRecord.create({
-      data: {
-        medium: "EMAIL",
-        target: email,
-        otpHash,
-        expiresAt,
-      },
+    // Firestore: Store OTP record
+    await db.collection("otps").add({
+      target: email,
+      otpHash,
+      expiresAt,
+      used: false,
+      createdAt: new Date().toISOString(),
     });
 
     // Send the OTP via Resend
@@ -36,7 +36,7 @@ export async function POST(req: Request) {
         to: email,
         subject: `${otp} is your verification code`,
         html: `
-          <div style="font-family: sans-serif; max-width: 600px; margin: 0 auto; padding: 20px; border: 1px solid #e5e7eb; rounded: 12px;">
+          <div style="font-family: sans-serif; max-width: 600px; margin: 0 auto; padding: 20px; border: 1px solid #e5e7eb; border-radius: 12px;">
             <h2 style="color: #111827; margin-bottom: 24px;">Verify your email</h2>
             <p style="color: #4b5563; font-size: 16px; margin-bottom: 24px;">Use the following code to continue your booking on <b>we build</b>:</p>
             <div style="background-color: #f3f4f6; padding: 16px; border-radius: 8px; text-align: center; font-size: 32px; font-weight: bold; letter-spacing: 8px; color: #111827; margin-bottom: 24px;">
@@ -49,7 +49,6 @@ export async function POST(req: Request) {
       console.log(`✅ Resend: OTP ${otp} sent to ${email}`);
     } catch (emailError: any) {
       console.error("Resend Email Error:", emailError.message || emailError);
-      // Fallback for demo purposes if Resend fails/is not configured properly
       console.log(`🔐 DEBUG OTP for ${email}: ${otp}`);
     }
 

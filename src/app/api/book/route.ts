@@ -1,6 +1,6 @@
 import { NextResponse } from "next/server";
 import { BookingSchema } from "@/lib/validators";
-import { prisma } from "@/lib/db";
+import { db } from "@/lib/firebase-admin";
 import { Resend } from "resend";
 
 const resend = new Resend(process.env.RESEND_API_KEY);
@@ -18,61 +18,41 @@ export async function POST(req: Request) {
       return NextResponse.json({ error: "Bot detected" }, { status: 400 });
     }
 
-    // 3. Database Execution
+    // 3. Firestore: User Upsert
     console.log("Processing booking request for:", validatedData.email);
     
-    const user = await prisma.user.upsert({
-      where: { email: validatedData.email },
-      update: { 
-        name: validatedData.name,
-        phoneNumber: validatedData.phone 
-      },
-      create: {
-        email: validatedData.email,
-        name: validatedData.name,
-        phoneNumber: validatedData.phone
-      }
-    });
+    // Use email as doc ID for users for easy lookup
+    const userRef = db.collection("users").doc(validatedData.email);
+    await userRef.set({
+      email: validatedData.email,
+      name: validatedData.name,
+      phoneNumber: validatedData.phone,
+      updatedAt: new Date().toISOString()
+    }, { merge: true });
 
-    const newSubmission = await prisma.submission.create({
-      data: {
-        userId: user.id,
-        ideaDescription: validatedData.description,
-        socialLinks: validatedData.socialLinks,
-        status: "SUBMITTED",
-        uploads: {
-          create: body.fileUrls?.map((url: string) => ({
-            fileUrl: url,
-            fileType: "unknown",
-            fileName: url.split("/").pop() || "upload",
-          })) || []
-        }
-      },
-      include: {
-        uploads: true
-      }
-    });
+    // 4. Firestore: Create Submission
+    const submissionRef = db.collection("submissions").doc();
+    const submissionId = submissionRef.id;
+    
+    const submissionData = {
+      id: submissionId,
+      userEmail: validatedData.email,
+      userName: validatedData.name,
+      userPhone: validatedData.phone,
+      ideaDescription: validatedData.description,
+      socialLinks: validatedData.socialLinks || null,
+      status: "SUBMITTED",
+      createdAt: new Date().toISOString(),
+      uploads: body.fileUrls?.map((url: string) => ({
+        fileUrl: url,
+        fileName: url.split("/").pop() || "upload",
+      })) || []
+    };
 
-    console.log("Successfully created submission:", newSubmission.id);
+    await submissionRef.set(submissionData);
+    console.log("✅ Firestore: Submission created:", submissionId);
 
-    // 🔥 Real-time Mirror to Firestore
-    try {
-      const { db } = await import("@/lib/firebase-admin");
-      await db.collection("submissions").doc(newSubmission.id).set({
-        id: newSubmission.id,
-        userName: user.name,
-        userEmail: user.email,
-        description: newSubmission.ideaDescription,
-        status: newSubmission.status,
-        createdAt: new Date().toISOString(),
-        uploads: newSubmission.uploads.map(u => ({ id: u.id, fileName: u.fileName, fileUrl: u.fileUrl }))
-      });
-      console.log("✅ Firestore: Real-time mirror created");
-    } catch (fsError: any) {
-      console.error("Firestore Sync Error:", fsError.message || fsError);
-    }
-
-    // 4. Send Confirmation Email via Resend
+    // 5. Send Confirmation Email via Resend
     try {
       await resend.emails.send({
         from: "we build <onboarding@resend.dev>",
@@ -104,16 +84,14 @@ export async function POST(req: Request) {
       success: true, 
       message: "Booking request received securely.",
       data: {
-         id: newSubmission.id,
-         name: user.name,
-         email: user.email,
-         status: newSubmission.status
+         id: submissionId,
+         email: validatedData.email,
+         status: "SUBMITTED"
       }
     });
   } catch (error: any) {
     console.error("Booking API Error:", error.message || error);
     
-    // Check for specific Prisma or Zod errors
     if (error.name === "ZodError") {
       return NextResponse.json({ error: "Invalid data provided", details: error.errors }, { status: 400 });
     }

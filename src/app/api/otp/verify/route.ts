@@ -1,6 +1,6 @@
 import { NextResponse } from "next/server";
-import { prisma } from "@/lib/db";
 import crypto from "crypto";
+import { db } from "@/lib/firebase-admin";
 
 export async function POST(req: Request) {
   try {
@@ -12,33 +12,34 @@ export async function POST(req: Request) {
 
     const otpHash = crypto.createHash("sha256").update(otp).digest("hex");
 
-    // Find the most recent valid OTP record for this email
-    const record = await prisma.otpRecord.findFirst({
-      where: {
-        target: email,
-        medium: "EMAIL",
-        used: false,
-        expiresAt: {
-          gt: new Date(), // Not expired
-        },
-      },
-      orderBy: {
-        createdAt: "desc",
-      },
-    });
+    // Firestore: Find the most recent valid OTP record for this email
+    const snapshot = await db.collection("otps")
+      .where("target", "==", email)
+      .where("used", "==", false)
+      .orderBy("createdAt", "desc")
+      .limit(1)
+      .get();
 
-    if (!record || record.otpHash !== otpHash) {
+    if (snapshot.empty) {
       return NextResponse.json({ error: "Invalid or expired OTP" }, { status: 400 });
     }
 
-    // Mark as used
-    await prisma.otpRecord.update({
-      where: { id: record.id },
-      data: { used: true },
-    });
+    const doc = snapshot.docs[0];
+    const record = doc.data();
 
-    // In a robust system, we would issue a JWT here. 
-    // We simulate verification success with a simple token string
+    // Check expiration (ISO string comparison or Date object)
+    if (new Date(record.expiresAt).getTime() < Date.now()) {
+      return NextResponse.json({ error: "OTP has expired" }, { status: 400 });
+    }
+
+    if (record.otpHash !== otpHash) {
+      return NextResponse.json({ error: "Invalid OTP" }, { status: 400 });
+    }
+
+    // Mark as used
+    await doc.ref.update({ used: true });
+
+    // Generate a temporary verification token
     const verificationToken = crypto.randomBytes(32).toString("hex");
 
     return NextResponse.json({ 
