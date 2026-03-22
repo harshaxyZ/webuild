@@ -11,6 +11,7 @@ export async function GET() {
 
     const snapshot = await db.collection("submissions")
       .orderBy("createdAt", "desc")
+      .limit(50)
       .get();
 
     const submissions = snapshot.docs.map((doc: any) => {

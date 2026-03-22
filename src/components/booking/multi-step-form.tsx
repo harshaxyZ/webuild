@@ -248,7 +248,7 @@ export function MultiStepForm() {
                             variant="default" 
                             className="h-14 w-32 rounded-2xl font-bold bg-zinc-950 text-white hover:bg-zinc-800 transition-all" 
                             onClick={handleVerifyOtp}
-                            disabled={isVerifyingOtp || otp.length !== 6}
+                            disabled={isVerifyingOtp || otp.length !== 4}
                           >
                             {isVerifyingOtp ? <ZenithSpinner size={16} /> : "Verify"}
                           </Button>

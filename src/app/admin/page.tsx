@@ -56,9 +56,9 @@ export default function AdminDashboardPage() {
   useEffect(() => {
     if (!user) return;
     
-    const { getFirestore, collection, query, orderBy, onSnapshot } = require("firebase/firestore");
+    const { getFirestore, collection, query, orderBy, onSnapshot, limit } = require("firebase/firestore");
     const db = getFirestore();
-    const q = query(collection(db, "submissions"), orderBy("createdAt", "desc"));
+    const q = query(collection(db, "submissions"), orderBy("createdAt", "desc"), limit(50));
 
     const unsubscribe = onSnapshot(q, (snapshot: any) => {
       const liveSubmissions = snapshot.docs.map((doc: any) => {
