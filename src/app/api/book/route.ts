@@ -3,7 +3,11 @@ import { BookingSchema } from "@/lib/validators";
 import { db } from "@/lib/firebase-admin";
 import { Resend } from "resend";
 
-const resend = new Resend(process.env.RESEND_API_KEY);
+export const dynamic = "force-dynamic";
+
+const resend = process.env.RESEND_API_KEY 
+  ? new Resend(process.env.RESEND_API_KEY) 
+  : null;
 
 export async function POST(req: Request) {
   try {
@@ -55,32 +59,34 @@ export async function POST(req: Request) {
     await submissionRef.set(submissionData);
     console.log("✅ Firestore: Submission created:", submissionId);
 
-    // 5. Send Confirmation Email via Resend
-    try {
-      await resend.emails.send({
-        from: "we build <onboarding@resend.dev>",
-        to: validatedData.email,
-        subject: "Your demo request has been submitted",
-        html: `
-          <div style="font-family: sans-serif; max-width: 600px; margin: 0 auto; padding: 20px; border: 1px solid #e5e7eb; border-radius: 12px; background-color: #fbfbfd;">
-            <h1 style="color: #111827; margin-bottom: 24px; font-size: 24px;">Request Received!</h1>
-            <p style="color: #4b5563; font-size: 16px; line-height: 1.6; margin-bottom: 24px;">
-              Hello ${validatedData.name || 'there'},<br><br>
-              Thank you for reaching out to <b>we build</b>. We've received your request for a demo and our team is already reviewing your vision.
-            </p>
-            <div style="background-color: #f3f4f6; padding: 16px; border-radius: 8px; margin-bottom: 24px;">
-              <p style="margin: 0; color: #111827; font-weight: bold;">What's next?</p>
-              <p style="margin: 8px 0 0 0; color: #4b5563;">Our engineering team will reach out to you in <b>under 24 hours</b> to schedule your personalized demo.</p>
+    // Send Confirmation Email
+    if (resend) {
+      try {
+        await resend.emails.send({
+          from: "we build <onboarding@resend.dev>",
+          to: validatedData.email,
+          subject: "Your demo request has been received!",
+          html: `
+            <div style="font-family: sans-serif; max-width: 600px; margin: 0 auto; padding: 20px; border: 1px solid #e5e7eb; border-radius: 12px; font-size: 16px;">
+              <h1 style="color: #111827; margin-bottom: 24px; font-size: 24px;">Request Received!</h1>
+              <p style="color: #4b5563; font-size: 16px; line-height: 1.6; margin-bottom: 24px;">
+                Hello ${validatedData.name || 'there'},<br><br>
+                Thank you for reaching out to <b>we build</b>. We've received your request for a demo and our team is already reviewing your vision.
+              </p>
+              <div style="background-color: #f3f4f6; padding: 16px; border-radius: 8px; margin-bottom: 24px;">
+                <p style="margin: 0; color: #111827; font-weight: bold;">What's next?</p>
+                <p style="margin: 8px 0 0 0; color: #4b5563;">Our engineering team will reach out to you in <b>under 24 hours</b> to schedule your personalized demo.</p>
+              </div>
+              <p style="color: #9ca3af; font-size: 14px;">If you have any immediate questions, feel free to reply to this email.</p>
+              <hr style="border: 0; border-top: 1px solid #e5e7eb; margin: 24px 0;">
+              <p style="text-align: center; color: #111827; font-weight: bold; font-size: 18px;">we build</p>
             </div>
-            <p style="color: #9ca3af; font-size: 14px;">If you have any immediate questions, feel free to reply to this email.</p>
-            <hr style="border: 0; border-top: 1px solid #e5e7eb; margin: 24px 0;">
-            <p style="text-align: center; color: #111827; font-weight: bold; font-size: 18px;">we build</p>
-          </div>
-        `,
-      });
-      console.log(`✅ Resend: Confirmation email sent to ${validatedData.email}`);
-    } catch (emailError: any) {
-      console.error("Resend Confirmation Error:", emailError.message || emailError);
+          `,
+        });
+        console.log(`✅ Resend: Confirmation email sent to ${validatedData.email}`);
+      } catch (emailError: any) {
+        console.error("Resend Confirmation Error:", emailError.message || emailError);
+      }
     }
 
     return NextResponse.json({ 
