@@ -56,17 +56,17 @@ export function HowItWorks() {
           {steps.map((step, index) => (
             <motion.div
               key={index}
-              initial={{ opacity: 0, y: 40 }}
+              initial={{ opacity: 0, y: 20 }}
               whileInView={{ opacity: 1, y: 0 }}
-              viewport={{ once: true, margin: "-100px" }}
-              transition={{ duration: 1.2, ease: [0.16, 1, 0.3, 1], delay: index * 0.1 }}
-              className={`group p-10 rounded-[2.5rem] bg-white border border-zinc-100 hover:shadow-2xl hover:shadow-zinc-200/50 transition-all duration-500 ${index === 4 ? 'lg:col-span-2' : ''}`}
+              viewport={{ once: true, margin: "-50px" }}
+              transition={{ duration: 0.6, ease: "easeOut", delay: index * 0.1 }}
+              className={`group p-8 md:p-10 rounded-[2.5rem] bg-white border border-zinc-100 hover:shadow-xl hover:-translate-y-1 hover:border-zinc-200 transition-all duration-300 ${index === 4 ? 'lg:col-span-2' : ''}`}
             >
-              <div className="w-16 h-16 rounded-2xl bg-slate-50 border border-zinc-100 text-zinc-900 flex items-center justify-center mb-10 group-hover:bg-[#1d1d1f] group-hover:text-white transition-all duration-500">
-                <step.icon size={28} strokeWidth={1.5} />
+              <div className="w-14 h-14 md:w-16 md:h-16 rounded-2xl bg-slate-50 border border-zinc-100 text-zinc-900 flex items-center justify-center mb-8 md:mb-10 group-hover:bg-[#1d1d1f] group-hover:text-white transition-all duration-300">
+                <step.icon size={26} strokeWidth={1.5} />
               </div>
-              <h3 className="text-2xl font-bold mb-4 tracking-tight text-[#1d1d1f]">{step.title}</h3>
-              <p className="text-zinc-500 text-lg leading-relaxed font-medium group-hover:text-zinc-600 transition-colors">
+              <h3 className="text-xl md:text-2xl font-bold mb-3 md:mb-4 tracking-tight text-[#1d1d1f]">{step.title}</h3>
+              <p className="text-zinc-500 text-base md:text-lg leading-relaxed font-medium group-hover:text-zinc-600 transition-colors">
                 {step.description}
               </p>
             </motion.div>

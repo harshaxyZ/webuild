@@ -46,7 +46,11 @@ export async function POST(req: Request) {
       userEmail: validatedData.email,
       userName: validatedData.name,
       userPhone: validatedData.phone,
-      ideaDescription: validatedData.description,
+      concept: validatedData.concept || null,
+      projectType: validatedData.projectType || null,
+      ideaDescription: validatedData.description || null,
+      referenceUrls: validatedData.referenceUrls || [],
+      stylePreference: validatedData.stylePreference || null,
       socialLinks: validatedData.socialLinks || null,
       status: "SUBMITTED",
       createdAt: new Date().toISOString(),
@@ -59,9 +63,9 @@ export async function POST(req: Request) {
     await submissionRef.set(submissionData);
     console.log("✅ Firestore: Submission created:", submissionId);
 
-    // Send Confirmation Email
     if (resend) {
       try {
+        // Send Confirmation Email to USER
         await resend.emails.send({
           from: "we build <onboarding@resend.dev>",
           to: validatedData.email,
@@ -83,9 +87,33 @@ export async function POST(req: Request) {
             </div>
           `,
         });
-        console.log(`✅ Resend: Confirmation email sent to ${validatedData.email}`);
+
+        // Send Notification Email to ADMIN
+        await resend.emails.send({
+          from: "System <onboarding@resend.dev>",
+          to: process.env.NEXT_PUBLIC_RESEND_DOMAIN || "delivered@resend.dev", // Replace with actual admin in prod
+          subject: `🚨 New Lead: ${validatedData.name} (${validatedData.email})`,
+          html: `
+            <div style="font-family: sans-serif; max-width: 600px; padding: 20px;">
+              <h2>New Booking Request</h2>
+              <p><strong>Name:</strong> ${validatedData.name}</p>
+              <p><strong>Email:</strong> ${validatedData.email}</p>
+              <p><strong>Phone:</strong> ${validatedData.phone || 'N/A'}</p>
+              <p><strong>Concept:</strong> ${validatedData.concept || 'N/A'}</p>
+              <p><strong>Type:</strong> ${validatedData.projectType || 'N/A'}</p>
+              <p><strong>Style:</strong> ${validatedData.stylePreference || 'N/A'}</p>
+              <p><strong>Context:</strong> ${validatedData.description || 'N/A'}</p>
+              <p><strong>References:</strong> ${(validatedData.referenceUrls || []).join(", ") || 'N/A'}</p>
+              <p><strong>Links:</strong> ${validatedData.socialLinks || 'N/A'}</p>
+              <p><strong>Submission ID:</strong> ${submissionId}</p>
+              <p><a href="https://webuild-admin.com/dashboard/submissions/${submissionId}">View in Admin Dashboard</a></p>
+            </div>
+          `,
+        });
+        
+        console.log(`✅ Resend: Confirmation emails dispatched for ${validatedData.email}`);
       } catch (emailError: any) {
-        console.error("Resend Confirmation Error:", emailError.message || emailError);
+        console.error("Resend Processing Error:", emailError.message || emailError);
       }
     }
 
@@ -111,3 +139,4 @@ export async function POST(req: Request) {
     );
   }
 }
+

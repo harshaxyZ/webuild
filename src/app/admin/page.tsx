@@ -12,6 +12,10 @@ import { app } from "@/lib/firebase";
 
 type Submission = {
   id: string;
+  concept?: string | null;
+  projectType?: string | null;
+  stylePreference?: string | null;
+  referenceUrls?: string[];
   ideaDescription: string | null;
   socialLinks: string | null;
   status: string;
@@ -56,46 +60,18 @@ export default function AdminDashboardPage() {
     return () => unsubscribe();
   }, [router]);
 
-  // Real-time Firestore Listener
+  // Bypassing Real-time Client listener to prevent "Insufficient Permissions" 
+  // on default Firebase rule constraints. We will execute secure Admin Backend fetching on an interval.
   useEffect(() => {
-    if (!user || isDemoMode || !app) return;
+    if (!user) return;
     
-    const db = getFirestore(app);
-    const q = query(collection(db, "submissions"), orderBy("createdAt", "desc"), limit(50));
+    fetchSubmissions(); // Initial fetch
+    
+    const interval = setInterval(() => {
+      fetchSubmissions();
+    }, 10000); // Poll every 10 seconds
 
-    const unsubscribe = onSnapshot(q, (snapshot: any) => {
-      const liveSubmissions = snapshot.docs.map((doc: any) => {
-        const data = doc.data();
-        return {
-          id: data.id,
-          ideaDescription: data.description,
-          socialLinks: data.socialLinks || null,
-          status: data.status,
-          createdAt: data.createdAt,
-          user: { name: data.userName, email: data.userEmail, phoneNumber: data.userPhone || null },
-          uploads: data.uploads || []
-        };
-      });
-      
-      if (liveSubmissions.length > 0) {
-        setSubmissions(prev => {
-          const merged = [...liveSubmissions];
-          const liveIds = new Set(liveSubmissions.map((s: any) => s.id));
-          prev.forEach(p => {
-            if (!liveIds.has(p.id)) merged.push(p);
-          });
-          return merged.sort((a, b) => new Date(b.createdAt).getTime() - new Date(a.createdAt).getTime());
-        });
-      }
-    }, (error) => {
-      console.error("Firestore snapshot error:", error);
-    });
-
-    return () => unsubscribe();
-  }, [user, isDemoMode]);
-
-  useEffect(() => {
-    if (user) fetchSubmissions();
+    return () => clearInterval(interval);
   }, [user, fetchSubmissions]);
 
   const handleLogout = async () => {
@@ -144,17 +120,44 @@ export default function AdminDashboardPage() {
         </div>
       </aside>
 
+      {/* Mobile Navigation */}
+      <div className="md:hidden fixed bottom-0 left-0 right-0 border-t border-zinc-900 bg-zinc-950/90 backdrop-blur-xl p-4 flex justify-between z-50">
+        <Button variant="ghost" size="icon" className="text-zinc-500 hover:text-white">
+          <Search className="w-5 h-5" />
+        </Button>
+        <Button variant="ghost" size="icon" className="text-white bg-zinc-900">
+          <FileText className="w-5 h-5" />
+        </Button>
+        <Button variant="ghost" size="icon" className="text-zinc-500 hover:text-white">
+          <Users className="w-5 h-5" />
+        </Button>
+      </div>
+
       {/* Admin Content */}
-      <main className="flex-1 p-6 md:p-12">
-        <header className="flex items-center justify-between mb-12">
-          <h1 className="text-3xl font-bold">Submissions Pipeline</h1>
-          <Button 
-            variant="secondary" 
-            className="bg-zinc-900 text-zinc-100 hover:bg-zinc-800 border-zinc-800 border"
-            onClick={fetchSubmissions}
-          >
-            Refresh
-          </Button>
+      <main className="flex-1 p-6 md:p-12 pb-24 md:pb-12 h-screen overflow-y-auto">
+        <header className="flex items-center justify-between mb-8 md:mb-12">
+          <div>
+             <h1 className="text-2xl md:text-3xl font-bold">Submissions Pipeline</h1>
+             <p className="text-zinc-500 text-sm md:hidden mt-1">Manage deliveries</p>
+          </div>
+          <div className="flex items-center gap-2">
+            <Button 
+              variant="secondary" 
+              size="sm"
+              className="bg-zinc-900 text-zinc-100 hover:bg-zinc-800 border-zinc-800 border text-xs md:text-sm h-9"
+              onClick={fetchSubmissions}
+            >
+              Refresh
+            </Button>
+            <Button 
+              variant="ghost" 
+              size="sm"
+              className="md:hidden text-zinc-400 hover:text-white"
+              onClick={handleLogout}
+            >
+              Logout
+            </Button>
+          </div>
         </header>
 
         <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
@@ -222,22 +225,38 @@ function SubmissionCard({ submission, onMove, nextLabel }: { submission: Submiss
     <motion.div
       initial={{ opacity: 0, y: 10 }}
       animate={{ opacity: 1, y: 0 }}
-      className="p-5 rounded-xl border border-zinc-800 bg-zinc-900/50 hover:border-zinc-700 transition-colors"
+      className="p-5 rounded-xl border border-zinc-800 bg-zinc-900/50 hover:border-zinc-700 transition-colors shadow-lg shadow-black/20"
     >
       <div className="flex justify-between items-start mb-3">
         <span className="text-xs font-mono text-zinc-500">{initials}</span>
         <span className="text-xs text-zinc-500">{timeAgo}</span>
       </div>
-      <h3 className="font-semibold mb-1 truncate">{submission.user.name || "Anonymous"}</h3>
-      <p className="text-sm text-zinc-400 mb-1 truncate">{submission.user.email}</p>
-      {submission.ideaDescription && (
-        <p className="text-sm text-zinc-500 line-clamp-2 mb-4">{submission.ideaDescription}</p>
+      <h3 className="font-semibold mb-1 truncate text-zinc-100">{submission.user.name || "Anonymous"}</h3>
+      <p className="text-sm text-zinc-400 mb-2 truncate">{submission.user.email}</p>
+      
+      {(submission.concept || submission.projectType || submission.stylePreference) && (
+        <div className="flex flex-wrap gap-1.5 mb-3">
+          {submission.concept && <span className="bg-blue-500/10 text-blue-400 text-[10px] uppercase font-bold px-2 py-0.5 rounded-full">{submission.concept}</span>}
+          {submission.projectType && <span className="bg-emerald-500/10 text-emerald-400 text-[10px] uppercase font-bold px-2 py-0.5 rounded-full">{submission.projectType}</span>}
+          {submission.stylePreference && <span className="bg-amber-500/10 text-amber-500 text-[10px] uppercase font-bold px-2 py-0.5 rounded-full">{submission.stylePreference}</span>}
+        </div>
       )}
-      {submission.uploads.length > 0 && (
+
+      {submission.ideaDescription && (
+        <p className="text-sm text-zinc-500 line-clamp-2 mb-3">{submission.ideaDescription}</p>
+      )}
+
+      {((submission.referenceUrls && submission.referenceUrls.length > 0) || submission.socialLinks) && (
+        <p className="text-xs text-zinc-500 mb-2 truncate flex items-center gap-1">
+           Refs: {submission.referenceUrls?.length ? `${submission.referenceUrls.length} link(s)` : submission.socialLinks}
+        </p>
+      )}
+
+      {submission.uploads && submission.uploads.length > 0 && (
         <p className="text-xs text-zinc-600 mb-3">{submission.uploads.length} file(s) attached</p>
       )}
-      <div className="flex items-center gap-2">
-        <Button size="sm" variant="outline" className="text-xs h-8 border-zinc-800 hover:bg-zinc-800 gap-1" onClick={onMove}>
+      <div className="flex items-center gap-2 mt-4">
+        <Button size="sm" variant="outline" className="text-xs h-9 bg-zinc-800 text-zinc-300 border-zinc-700 hover:bg-zinc-700 hover:text-white gap-2 transition-all w-full md:w-auto" onClick={onMove}>
           {nextLabel} <ArrowRight className="w-3 h-3" />
         </Button>
       </div>
