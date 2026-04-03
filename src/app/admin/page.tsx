@@ -1,7 +1,7 @@
 "use client";
 
-import { motion } from "framer-motion";
-import { Users, FileText, Search, ArrowRight } from "lucide-react";
+import { motion, AnimatePresence } from "framer-motion";
+import { Users, FileText, Search, ArrowRight, X, Trash2, Phone, ExternalLink } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { auth } from "@/lib/firebase";
 import { onAuthStateChanged, signOut } from "firebase/auth";
