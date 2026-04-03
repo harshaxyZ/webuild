@@ -137,14 +137,14 @@ export default function AdminDashboardPage() {
       <main className="flex-1 p-6 md:p-12 pb-24 md:pb-12 h-screen overflow-y-auto">
         <header className="flex items-center justify-between mb-8 md:mb-12">
           <div>
-             <h1 className="text-2xl md:text-3xl font-bold">Submissions Pipeline</h1>
-             <p className="text-zinc-500 text-sm md:hidden mt-1">Manage deliveries</p>
+             <h1 className="text-2xl md:text-3xl font-bold">Pipeline</h1>
+             <p className="text-zinc-500 text-xs mt-1 md:hidden">Track your leads</p>
           </div>
           <div className="flex items-center gap-2">
             <Button 
               variant="secondary" 
               size="sm"
-              className="bg-zinc-900 text-zinc-100 hover:bg-zinc-800 border-zinc-800 border text-xs md:text-sm h-9"
+              className="bg-zinc-900 text-zinc-100 hover:bg-zinc-800 border-zinc-800 border text-xs h-9 px-3"
               onClick={fetchSubmissions}
             >
               Refresh
@@ -160,7 +160,7 @@ export default function AdminDashboardPage() {
           </div>
         </header>
 
-        <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
+        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
           {/* Column: Submitted */}
           <div className="space-y-4">
             <div className="flex items-center justify-between text-sm font-medium text-zinc-400 mb-4 px-2">

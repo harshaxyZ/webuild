@@ -354,14 +354,14 @@ export function MultiStepForm() {
                              handleInputChange("concept", opt.id);
                              handleInputChange("projectType", ""); // reset step 2
                           }}
-                          className={`cursor-pointer p-5 rounded-2xl border-2 transition-all flex items-start gap-4 ${isSelected ? 'border-zinc-950 bg-zinc-50' : 'border-zinc-200 bg-white hover:border-zinc-300'}`}
+                          className={`cursor-pointer p-4 md:p-5 rounded-2xl border-2 transition-all flex items-center md:items-start gap-4 ${isSelected ? 'border-zinc-950 bg-zinc-50' : 'border-zinc-200 bg-white hover:border-zinc-300'}`}
                         >
-                           <div className={`p-2 rounded-xl ${isSelected ? 'bg-zinc-950 text-white' : 'bg-zinc-100 text-zinc-600'}`}>
-                              <Icon size={20} />
+                           <div className={`p-3 rounded-xl flex-shrink-0 ${isSelected ? 'bg-zinc-950 text-white' : 'bg-zinc-100 text-zinc-600'}`}>
+                              <Icon size={26} className="md:w-6 md:h-6" />
                            </div>
-                           <div>
-                             <h4 className={`font-bold ${isSelected ? 'text-zinc-950' : 'text-zinc-700'}`}>{opt.id}</h4>
-                             <p className="text-xs text-zinc-500 mt-1">{opt.desc}</p>
+                           <div className="flex-1">
+                             <h4 className={`font-bold text-sm md:text-base ${isSelected ? 'text-zinc-950' : 'text-zinc-700'}`}>{opt.id}</h4>
+                             <p className="text-[10px] md:text-xs text-zinc-500 mt-0.5 line-clamp-1 md:line-clamp-none">{opt.desc}</p>
                            </div>
                         </div>
                       )
@@ -374,13 +374,13 @@ export function MultiStepForm() {
               {/* STEP 2: Type */}
               {currentStep === 1 && (
                 <div className="space-y-4">
-                  <h3 className="text-2xl md:text-3xl font-bold tracking-tight text-[#1d1d1f] mb-6">Select {formData.concept} Type</h3>
-                  <div className="flex flex-wrap gap-3">
+                  <h3 className="text-xl md:text-3xl font-bold tracking-tight text-[#1d1d1f] mb-6">Select {formData.concept} Type</h3>
+                  <div className="flex flex-wrap gap-2 md:gap-3">
                     {getDynamicTypes().map(type => (
                        <button
                          key={type}
                          onClick={() => handleInputChange("projectType", type)}
-                         className={`px-6 py-4 rounded-2xl border-2 font-semibold transition-all text-sm ${formData.projectType === type ? 'border-zinc-950 bg-zinc-950 text-white' : 'border-zinc-200 bg-white text-zinc-700 hover:border-zinc-300'}`}
+                         className={`flex-1 min-w-[140px] md:flex-none px-4 md:px-6 py-3 md:py-4 rounded-xl md:rounded-2xl border-2 font-semibold transition-all text-xs md:text-sm ${formData.projectType === type ? 'border-zinc-950 bg-zinc-950 text-white' : 'border-zinc-200 bg-white text-zinc-700 hover:border-zinc-300'}`}
                        >
                          {type}
                        </button>
@@ -391,7 +391,7 @@ export function MultiStepForm() {
                        initial={{opacity:0, height:0}} animate={{opacity:1, height:'auto'}}
                        type="text" 
                        placeholder="Please specify" 
-                       className="w-full h-14 mt-4 rounded-2xl border border-zinc-200 px-4 focus:border-zinc-900 outline-none"
+                       className="w-full h-14 mt-4 rounded-2xl border border-zinc-200 px-4 focus:border-zinc-900 outline-none text-base"
                        onChange={(e) => handleInputChange("projectType", e.target.value)}
                     />
                   )}
@@ -402,8 +402,8 @@ export function MultiStepForm() {
               {/* STEP 3: References */}
               {currentStep === 2 && (
                 <div className="space-y-4">
-                  <h3 className="text-2xl md:text-3xl font-bold tracking-tight text-[#1d1d1f] mb-2">Reference Links</h3>
-                  <p className="text-zinc-500 text-sm mb-6">Provide URLs to sites, apps, or designs you like.</p>
+                  <h3 className="text-xl md:text-3xl font-bold tracking-tight text-[#1d1d1f] mb-2">Reference Links</h3>
+                  <p className="text-zinc-500 text-xs md:text-sm mb-6">Provide URLs to sites, apps, or designs you like.</p>
                   
                   {formData.referenceUrls.map((url, i) => (
                     <div key={i} className="flex gap-2">
@@ -434,7 +434,7 @@ export function MultiStepForm() {
                   <Button 
                     variant="outline" 
                     onClick={() => handleInputChange("referenceUrls", [...formData.referenceUrls, ""])}
-                    className="w-full h-14 rounded-2xl border-dashed border-2 text-zinc-500 hover:text-zinc-900"
+                    className="w-full h-14 rounded-2xl border-dashed border-2 text-zinc-500 hover:text-zinc-900 text-sm"
                   >
                     <Plus size={16} className="mr-2" /> Add another reference
                   </Button>
@@ -444,11 +444,11 @@ export function MultiStepForm() {
               {/* STEP 4: Details */}
               {currentStep === 3 && (
                 <div className="space-y-4">
-                  <h3 className="text-2xl md:text-3xl font-bold tracking-tight text-[#1d1d1f] mb-2">Describe your requirement</h3>
-                  <p className="text-zinc-500 text-sm mb-6">What is the core problem this solves? Any key features?</p>
+                  <h3 className="text-xl md:text-3xl font-bold tracking-tight text-[#1d1d1f] mb-2">Describe your requirement</h3>
+                  <p className="text-zinc-500 text-xs md:text-sm mb-6">What is the core problem this solves? Any key features?</p>
                   
                   <textarea
-                    className={`w-full min-h-[200px] rounded-3xl border ${validationErrors.description ? 'border-red-500' : 'border-zinc-200'} bg-white p-6 text-base focus:border-zinc-950 outline-none resize-none shadow-sm`}
+                    className={`w-full min-h-[160px] md:min-h-[200px] rounded-3xl border ${validationErrors.description ? 'border-red-500' : 'border-zinc-200'} bg-white p-6 text-base focus:border-zinc-950 outline-none resize-none shadow-sm`}
                     placeholder="E.g., I need a booking platform for my coaching business with Stripe integration, a dark mode UI, and an admin dashboard to track hours..."
                     value={formData.description}
                     onChange={(e) => handleInputChange("description", e.target.value)}
@@ -460,13 +460,13 @@ export function MultiStepForm() {
               {/* STEP 5: Style Preference */}
               {currentStep === 4 && (
                 <div className="space-y-4">
-                  <h3 className="text-2xl md:text-3xl font-bold tracking-tight text-[#1d1d1f] mb-6">Style Preference</h3>
+                  <h3 className="text-xl md:text-3xl font-bold tracking-tight text-[#1d1d1f] mb-6">Style Preference</h3>
                   <div className="flex flex-wrap gap-2">
                     {styleChips.map(style => (
                        <button
                          key={style}
                          onClick={() => handleInputChange("stylePreference", style)}
-                         className={`px-5 py-3 rounded-full border-2 font-medium transition-all text-sm ${formData.stylePreference === style ? 'border-zinc-950 bg-zinc-950 text-white shadow-md' : 'border-zinc-200 bg-white text-zinc-600 hover:border-zinc-300 hover:bg-zinc-50'}`}
+                         className={`px-4 md:px-5 py-2.5 md:py-3 rounded-full border-2 font-medium transition-all text-xs md:text-sm ${formData.stylePreference === style ? 'border-zinc-950 bg-zinc-950 text-white shadow-md' : 'border-zinc-200 bg-white text-zinc-600 hover:border-zinc-300 hover:bg-zinc-50'}`}
                        >
                          {style}
                        </button>
@@ -479,7 +479,7 @@ export function MultiStepForm() {
               {/* STEP 6: Contact */}
               {currentStep === 5 && (
                 <div className="space-y-6">
-                  <h3 className="text-2xl md:text-3xl font-bold tracking-tight text-[#1d1d1f] mb-6">Almost there!</h3>
+                  <h3 className="text-xl md:text-3xl font-bold tracking-tight text-[#1d1d1f] mb-6">Almost there!</h3>
                   <div className="space-y-2">
                     <label className="text-sm font-semibold text-zinc-500 ml-1">Full Name</label>
                     <input
@@ -525,28 +525,29 @@ export function MultiStepForm() {
               {/* STEP 7: Verify */}
               {currentStep === 6 && (
                 <div className="space-y-6 text-center mt-6">
-                  <div className="w-16 h-16 bg-blue-50 rounded-full flex items-center justify-center mx-auto mb-4">
-                     <svg className="w-8 h-8 text-blue-500" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                  <div className="w-12 h-12 md:w-16 md:h-16 bg-blue-50 rounded-full flex items-center justify-center mx-auto mb-4">
+                     <svg className="w-6 h-6 md:w-8 md:h-8 text-blue-500" fill="none" viewBox="0 0 24 24" stroke="currentColor">
                        <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M3 19v-8.93a2 2 0 01.89-1.664l7-4.666a2 2 0 012.22 0l7 4.666A2 2 0 0121 10.07V19M3 19a2 2 0 002 2h14a2 2 0 002-2M3 19l6.75-4.5M21 19l-6.75-4.5M3 10l6.75 4.5M21 10l-6.75 4.5m0 0l-1.14.76a2 2 0 01-2.22 0l-1.14-.76" />
                      </svg>
                   </div>
-                  <h3 className="text-2xl font-bold text-[#1d1d1f]">Verify your email</h3>
-                  <p className="text-zinc-500 text-sm max-w-sm mx-auto">
+                  <h3 className="text-xl md:text-2xl font-bold text-[#1d1d1f]">Verify your email</h3>
+                  <p className="text-zinc-500 text-xs md:text-sm max-w-sm mx-auto px-4">
                     We sent a 4-digit security code to <b className="text-zinc-900">{formData.email}</b>. 
                   </p>
                   
-                  <div className="flex justify-center gap-3 mt-8">
+                  <div className="flex justify-center gap-2 md:gap-3 mt-8">
                     {[0, 1, 2, 3].map((index) => (
                       <input
                         key={index}
                         ref={otpRefs[index]}
                         type="text"
                         maxLength={1}
-                        className={`w-16 h-20 text-center text-3xl font-bold rounded-2xl border-2 ${otpError ? 'border-red-400 bg-red-50 text-red-900' : 'border-zinc-200 bg-white text-zinc-900'} focus:border-zinc-950 outline-none transition-all shadow-sm`}
+                        className={`w-12 h-16 md:w-16 md:h-20 text-center text-2xl md:text-3xl font-bold rounded-xl md:rounded-2xl border-2 ${otpError ? 'border-red-400 bg-red-50 text-red-900' : 'border-zinc-200 bg-white text-zinc-900'} focus:border-zinc-950 outline-none transition-all shadow-sm`}
                         value={otp[index]}
                         onChange={(e) => handleOtpChange(index, e.target.value)}
                         onKeyDown={(e) => handleOtpKeyDown(index, e)}
-                        autoComplete="off"
+                        inputMode="numeric"
+                        autoComplete="one-time-code"
                         required
                       />
                     ))}
