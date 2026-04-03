@@ -91,7 +91,7 @@
     @apply border-border outline-ring/50;
   }
   html {
-    scroll-behavior: smooth;
+    scroll-behavior: auto !important;
   }
   body {
     @apply bg-background text-foreground;
