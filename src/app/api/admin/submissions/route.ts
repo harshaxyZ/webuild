@@ -60,3 +60,26 @@ export async function PATCH(req: Request) {
     return NextResponse.json({ error: "Failed to update submission" }, { status: 500 });
   }
 }
+
+// DELETE: Remove a submission from Firestore
+export async function DELETE(req: Request) {
+  try {
+    if (!db) {
+      return NextResponse.json({ error: "Database not initialized" }, { status: 500 });
+    }
+
+    const { searchParams } = new URL(req.url);
+    const id = searchParams.get("id");
+
+    if (!id) {
+      return NextResponse.json({ error: "Missing id" }, { status: 400 });
+    }
+
+    await db.collection("submissions").doc(id).delete();
+
+    return NextResponse.json({ success: true });
+  } catch (error: any) {
+    console.error("Admin submissions DELETE error:", error.message);
+    return NextResponse.json({ error: "Failed to delete submission" }, { status: 500 });
+  }
+}

@@ -10,7 +10,8 @@ import {
   ContactShadows,
   useScroll,
   ScrollControls,
-  Scroll
+  Scroll,
+  PerformanceMonitor
 } from "@react-three/drei";
 import * as THREE from "three";
 import gsap from "gsap";
@@ -186,17 +187,17 @@ function Scene() {
         <mesh rotation={[-Math.PI / 2, 0, 0]} position={[0, -1.5, 0]}>
           <planeGeometry args={[100, 100]} />
           <MeshReflectorMaterial
-            blur={[300, 100]}
-            resolution={512}
-            mixBlur={1}
-            mixStrength={60}
+            blur={[0, 0]} // Disable blur for massive performance gain
+            resolution={256} // Lower resolution is plenty for this aesthetic
+            mixBlur={0}
+            mixStrength={40}
             roughness={1}
-            depthScale={1.2}
-            minDepthThreshold={0.4}
+            depthScale={0}
+            minDepthThreshold={0.9}
             maxDepthThreshold={1.4}
             color="#ecf2ff"
             metalness={0.5}
-            mirror={0.9}
+            mirror={0.8}
           />
         </mesh>
         
@@ -208,12 +209,19 @@ function Scene() {
 }
 
 export function CinematicHero() {
+  const [dpr, setDpr] = React.useState(1.5);
   return (
     <div className="h-[400vh] w-full bg-zinc-950">
       <div className="sticky top-0 h-screen w-full overflow-hidden">
-        <Canvas shadows dpr={[1, 2]}>
-          <PerspectiveCamera makeDefault position={[0, 0, 10]} fov={50} />
-          <ScrollControls pages={4} damping={0.2}>
+        <Canvas 
+          shadows 
+          dpr={dpr}
+          gl={{ antialias: false, powerPreference: "high-performance" }}
+          camera={{ fov: 50 }}
+        >
+          <PerformanceMonitor onDecline={() => setDpr(1)} />
+          <PerspectiveCamera makeDefault position={[0, 0, 10]} />
+          <ScrollControls pages={4} damping={0.15}>
             <Scene />
             
             {/* Stage 5: Immersion (HTML Overlay) */}

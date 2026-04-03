@@ -29,6 +29,7 @@ export default function AdminDashboardPage() {
   const [user, setUser] = useState<any>(null);
   const [loading, setLoading] = useState(true);
   const [submissions, setSubmissions] = useState<Submission[]>([]);
+  const [selectedLead, setSelectedLead] = useState<Submission | null>(null);
   const [isDemoMode, setIsDemoMode] = useState(false);
 
   const fetchSubmissions = useCallback(async () => {
@@ -79,16 +80,34 @@ export default function AdminDashboardPage() {
     router.push("/admin/login");
   };
 
-  const moveSubmission = async (id: string, newStatus: string) => {
+  const handleStatusUpdate = async (id: string, newStatus: string) => {
     try {
-      const res = await fetch("/api/admin/submissions", {
+      const resp = await fetch("/api/admin/submissions", {
         method: "PATCH",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({ id, status: newStatus }),
       });
-      if (res.ok) fetchSubmissions();
-    } catch (e: any) {
-      console.error("Failed to update submission:", e);
+      if (resp.ok) {
+        setSubmissions((prev) => 
+          prev.map((s) => (s.id === id ? { ...s, status: newStatus } : s))
+        );
+      }
+    } catch (err) {
+      console.error("Update failed", err);
+    }
+  };
+
+  const handleDelete = async (id: string) => {
+    if (!confirm("Are you sure you want to delete this lead?")) return;
+    try {
+      const resp = await fetch(`/api/admin/submissions?id=${id}`, {
+        method: "DELETE",
+      });
+      if (resp.ok) {
+        setSubmissions((prev) => prev.filter((s) => s.id !== id));
+      }
+    } catch (err) {
+      console.error("Delete failed", err);
     }
   };
 
@@ -173,7 +192,7 @@ export default function AdminDashboardPage() {
               </div>
             ) : (
               submitted.map((s) => (
-                <SubmissionCard key={s.id} submission={s} onMove={() => moveSubmission(s.id, "IN_PROGRESS")} nextLabel="Move to In Progress" />
+                <SubmissionCard key={s.id} submission={s} onStatusUpdate={handleStatusUpdate} onDelete={handleDelete} onViewDetails={() => setSelectedLead(s)} nextStatus="IN_PROGRESS" />
               ))
             )}
           </div>
@@ -190,7 +209,7 @@ export default function AdminDashboardPage() {
               </div>
             ) : (
               inProgress.map((s) => (
-                <SubmissionCard key={s.id} submission={s} onMove={() => moveSubmission(s.id, "DEMO_READY")} nextLabel="Mark Demo Ready" />
+                <SubmissionCard key={s.id} submission={s} onStatusUpdate={handleStatusUpdate} onDelete={handleDelete} onViewDetails={() => setSelectedLead(s)} nextStatus="DEMO_READY" />
               ))
             )}
           </div>
@@ -207,17 +226,98 @@ export default function AdminDashboardPage() {
               </div>
             ) : (
               demoReady.map((s) => (
-                <SubmissionCard key={s.id} submission={s} onMove={() => moveSubmission(s.id, "COMPLETED")} nextLabel="Mark Completed" />
+                <SubmissionCard 
+                  key={s.id} 
+                  submission={s} 
+                  onStatusUpdate={handleStatusUpdate} 
+                  onDelete={handleDelete} 
+                  onViewDetails={() => setSelectedLead(s)}
+                  nextStatus="COMPLETED" 
+                />
               ))
             )}
           </div>
         </div>
+
+        {/* DETAILS MODAL */}
+        <AnimatePresence>
+          {selectedLead && (
+            <div className="fixed inset-0 z-50 flex items-center justify-center p-4">
+              <motion.div 
+                initial={{ opacity: 0 }} animate={{ opacity: 1 }} exit={{ opacity: 0 }}
+                className="absolute inset-0 bg-black/80 backdrop-blur-sm"
+                onClick={() => setSelectedLead(null)}
+              />
+              <motion.div 
+                initial={{ opacity: 0, scale: 0.95, y: 20 }} animate={{ opacity: 1, scale: 1, y: 0 }} exit={{ opacity: 0, scale: 0.95, y: 20 }}
+                className="relative w-full max-w-2xl bg-zinc-900 border border-zinc-800 rounded-3xl p-8 shadow-2xl overflow-y-auto max-h-[90vh]"
+              >
+                <div className="flex justify-between items-start mb-8">
+                  <div>
+                    <h2 className="text-3xl font-bold text-white mb-2">{selectedLead.user.name || "Anonymous Lead"}</h2>
+                    <p className="text-zinc-400 font-mono text-sm">{selectedLead.user.email}</p>
+                  </div>
+                  <button onClick={() => setSelectedLead(null)} className="p-2 hover:bg-zinc-800 rounded-full transition-colors">
+                    <X size={24} className="text-zinc-500" />
+                  </button>
+                </div>
+
+                <div className="grid grid-cols-2 gap-4 mb-8">
+                   <div className="p-4 bg-zinc-950 rounded-2xl border border-zinc-800">
+                      <span className="text-[10px] uppercase font-bold text-zinc-500 tracking-widest block mb-1">Concept</span>
+                      <span className="text-white font-medium">{selectedLead.concept || "N/A"}</span>
+                   </div>
+                   <div className="p-4 bg-zinc-950 rounded-2xl border border-zinc-800">
+                      <span className="text-[10px] uppercase font-bold text-zinc-500 tracking-widest block mb-1">Type</span>
+                      <span className="text-white font-medium">{selectedLead.projectType || "N/A"}</span>
+                   </div>
+                   <div className="p-4 bg-zinc-950 rounded-2xl border border-zinc-800">
+                      <span className="text-[10px] uppercase font-bold text-zinc-500 tracking-widest block mb-1">Style</span>
+                      <span className="text-white font-medium">{selectedLead.stylePreference || "N/A"}</span>
+                   </div>
+                   <div className="p-4 bg-zinc-950 rounded-2xl border border-zinc-800">
+                      <span className="text-[10px] uppercase font-bold text-zinc-500 tracking-widest block mb-1">Phone</span>
+                      <span className="text-white font-medium">{selectedLead.user.phoneNumber || "N/A"}</span>
+                   </div>
+                </div>
+
+                <div className="space-y-6">
+                  <div>
+                    <h3 className="text-sm font-bold text-zinc-400 uppercase tracking-widest mb-3">Project Description</h3>
+                    <div className="p-6 bg-zinc-950 rounded-3xl border border-zinc-800 text-zinc-300 leading-relaxed italic">
+                      "{selectedLead.ideaDescription || "No description provided."}"
+                    </div>
+                  </div>
+
+                  {selectedLead.referenceUrls && selectedLead.referenceUrls.length > 0 && (
+                    <div>
+                      <h3 className="text-sm font-bold text-zinc-400 uppercase tracking-widest mb-3">Reference Links</h3>
+                      <div className="space-y-2">
+                        {selectedLead.referenceUrls.map((url, i) => (
+                          <a 
+                            key={i} 
+                            href={url.startsWith('http') ? url : `https://${url}`} 
+                            target="_blank" 
+                            rel="noopener noreferrer" 
+                            className="flex items-center gap-2 p-3 bg-zinc-950 rounded-xl border border-zinc-800 text-blue-400 hover:text-blue-300 hover:border-zinc-700 transition-all text-sm truncate"
+                          >
+                            <ExternalLink size={14} /> {url}
+                          </a>
+                        ))}
+                      </div>
+                    </div>
+                  )}
+                </div>
+              </motion.div>
+            </div>
+          )}
+        </AnimatePresence>
       </main>
     </div>
   );
 }
 
-function SubmissionCard({ submission, onMove, nextLabel }: { submission: Submission; onMove: () => void; nextLabel: string }) {
+function SubmissionCard({ submission, onStatusUpdate, onDelete, onViewDetails, nextStatus }: { submission: Submission; onStatusUpdate: (id: string, status: string) => void; onDelete: (id: string) => void; onViewDetails: () => void; nextStatus?: string }) {
   const initials = (submission.user.name || submission.user.email).slice(0, 2).toUpperCase();
   const timeAgo = getTimeAgo(submission.createdAt);
 
@@ -225,7 +325,7 @@ function SubmissionCard({ submission, onMove, nextLabel }: { submission: Submiss
     <motion.div
       initial={{ opacity: 0, y: 10 }}
       animate={{ opacity: 1, y: 0 }}
-      className="p-5 rounded-xl border border-zinc-800 bg-zinc-900/50 hover:border-zinc-700 transition-colors shadow-lg shadow-black/20"
+      className="p-5 rounded-xl border border-zinc-800 bg-zinc-900/50 hover:border-zinc-700 transition-colors shadow-lg shadow-black/20 flex flex-col"
     >
       <div className="flex justify-between items-start mb-3">
         <span className="text-xs font-mono text-zinc-500">{initials}</span>
@@ -236,28 +336,55 @@ function SubmissionCard({ submission, onMove, nextLabel }: { submission: Submiss
       
       {(submission.concept || submission.projectType || submission.stylePreference) && (
         <div className="flex flex-wrap gap-1.5 mb-3">
-          {submission.concept && <span className="bg-blue-500/10 text-blue-400 text-[10px] uppercase font-bold px-2 py-0.5 rounded-full">{submission.concept}</span>}
-          {submission.projectType && <span className="bg-emerald-500/10 text-emerald-400 text-[10px] uppercase font-bold px-2 py-0.5 rounded-full">{submission.projectType}</span>}
-          {submission.stylePreference && <span className="bg-amber-500/10 text-amber-500 text-[10px] uppercase font-bold px-2 py-0.5 rounded-full">{submission.stylePreference}</span>}
+          {submission.concept && <span className="bg-blue-500/10 text-blue-400 text-[10px] uppercase font-bold px-2 py-0.5 rounded-full border border-blue-500/20">{submission.concept}</span>}
+          {submission.projectType && <span className="bg-emerald-500/10 text-emerald-400 text-[10px] uppercase font-bold px-2 py-0.5 rounded-full border border-emerald-500/20">{submission.projectType}</span>}
+          {submission.stylePreference && <span className="bg-amber-500/10 text-amber-500 text-[10px] uppercase font-bold px-2 py-0.5 rounded-full border border-amber-500/20">{submission.stylePreference}</span>}
         </div>
       )}
 
       {submission.ideaDescription && (
-        <p className="text-sm text-zinc-500 line-clamp-2 mb-3">{submission.ideaDescription}</p>
+        <p className="text-sm text-zinc-500 line-clamp-3 mb-3 leading-relaxed">{submission.ideaDescription}</p>
       )}
 
-      {((submission.referenceUrls && submission.referenceUrls.length > 0) || submission.socialLinks) && (
-        <p className="text-xs text-zinc-500 mb-2 truncate flex items-center gap-1">
-           Refs: {submission.referenceUrls?.length ? `${submission.referenceUrls.length} link(s)` : submission.socialLinks}
-        </p>
-      )}
+      <div className="flex flex-wrap items-center gap-3 text-xs text-zinc-500 mt-auto pt-4 border-t border-zinc-800/50">
+        <div className="flex items-center gap-1.5 bg-zinc-900/50 px-2.5 py-1 rounded-lg border border-zinc-800 group-hover:border-zinc-700 transition-colors">
+          <Phone size={12} className="text-zinc-600" />
+          <span>{submission.user.phoneNumber || "No Phone"}</span>
+        </div>
+        {submission.referenceUrls && submission.referenceUrls.length > 0 && (
+          <div className="flex items-center gap-1.5 bg-zinc-900/50 px-2.5 py-1 rounded-lg border border-zinc-800 group-hover:border-zinc-700 transition-colors">
+            <ExternalLink size={12} className="text-zinc-600" />
+            <span>{submission.referenceUrls.length} Ref(s)</span>
+          </div>
+        )}
+      </div>
 
-      {submission.uploads && submission.uploads.length > 0 && (
-        <p className="text-xs text-zinc-600 mb-3">{submission.uploads.length} file(s) attached</p>
-      )}
-      <div className="flex items-center gap-2 mt-4">
-        <Button size="sm" variant="outline" className="text-xs h-9 bg-zinc-800 text-zinc-300 border-zinc-700 hover:bg-zinc-700 hover:text-white gap-2 transition-all w-full md:w-auto" onClick={onMove}>
-          {nextLabel} <ArrowRight className="w-3 h-3" />
+      <div className="flex items-center gap-2 mt-5">
+        {nextStatus && (
+          <Button 
+            size="sm" 
+            className="flex-1 bg-zinc-100 text-zinc-950 hover:bg-white text-[11px] font-bold h-9 rounded-xl transition-all active:scale-95"
+            onClick={() => onStatusUpdate(submission.id, nextStatus)}
+          >
+            Move to {nextStatus.replace("_", " ")}
+          </Button>
+        )}
+        <Button 
+          size="sm" 
+          variant="outline" 
+          className="px-3 h-9 rounded-xl border-zinc-800 bg-zinc-900/50 text-zinc-500 hover:text-white hover:border-zinc-700 hover:bg-zinc-800 transition-all active:scale-95 text-[10px] font-bold uppercase tracking-widest"
+          onClick={onViewDetails}
+        >
+          Details
+        </Button>
+        <Button 
+          size="sm" 
+          variant="outline" 
+          className="w-10 h-9 rounded-xl border-zinc-800 bg-zinc-900/50 text-rose-500/50 hover:text-rose-500 hover:border-rose-500/30 hover:bg-rose-500/10 transition-all active:scale-95 flex items-center justify-center p-0"
+          onClick={() => onDelete(submission.id)}
+          title="Delete Submission"
+        >
+          <Trash2 size={14} />
         </Button>
       </div>
     </motion.div>

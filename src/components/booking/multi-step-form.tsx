@@ -376,24 +376,39 @@ export function MultiStepForm() {
                 <div className="space-y-4">
                   <h3 className="text-xl md:text-3xl font-bold tracking-tight text-[#1d1d1f] mb-6">Select {formData.concept} Type</h3>
                   <div className="flex flex-wrap gap-2 md:gap-3">
-                    {getDynamicTypes().map(type => (
-                       <button
-                         key={type}
-                         onClick={() => handleInputChange("projectType", type)}
-                         className={`flex-1 min-w-[140px] md:flex-none px-4 md:px-6 py-3 md:py-4 rounded-xl md:rounded-2xl border-2 font-semibold transition-all text-xs md:text-sm ${formData.projectType === type ? 'border-zinc-950 bg-zinc-950 text-white' : 'border-zinc-200 bg-white text-zinc-700 hover:border-zinc-300'}`}
-                       >
-                         {type}
-                       </button>
-                    ))}
+                    {getDynamicTypes().map(type => {
+                       const isSelected = formData.projectType === type;
+                       const isOtherInList = type === "Other";
+                       return (
+                         <button
+                           key={type}
+                           onClick={() => {
+                             handleInputChange("projectType", type);
+                           }}
+                           className={`flex-1 min-w-[140px] md:flex-none px-4 md:px-6 py-3 md:py-4 rounded-xl md:rounded-2xl border-2 font-semibold transition-all text-xs md:text-sm ${isSelected ? 'border-zinc-950 bg-zinc-950 text-white' : 'border-zinc-200 bg-white text-zinc-700 hover:border-zinc-300'}`}
+                         >
+                           {type}
+                         </button>
+                       );
+                    })}
                   </div>
-                  {formData.projectType === "Other" && (
-                    <motion.input 
-                       initial={{opacity:0, height:0}} animate={{opacity:1, height:'auto'}}
-                       type="text" 
-                       placeholder="Please specify" 
-                       className="w-full h-14 mt-4 rounded-2xl border border-zinc-200 px-4 focus:border-zinc-900 outline-none text-base"
-                       onChange={(e) => handleInputChange("projectType", e.target.value)}
-                    />
+                  
+                  {/* Show "Specify" if selected type is not in the predefined list for that concept */}
+                  {(!getDynamicTypes().includes(formData.projectType) || formData.projectType === "Other") && formData.projectType !== "" && (
+                    <motion.div 
+                       initial={{opacity:0, y: -10}} animate={{opacity:1, y: 0}}
+                       className="space-y-2 mt-4"
+                    >
+                       <label className="text-xs font-bold text-zinc-400 uppercase tracking-widest ml-1">Please specify your project type</label>
+                       <input 
+                         type="text" 
+                         autoFocus
+                         placeholder="E.g., Crypto Wallet, AI Agent, Ed-Tech Platform..." 
+                         className="w-full h-14 rounded-2xl border border-zinc-200 px-4 focus:border-zinc-950 outline-none text-base shadow-sm focus:ring-2 focus:ring-zinc-950/5 transition-all"
+                         value={formData.projectType === "Other" ? "" : formData.projectType}
+                         onChange={(e) => handleInputChange("projectType", e.target.value)}
+                       />
+                    </motion.div>
                   )}
                   {validationErrors.projectType && <p className="text-red-500 text-sm mt-2 flex items-center gap-1 font-medium"><AlertCircle size={14}/> {validationErrors.projectType}</p>}
                 </div>
