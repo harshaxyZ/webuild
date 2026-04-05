@@ -7,38 +7,38 @@ const services = [
   {
     icon: LayoutTemplate,
     title: "Web Applications",
-    description: "High-performance, scalable SPAs and SSR web applications built natively with Next.js and React."
+    description: "High-performance, scalable SPAs and SSR apps built natively with Next.js and React."
   },
   {
     icon: Smartphone,
     title: "Mobile Applications",
-    description: "Premium cross-platform mobile experiences engineered for iOS and Android with strict UI/UX standards."
+    description: "Premium cross-platform experiences for iOS and Android with strict UI/UX standards."
   },
   {
     icon: Database,
-    title: "Full-Stack Systems",
-    description: "Robust, secure backend architectures, APIs, and microservices connecting your digital ecosystem."
+    title: "Automation Systems",
+    description: "Robust backend architectures, APIs, and microservices to automate your ecosystem."
   }
 ];
 
 export function Services() {
   return (
-    <section id="services" className="py-32 bg-white relative overflow-hidden">
+    <section id="services" className="py-24 bg-white relative overflow-hidden">
       <div className="container mx-auto px-6 relative z-10">
         <div className="max-w-7xl mx-auto">
           <motion.div
             initial={{ opacity: 0, y: 20 }}
             whileInView={{ opacity: 1, y: 0 }}
             viewport={{ once: true }}
-            transition={{ duration: 1.2, ease: [0.16, 1, 0.3, 1] }}
-            className="mb-24"
+            transition={{ duration: 1, ease: [0.16, 1, 0.3, 1] }}
+            className="mb-20"
           >
-            <h2 className="text-4xl md:text-7xl font-bold tracking-tight mb-8 text-[#1d1d1f]">
-              Not a basic <br /> 
-              <span className="text-zinc-400">website builder.</span>
+            <h2 className="text-4xl md:text-6xl font-bold tracking-tight mb-6 text-[#1d1d1f]">
+              Bespoke Digital <br /> 
+              <span className="text-zinc-400">Engineering.</span>
             </h2>
-            <p className="max-w-2xl text-xl md:text-2xl text-zinc-500 font-medium leading-tight">
-              We are product architects. We build startup-ready technical solutions with the same engineering rigor as major tech platforms.
+            <p className="max-w-xl text-lg md:text-xl text-zinc-500 font-medium leading-snug">
+              We build startup-ready technical solutions with the same engineering rigor as major tech platforms.
             </p>
           </motion.div>
 

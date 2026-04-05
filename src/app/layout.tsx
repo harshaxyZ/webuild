@@ -14,8 +14,8 @@ const geistMono = Geist_Mono({
 });
 
 export const metadata: Metadata = {
-  title: "we build | you pay only if you love it",
-  description: "we build your digital presence at zero upfront cost.",
+  title: "we build | Elite Web Development & Process Automation",
+  description: "Premium web development and automation services with zero upfront cost. High-performance, scalable digital solutions for modern businesses.",
 };
 
 export default function RootLayout({

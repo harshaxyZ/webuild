@@ -10,6 +10,7 @@ import { Footer } from "@/components/footer";
 import { ZenithSpinner } from "@/components/ui/zenith-spinner";
 import { ReactiveBackground } from "@/components/ui/reactive-background";
 import { BookingOverlay } from "@/components/booking/booking-overlay";
+import { WhatsAppButton } from "@/components/ui/whatsapp-button";
 import { useState, useEffect } from "react";
 import { motion } from "framer-motion";
 
@@ -65,6 +66,7 @@ export default function Home() {
         isOpen={isBookingOpen} 
         onClose={closeBooking} 
       />
+      <WhatsAppButton />
     </div>
   );
 }

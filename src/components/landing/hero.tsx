@@ -11,48 +11,55 @@ export function Hero({ onBookClick }: { onBookClick?: () => void }) {
       {/* 
         TYPOGRAPHY HIERARCHY (Apple Aesthetic)
       */}
-      <div className="flex flex-col items-center text-center z-10 w-full max-w-4xl mt-12 mb-16">
+      <div className="flex flex-col items-center text-center z-10 w-full max-w-4xl mt-12 mb-16 px-4">
         <motion.div
-           initial={{ opacity: 0, y: 20 }}
+           initial={{ opacity: 0, y: 10 }}
            animate={{ opacity: 1, y: 0 }}
            transition={{ duration: 0.8, ease: [0.16, 1, 0.3, 1] }}
-           className="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-white border border-zinc-200 shadow-sm mb-8"
+           className="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-zinc-50 border border-zinc-200 mb-8 shadow-sm"
         >
-          <span className="w-1.5 h-1.5 rounded-full bg-rose-500 animate-pulse" />
-          <span className="text-[11px] font-semibold tracking-widest text-zinc-500 uppercase">Available for new projects</span>
+          <span className="w-1.5 h-1.5 rounded-full bg-blue-500 animate-pulse" />
+          <span className="text-[10px] font-bold tracking-widest text-zinc-500 uppercase">Available for new projects</span>
         </motion.div>
 
         <motion.h1 
           initial={{ opacity: 0, y: 20 }}
           animate={{ opacity: 1, y: 0 }}
           transition={{ duration: 0.8, delay: 0.1, ease: [0.16, 1, 0.3, 1] }}
-          className="text-5xl md:text-[5rem] font-bold tracking-tight text-[#1d1d1f] leading-[1.02] mb-6"
+          className="text-4xl md:text-[5.5rem] font-bold tracking-tight text-[#1d1d1f] leading-[1.05] mb-6"
         >
-          Engineering elite <br />
-          <span className="text-rose-500">digital experiences.</span>
+          Elite Web Apps & <br />
+          <span className="text-zinc-400">Process Automation.</span>
         </motion.h1>
         
         <motion.p 
           initial={{ opacity: 0, y: 20 }}
           animate={{ opacity: 1, y: 0 }}
           transition={{ duration: 0.8, delay: 0.2, ease: [0.16, 1, 0.3, 1] }}
-          className="text-lg md:text-xl text-zinc-500 max-w-2xl font-medium leading-relaxed mb-10"
+          className="text-base md:text-xl text-zinc-500 max-w-2xl font-medium leading-relaxed mb-10 px-4"
         >
-          We turn your most ambitious visions into production-ready reality. <br className="hidden md:block"/>
-          World-class engineering, delivered with zero upfront risk.
+          Bespoke digital solutions with zero upfront risk. <br className="hidden md:block"/>
+          We build production-ready systems for modern companies.
         </motion.p>
 
         <motion.div
           initial={{ opacity: 0, y: 20 }}
           animate={{ opacity: 1, y: 0 }}
           transition={{ duration: 0.8, delay: 0.3, ease: [0.16, 1, 0.3, 1] }}
+          className="flex flex-col sm:flex-row items-center gap-4 w-full sm:w-auto px-6"
         >
           <Button 
             onClick={onBookClick}
-            className="h-14 px-10 text-[15px] font-bold rounded-full bg-zinc-950 text-white hover:bg-zinc-800 hover:scale-[1.02] transition-all duration-300 shadow-xl shadow-zinc-200 group relative overflow-hidden"
+            className="h-14 w-full sm:w-auto px-10 text-[15px] font-bold rounded-2xl bg-zinc-950 text-white hover:bg-zinc-800 transition-all shadow-xl shadow-zinc-200 active:scale-95"
           >
-            <span className="relative z-10 transition-colors group-hover:text-rose-100">Book a demo</span>
-            <div className="absolute inset-0 bg-gradient-to-r from-rose-500 to-transparent opacity-0 group-hover:opacity-10 transition-opacity duration-300" />
+            Get a Demo
+          </Button>
+          <Button 
+            variant="outline"
+            onClick={() => window.scrollTo({ top: 1000, behavior: 'smooth' })}
+            className="h-14 w-full sm:w-auto px-10 text-[15px] font-bold rounded-2xl border-zinc-200 text-zinc-600 hover:bg-zinc-50 transition-all font-sans"
+          >
+            View Work
           </Button>
         </motion.div>
       </div>

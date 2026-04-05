@@ -38,12 +38,12 @@ export function DepthSection() {
             whileInView={{ opacity: 1, y: 0 }}
             transition={{ duration: 1.2, ease: [0.16, 1, 0.3, 1] }}
           >
-            <h2 className="text-5xl md:text-[5.5rem] font-bold tracking-tight mb-8 leading-[1.1]">
-              unseen depth. <br />
-              <span className="text-rose-500">unmatched performance.</span>
+            <h2 className="text-5xl md:text-[5.5rem] font-bold tracking-tight mb-8 leading-[1.1] text-[#1d1d1f]">
+              structural depth. <br />
+              <span className="text-zinc-400">unmatched performance.</span>
             </h2>
             <p className="text-zinc-500 text-lg md:text-xl font-medium max-w-xl mx-auto">
-              We engineer at the architectural core, building systems that don't just work—they dominate.
+              We engineer at the architectural core, building systems that don&apos;t just work—they scale.
             </p>
           </motion.div>
         </div>
@@ -52,26 +52,26 @@ export function DepthSection() {
         <div className="grid grid-cols-1 md:grid-cols-2 gap-8 max-w-5xl mx-auto">
           <FeatureCard 
             icon={<Shield className="w-6 h-6" />}
-            title="Ironclad Security"
-            description="Enterprise-grade protection baked into every line of code. We build for long-term stability."
+            title="Zero Upfront Cost"
+            description="We invest in your vision first. Payment only happens when you approve the production build."
             index={0}
           />
           <FeatureCard 
             icon={<Zap className="w-6 h-6" />}
             title="Sub-second Precision"
-            description="Optimized core engines ensuring ultra-fast load times and seamless interactions."
+            description="Optimized core engines ensuring ultra-fast load times and seamless digital interactions."
             index={1}
           />
           <FeatureCard 
             icon={<Globe className="w-6 h-6" />}
             title="Global Infrastructure"
-            description="Serverless edge deployment reaching your users anywhere in milliseconds."
+            description="Enterprise-grade edge deployment reaching your users anywhere with maximum uptime."
             index={2}
           />
           <FeatureCard 
             icon={<Cpu className="w-6 h-6" />}
-            title="AI Core Integration"
-            description="Native LLM orchestration for intelligent, context-aware digital experiences."
+            title="Direct Dev Access"
+            description="Work hand-in-hand with our lead engineering team. No middlemen, just pure technical execution."
             index={3}
           />
         </div>
@@ -95,9 +95,9 @@ function FeatureCard({ icon, title, description, index }: any) {
       }}
       className="p-10 rounded-[3rem] bg-white border border-zinc-100 backdrop-blur-xl hover:shadow-2xl hover:shadow-zinc-200/50 transition-all duration-700 group relative overflow-hidden"
     >
-      <div className="absolute inset-0 bg-gradient-to-br from-rose-500/5 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-700" />
+      <div className="absolute inset-0 bg-gradient-to-br from-blue-500/5 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-700" />
       
-      <div className="w-14 h-14 rounded-2xl bg-white flex items-center justify-center mb-10 border border-zinc-200 group-hover:scale-110 group-hover:bg-rose-500 group-hover:text-white group-hover:border-rose-500 transition-all duration-500 relative z-10 shadow-sm">
+      <div className="w-14 h-14 rounded-2xl bg-white flex items-center justify-center mb-10 border border-zinc-200 group-hover:scale-110 group-hover:bg-blue-500 group-hover:text-white group-hover:border-blue-500 transition-all duration-500 relative z-10 shadow-sm">
         {icon}
       </div>
       <h3 className="text-2xl font-bold mb-4 tracking-tight relative z-10 text-[#1d1d1f]">{title}</h3>
