@@ -18,7 +18,7 @@ export function Hero({ onBookClick }: { onBookClick?: () => void }) {
            transition={{ duration: 0.8, ease: [0.16, 1, 0.3, 1] }}
            className="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-zinc-50 border border-zinc-200 mb-8 shadow-sm"
         >
-          <span className="w-1.5 h-1.5 rounded-full bg-blue-500 animate-pulse" />
+          <span className="w-1.5 h-1.5 rounded-full bg-rose-500 animate-pulse" />
           <span className="text-[10px] font-bold tracking-widest text-zinc-500 uppercase">Available for new projects</span>
         </motion.div>
 
@@ -29,7 +29,7 @@ export function Hero({ onBookClick }: { onBookClick?: () => void }) {
           className="text-4xl md:text-[5.5rem] font-bold tracking-tight text-[#1d1d1f] leading-[1.05] mb-6"
         >
           Elite Web Apps & <br />
-          <span className="text-zinc-400">Process Automation.</span>
+          <span className="text-rose-500">Process Automation.</span>
         </motion.h1>
         
         <motion.p 

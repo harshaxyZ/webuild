@@ -303,9 +303,9 @@ export function MultiStepForm() {
          <p className="text-zinc-600 mb-8 max-w-sm text-lg">
            We&apos;ll get back to you with a demo within <b>24–48 hours</b>. Keep an eye on your inbox!
          </p>
-         <Button onClick={() => router.push("/")} className="h-14 px-10 rounded-2xl font-bold bg-zinc-950 text-white hover:bg-zinc-800">
-           Return Home
-         </Button>
+          <Button onClick={() => window.location.href = "/"} className="h-14 px-10 rounded-2xl font-bold bg-zinc-950 text-white hover:bg-zinc-800 active:scale-95 transition-all">
+            Return Home
+          </Button>
       </div>
     );
   }
@@ -540,8 +540,8 @@ export function MultiStepForm() {
               {/* STEP 7: Verify */}
               {currentStep === 6 && (
                 <div className="space-y-6 text-center mt-6">
-                  <div className="w-12 h-12 md:w-16 md:h-16 bg-blue-50 rounded-full flex items-center justify-center mx-auto mb-4">
-                     <svg className="w-6 h-6 md:w-8 md:h-8 text-blue-500" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                  <div className="w-12 h-12 md:w-16 md:h-16 bg-rose-50 rounded-full flex items-center justify-center mx-auto mb-4">
+                     <svg className="w-6 h-6 md:w-8 md:h-8 text-rose-500" fill="none" viewBox="0 0 24 24" stroke="currentColor">
                        <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M3 19v-8.93a2 2 0 01.89-1.664l7-4.666a2 2 0 012.22 0l7 4.666A2 2 0 0121 10.07V19M3 19a2 2 0 002 2h14a2 2 0 002-2M3 19l6.75-4.5M21 19l-6.75-4.5M3 10l6.75 4.5M21 10l-6.75 4.5m0 0l-1.14.76a2 2 0 01-2.22 0l-1.14-.76" />
                      </svg>
                   </div>

@@ -45,7 +45,7 @@ export function HowItWorks() {
             className="text-4xl md:text-[4.5rem] font-bold mb-8 tracking-tight text-[#1d1d1f] leading-tight"
           >
             The engineering <br />
-            <span className="text-blue-500">commitment flow</span>
+            <span className="text-rose-500">commitment flow</span>
           </motion.h2>
           <p className="text-zinc-500 text-lg md:text-xl font-medium leading-tight max-w-xl mx-auto">
             A frictionless, zero-risk process designed for scaling companies.
@@ -62,7 +62,7 @@ export function HowItWorks() {
               transition={{ duration: 0.6, ease: "easeOut", delay: index * 0.1 }}
               className={`group p-8 md:p-10 rounded-[2.5rem] bg-white border border-zinc-100 hover:shadow-xl hover:-translate-y-1 hover:border-zinc-200 transition-all duration-300 ${index === 4 ? 'lg:col-span-2' : ''}`}
             >
-              <div className="w-14 h-14 md:w-16 md:h-16 rounded-2xl bg-zinc-50 border border-zinc-100 text-zinc-900 flex items-center justify-center mb-8 md:mb-10 group-hover:bg-blue-500 group-hover:text-white transition-all duration-300">
+              <div className="w-14 h-14 md:w-16 md:h-16 rounded-2xl bg-zinc-50 border border-zinc-100 text-zinc-900 flex items-center justify-center mb-8 md:mb-10 group-hover:bg-rose-500 group-hover:text-white transition-all duration-300">
                 <step.icon size={26} strokeWidth={1.5} />
               </div>
               <h3 className="text-xl md:text-2xl font-bold mb-3 md:mb-4 tracking-tight text-[#1d1d1f]">{step.title}</h3>
@@ -74,8 +74,8 @@ export function HowItWorks() {
         </div>
 
         <div className="mt-24 flex flex-wrap justify-center gap-4">
-          <div className="inline-flex items-center gap-3 rounded-full bg-white border border-blue-100 px-6 py-3 text-xs font-bold text-blue-600 shadow-sm">
-            <Sparkles size={16} className="text-blue-500" /> NO UPFRONT COST
+          <div className="inline-flex items-center gap-3 rounded-full bg-white border border-rose-100 px-6 py-3 text-xs font-bold text-rose-500 shadow-sm">
+            <Sparkles size={16} className="text-rose-500" /> NO UPFRONT COST
           </div>
           <div className="inline-flex items-center gap-3 rounded-full bg-white border border-zinc-100 px-6 py-3 text-xs font-bold text-zinc-900 shadow-sm">
             <ShieldCheck size={16} className="text-green-500" /> DEDICATED ENGINEERING

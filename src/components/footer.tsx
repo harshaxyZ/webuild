@@ -36,7 +36,13 @@ export function Footer() {
           >
             Terms
           </Link>
-          <Link href="mailto:harsha210108@gmail.com" className="hover:text-[#1d1d1f] transition-colors underline underline-offset-8 decoration-zinc-200">Contact</Link>
+          <Link 
+            href="/status" 
+            className="hover:text-rose-500 transition-colors"
+          >
+            Track Status
+          </Link>
+          <Link href="mailto:harsha210108@gmail.com" className="hover:text-rose-500 transition-colors underline underline-offset-8 decoration-zinc-100">Contact</Link>
         </nav>
       </div>
     </motion.footer>

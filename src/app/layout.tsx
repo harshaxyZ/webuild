@@ -14,8 +14,9 @@ const geistMono = Geist_Mono({
 });
 
 export const metadata: Metadata = {
-  title: "we build | Elite Web Development & Process Automation",
-  description: "Premium web development and automation services with zero upfront cost. High-performance, scalable digital solutions for modern businesses.",
+  title: "We Build | Elite Web Apps & Process Automation",
+  description: "Senior engineering agency building high-performance websites and automation systems that actually convert. Zero upfront risk. Mobile-first engineering.",
+  keywords: ["web development", "automation services", "conversion optimization", "SaaS development", "process automation"],
 };
 
 export default function RootLayout({

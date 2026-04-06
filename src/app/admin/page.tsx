@@ -121,8 +121,8 @@ export default function AdminDashboardPage() {
   return (
     <div className="min-h-screen bg-zinc-950 text-zinc-50 flex">
       {/* Admin Sidebar */}
-      <aside className="w-64 border-r border-zinc-900 bg-zinc-950 p-6 hidden md:flex flex-col">
-        <div className="text-xl font-bold tracking-tight mb-12 text-blue-400">we build admin</div>
+      <aside className="w-64 border-r border-zinc-900 bg-zinc-950 p-6 hidden md:flex flex-col h-screen sticky top-0">
+        <div className="text-xl font-bold tracking-tight mb-12 text-rose-500">we build admin</div>
         <nav className="space-y-2 flex-1">
           <Button variant="ghost" className="w-full justify-start text-white bg-zinc-900">
             <Search className="w-4 h-4 mr-3" /> Dashboard
@@ -153,17 +153,17 @@ export default function AdminDashboardPage() {
       </div>
 
       {/* Admin Content */}
-      <main className="flex-1 p-6 md:p-12 pb-24 md:pb-12 h-screen overflow-y-auto">
+      <main className="flex-1 p-6 md:p-12 pb-24 md:pb-12 overflow-y-auto overflow-x-hidden">
         <header className="flex items-center justify-between mb-8 md:mb-12">
           <div>
              <h1 className="text-2xl md:text-3xl font-bold">Pipeline</h1>
-             <p className="text-zinc-500 text-xs mt-1 md:hidden">Track your leads</p>
+             <p className="text-zinc-500 text-xs mt-1 md:hidden text-rose-500/80">Track your leads</p>
           </div>
           <div className="flex items-center gap-2">
             <Button 
               variant="secondary" 
               size="sm"
-              className="bg-zinc-900 text-zinc-100 hover:bg-zinc-800 border-zinc-800 border text-xs h-9 px-3"
+              className="bg-zinc-900 text-zinc-100 hover:bg-zinc-800 border-zinc-800 border text-xs h-9 px-3 hover:border-rose-500/30 transition-colors"
               onClick={fetchSubmissions}
             >
               Refresh
@@ -199,9 +199,9 @@ export default function AdminDashboardPage() {
 
           {/* Column: In Progress */}
           <div className="space-y-4">
-            <div className="flex items-center justify-between text-sm font-medium text-blue-400 mb-4 px-2">
+            <div className="flex items-center justify-between text-sm font-medium text-rose-400 mb-4 px-2">
               <span>IN PROGRESS</span>
-              <span className="bg-blue-900/30 text-blue-400 px-2 py-0.5 rounded-full">{inProgress.length}</span>
+              <span className="bg-rose-900/30 text-rose-400 px-2 py-0.5 rounded-full">{inProgress.length}</span>
             </div>
             {inProgress.length === 0 ? (
               <div className="h-32 border border-dashed border-zinc-800 rounded-xl flex items-center justify-center text-zinc-600 text-sm">
@@ -336,7 +336,7 @@ function SubmissionCard({ submission, onStatusUpdate, onDelete, onViewDetails, n
       
       {(submission.concept || submission.projectType || submission.stylePreference) && (
         <div className="flex flex-wrap gap-1.5 mb-3">
-          {submission.concept && <span className="bg-blue-500/10 text-blue-400 text-[10px] uppercase font-bold px-2 py-0.5 rounded-full border border-blue-500/20">{submission.concept}</span>}
+          {submission.concept && <span className="bg-rose-500/10 text-rose-400 text-[10px] uppercase font-bold px-2 py-0.5 rounded-full border border-rose-500/20">{submission.concept}</span>}
           {submission.projectType && <span className="bg-emerald-500/10 text-emerald-400 text-[10px] uppercase font-bold px-2 py-0.5 rounded-full border border-emerald-500/20">{submission.projectType}</span>}
           {submission.stylePreference && <span className="bg-amber-500/10 text-amber-500 text-[10px] uppercase font-bold px-2 py-0.5 rounded-full border border-amber-500/20">{submission.stylePreference}</span>}
         </div>
