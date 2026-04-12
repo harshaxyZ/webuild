@@ -4,8 +4,8 @@ import { motion, useScroll, useTransform, useSpring, useReducedMotion } from "fr
 import { useRef, useEffect, useState } from "react";
 import { Button } from "@/components/ui/button";
 
-const EASE_OUT = [0.25, 1, 0.5, 1]; // Smooth easeOut
-const PREMIUM_EASE = [0.16, 1, 0.3, 1];
+const EASE_OUT = [0.25, 1, 0.5, 1] as const; // Smooth easeOut
+const PREMIUM_EASE = [0.16, 1, 0.3, 1] as const;
 
 /* ─── Floating stat cards ─── */
 const floatingCards = [

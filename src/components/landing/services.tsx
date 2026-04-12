@@ -3,7 +3,9 @@
 import { motion } from "framer-motion";
 import { Layout, Zap, Shield, Check } from "lucide-react";
 
-const containerVariants = {
+import { Variants } from "framer-motion";
+
+const containerVariants: Variants = {
   hidden: { opacity: 0 },
   visible: {
     opacity: 1,
@@ -13,7 +15,7 @@ const containerVariants = {
   },
 };
 
-const itemVariants = {
+const itemVariants: Variants = {
   hidden: { opacity: 0, y: 40 },
   visible: { 
     opacity: 1, 
