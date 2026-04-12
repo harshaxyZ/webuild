@@ -81,13 +81,12 @@ export function HeroCinematic({ onBookClick }: { onBookClick: () => void }) {
           <img
             src="/hero-cinematic.webp"
             alt="Hero Background"
-            className="w-full h-full object-cover opacity-90"
+            className="w-full h-full object-cover"
             loading="eager"
             fetchPriority="high"
           />
-          {/* Layered cinematic gradient for ultimate depth */}
-          <div className="absolute inset-0 bg-gradient-to-b from-black/50 via-zinc-950/20 to-zinc-950" />
-          <div className="absolute inset-0 bg-[radial-gradient(ellipse_at_top,_var(--tw-gradient-stops))] from-rose-900/10 via-transparent to-transparent" />
+          {/* Subtle gradient just enough for text readability, avoiding dullness */}
+          <div className="absolute inset-0 bg-gradient-to-b from-black/20 via-transparent to-black/40" />
         </motion.div>
 
         {/* ─── L2: Mid-layer Elements (moves up slowly) ─── */}
