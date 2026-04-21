@@ -88,7 +88,7 @@ export default function Home() {
           </section>
           <Footer />
         </div>
-      </motion.main>
+      </main>
 
       <BookingOverlay 
         isOpen={isBookingOpen} 
