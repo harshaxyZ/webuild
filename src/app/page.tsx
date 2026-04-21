@@ -8,7 +8,6 @@ import { Services } from "@/components/landing/services";
 import { ProcessSticky } from "@/components/landing/process-sticky";
 import { Footer } from "@/components/footer";
 import { ZenithSpinner } from "@/components/ui/zenith-spinner";
-import { ReactiveBackground } from "@/components/ui/reactive-background";
 import { BookingOverlay } from "@/components/booking/booking-overlay";
 import { ContactMenu } from "@/components/ui/contact-menu";
 import { Button } from "@/components/ui/button";
@@ -45,15 +44,10 @@ export default function Home() {
 
   return (
     <div className="flex flex-col min-h-screen relative bg-[#fbfbfd]">
-      <ReactiveBackground />
       <LoadingScreen />
       <Navbar onBookClick={openBooking} />
       
-      <motion.main 
-        animate={{ x: isBookingOpen ? "-10vw" : 0, filter: isBookingOpen ? "blur(20px)" : "blur(0px)" }}
-        transition={{ duration: 0.8, ease: [0.16, 1, 0.3, 1] }}
-        className="flex-1 flex flex-col relative"
-      >
+      <main className="flex-1 flex flex-col relative">
         <HeroCinematic onBookClick={openBooking} />
         <div className="relative z-20 overflow-hidden bg-white">
           <Services />

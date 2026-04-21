@@ -9,6 +9,11 @@ import { useEffect, useState, useCallback } from "react";
 import { useRouter } from "next/navigation";
 import { getFirestore, collection, query, orderBy, onSnapshot, limit } from "firebase/firestore";
 import { app } from "@/lib/firebase";
+import { checkIsAdmin } from "@/lib/auth-utils";
+import { createUserWithEmailAndPassword } from "firebase/auth";
+import { doc, setDoc } from "firebase/firestore";
+import { db as firebaseDb } from "@/lib/firebase";
+import { Lock, Plus, ShieldCheck, Mail, Key } from "lucide-react";
 
 type Submission = {
   id: string;
@@ -31,6 +36,12 @@ export default function AdminDashboardPage() {
   const [submissions, setSubmissions] = useState<Submission[]>([]);
   const [selectedLead, setSelectedLead] = useState<Submission | null>(null);
   const [isDemoMode, setIsDemoMode] = useState(false);
+  const [activeTab, setActiveTab] = useState<"dashboard" | "users">("dashboard");
+  const [adminEmail, setAdminEmail] = useState("");
+  const [adminPassword, setAdminPassword] = useState("");
+  const [isAddingAdmin, setIsAddingAdmin] = useState(false);
+  const [adminSuccess, setAdminSuccess] = useState("");
+  const [adminError, setAdminError] = useState("");
 
   const fetchSubmissions = useCallback(async () => {
     try {
@@ -50,12 +61,22 @@ export default function AdminDashboardPage() {
       setLoading(false);
       return;
     }
-    const unsubscribe = onAuthStateChanged(auth, (u) => {
+    const unsubscribe = onAuthStateChanged(auth, async (u) => {
       if (!u) {
         router.push("/admin/login");
-      } else {
-        setUser(u);
+        setLoading(false);
+        return;
       }
+
+      const isAdmin = await checkIsAdmin(u.email);
+      if (!isAdmin) {
+        await signOut(auth);
+        router.push("/");
+        setLoading(false);
+        return;
+      }
+
+      setUser(u);
       setLoading(false);
     });
     return () => unsubscribe();
@@ -111,6 +132,55 @@ export default function AdminDashboardPage() {
     }
   };
 
+  const handleAddAdmin = async (e: React.FormEvent) => {
+    e.preventDefault();
+    if (!adminEmail || !adminPassword) return;
+    if (adminPassword.length < 6) {
+      setAdminError("Password must be at least 6 characters.");
+      return;
+    }
+    
+    setIsAddingAdmin(true);
+    setAdminError("");
+    setAdminSuccess("");
+    
+    try {
+      if (!firebaseDb || !auth) throw new Error("Firebase not initialized");
+
+      // To create a user WITHOUT signing out the current user, we'd ideally use a Cloud Function.
+      // But since we want to "keep it simple", we will add them to the whitelist first.
+      // If the requirement strictly needs Auth user creation NOW, we can use a secondary app instance.
+      
+      const { initializeApp: initSecondary, getApp: getSecondary } = await import("firebase/app");
+      const { getAuth: getAuthSecondary, createUserWithEmailAndPassword: createSecondary } = await import("firebase/auth");
+      
+      let secondaryApp;
+      try {
+        secondaryApp = getSecondary("secondary");
+      } catch (e) {
+        secondaryApp = initSecondary(app!.options, "secondary");
+      }
+      
+      const secondaryAuth = getAuthSecondary(secondaryApp);
+      await createSecondary(secondaryAuth, adminEmail, adminPassword);
+
+      // Add to Firestore whitelist
+      await setDoc(doc(firebaseDb, "admins", adminEmail.toLowerCase()), {
+        email: adminEmail.toLowerCase(),
+        addedBy: user?.email,
+        createdAt: new Date().toISOString()
+      });
+
+      setAdminSuccess(`Admin ${adminEmail} created and added to whitelist.`);
+      setAdminEmail("");
+      setAdminPassword("");
+    } catch (err: any) {
+      setAdminError(err.message || "Failed to add admin.");
+    } finally {
+      setIsAddingAdmin(false);
+    }
+  };
+
   if (loading) return null;
   if (!user) return null;
 
@@ -124,14 +194,19 @@ export default function AdminDashboardPage() {
       <aside className="w-64 border-r border-zinc-900 bg-zinc-950 p-6 hidden md:flex flex-col h-screen sticky top-0">
         <div className="text-xl font-bold tracking-tight mb-12 text-rose-500">we build admin</div>
         <nav className="space-y-2 flex-1">
-          <Button variant="ghost" className="w-full justify-start text-white bg-zinc-900">
+          <Button 
+            variant="ghost" 
+            className={`w-full justify-start ${activeTab === 'dashboard' ? 'text-white bg-zinc-900' : 'text-zinc-400 hover:text-white hover:bg-zinc-900'}`}
+            onClick={() => setActiveTab('dashboard')}
+          >
             <Search className="w-4 h-4 mr-3" /> Dashboard
           </Button>
-          <Button variant="ghost" className="w-full justify-start text-zinc-400 hover:text-white hover:bg-zinc-900">
-            <FileText className="w-4 h-4 mr-3" /> Submissions
-          </Button>
-          <Button variant="ghost" className="w-full justify-start text-zinc-400 hover:text-white hover:bg-zinc-900">
-            <Users className="w-4 h-4 mr-3" /> Users
+          <Button 
+            variant="ghost" 
+            className={`w-full justify-start ${activeTab === 'users' ? 'text-white bg-zinc-900' : 'text-zinc-400 hover:text-white hover:bg-zinc-900'}`}
+            onClick={() => setActiveTab('users')}
+          >
+            <Users className="w-4 h-4 mr-3" /> Admin Management
           </Button>
         </nav>
         <div className="mt-auto">
@@ -154,90 +229,133 @@ export default function AdminDashboardPage() {
 
       {/* Admin Content */}
       <main className="flex-1 p-6 md:p-12 pb-24 md:pb-12 overflow-y-auto overflow-x-hidden">
-        <header className="flex items-center justify-between mb-8 md:mb-12">
-          <div>
-             <h1 className="text-2xl md:text-3xl font-bold">Pipeline</h1>
-             <p className="text-zinc-500 text-xs mt-1 md:hidden text-rose-500/80">Track your leads</p>
-          </div>
-          <div className="flex items-center gap-2">
-            <Button 
-              variant="secondary" 
-              size="sm"
-              className="bg-zinc-900 text-zinc-100 hover:bg-zinc-800 border-zinc-800 border text-xs h-9 px-3 hover:border-rose-500/30 transition-colors"
-              onClick={fetchSubmissions}
-            >
-              Refresh
-            </Button>
-            <Button 
-              variant="ghost" 
-              size="sm"
-              className="md:hidden text-zinc-400 hover:text-white"
-              onClick={handleLogout}
-            >
-              Logout
-            </Button>
-          </div>
-        </header>
-
-        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-          {/* Column: Submitted */}
-          <div className="space-y-4">
-            <div className="flex items-center justify-between text-sm font-medium text-zinc-400 mb-4 px-2">
-              <span>SUBMITTED</span>
-              <span className="bg-zinc-900 px-2 py-0.5 rounded-full">{submitted.length}</span>
-            </div>
-            {submitted.length === 0 ? (
-              <div className="h-32 border border-dashed border-zinc-800 rounded-xl flex items-center justify-center text-zinc-600 text-sm">
-                No new submissions
+        {activeTab === "dashboard" ? (
+          <>
+            <header className="flex items-center justify-between mb-8 md:mb-12">
+              <div>
+                 <h1 className="text-2xl md:text-3xl font-bold">Pipeline</h1>
+                 <p className="text-zinc-500 text-xs mt-1 md:hidden text-rose-500/80">Track your leads</p>
               </div>
-            ) : (
-              submitted.map((s) => (
-                <SubmissionCard key={s.id} submission={s} onStatusUpdate={handleStatusUpdate} onDelete={handleDelete} onViewDetails={() => setSelectedLead(s)} nextStatus="IN_PROGRESS" />
-              ))
-            )}
-          </div>
-
-          {/* Column: In Progress */}
-          <div className="space-y-4">
-            <div className="flex items-center justify-between text-sm font-medium text-rose-400 mb-4 px-2">
-              <span>IN PROGRESS</span>
-              <span className="bg-rose-900/30 text-rose-400 px-2 py-0.5 rounded-full">{inProgress.length}</span>
-            </div>
-            {inProgress.length === 0 ? (
-              <div className="h-32 border border-dashed border-zinc-800 rounded-xl flex items-center justify-center text-zinc-600 text-sm">
-                No active builds
+              <div className="flex items-center gap-2">
+                <Button 
+                  variant="secondary" 
+                  size="sm"
+                  className="bg-zinc-900 text-zinc-100 hover:bg-zinc-800 border-zinc-800 border text-xs h-9 px-3 hover:border-rose-500/30 transition-colors"
+                  onClick={fetchSubmissions}
+                >
+                  Refresh
+                </Button>
+                <Button 
+                  variant="ghost" 
+                  size="sm"
+                  className="md:hidden text-zinc-400 hover:text-white"
+                  onClick={handleLogout}
+                >
+                  Logout
+                </Button>
               </div>
-            ) : (
-              inProgress.map((s) => (
-                <SubmissionCard key={s.id} submission={s} onStatusUpdate={handleStatusUpdate} onDelete={handleDelete} onViewDetails={() => setSelectedLead(s)} nextStatus="DEMO_READY" />
-              ))
-            )}
-          </div>
+            </header>
 
-          {/* Column: Demo Ready */}
-          <div className="space-y-4">
-            <div className="flex items-center justify-between text-sm font-medium text-purple-400 mb-4 px-2">
-              <span>DEMO READY</span>
-              <span className="bg-purple-900/30 text-purple-400 px-2 py-0.5 rounded-full">{demoReady.length}</span>
-            </div>
-            {demoReady.length === 0 ? (
-              <div className="h-32 border border-dashed border-zinc-800 rounded-xl flex items-center justify-center text-zinc-600 text-sm">
-                No demos waiting
+          </>
+        ) : (
+          <div className="max-w-4xl">
+            <header className="mb-12">
+              <h1 className="text-3xl font-bold mb-2">Admin Management</h1>
+              <p className="text-zinc-500">Add and manage authorized system administrators.</p>
+            </header>
+
+            <div className="grid grid-cols-1 lg:grid-cols-2 gap-12">
+              {/* Add Admin Form */}
+              <div className="bg-zinc-900/50 border border-zinc-800 rounded-3xl p-8 backdrop-blur-xl">
+                <div className="flex items-center gap-4 mb-8">
+                  <div className="w-12 h-12 bg-rose-500/10 rounded-2xl flex items-center justify-center text-rose-500">
+                    <Plus size={24} />
+                  </div>
+                  <div>
+                    <h2 className="text-xl font-bold">Add New Admin</h2>
+                    <p className="text-zinc-500 text-sm">Create a new authorized account.</p>
+                  </div>
+                </div>
+
+                <form onSubmit={handleAddAdmin} className="space-y-6">
+                  <div className="space-y-2">
+                    <label className="text-sm font-medium text-zinc-400 flex items-center gap-2">
+                      <Mail size={14} /> Email Address
+                    </label>
+                    <input 
+                      type="email"
+                      required
+                      placeholder="email@example.com"
+                      className="w-full h-12 bg-zinc-950 border border-zinc-800 rounded-xl px-4 focus:outline-none focus:ring-2 focus:ring-rose-500 transition-all text-white"
+                      value={adminEmail}
+                      onChange={(e) => setAdminEmail(e.target.value)}
+                    />
+                  </div>
+
+                  <div className="space-y-2">
+                    <label className="text-sm font-medium text-zinc-400 flex items-center gap-2">
+                      <Key size={14} /> temporary Password
+                    </label>
+                    <input 
+                      type="password"
+                      required
+                      placeholder="••••••••"
+                      className="w-full h-12 bg-zinc-950 border border-zinc-800 rounded-xl px-4 focus:outline-none focus:ring-2 focus:ring-rose-500 transition-all text-white"
+                      value={adminPassword}
+                      onChange={(e) => setAdminPassword(e.target.value)}
+                    />
+                    <p className="text-[10px] text-zinc-500 italic">User will need to use this to log in.</p>
+                  </div>
+
+                  {adminError && (
+                    <div className="p-4 bg-rose-500/10 border border-rose-500/20 text-rose-500 text-xs rounded-xl">
+                      {adminError}
+                    </div>
+                  )}
+
+                  {adminSuccess && (
+                     <div className="p-4 bg-emerald-500/10 border border-emerald-500/20 text-emerald-500 text-xs rounded-xl flex items-center gap-3">
+                        <ShieldCheck size={16} />
+                        {adminSuccess}
+                     </div>
+                  )}
+
+                  <Button 
+                    type="submit" 
+                    className="w-full h-14 bg-rose-600 hover:bg-rose-500 text-white font-bold rounded-xl shadow-lg shadow-rose-500/20"
+                    disabled={isAddingAdmin}
+                  >
+                    {isAddingAdmin ? "Adding Admin..." : "Add Admin Access"}
+                  </Button>
+                </form>
               </div>
-            ) : (
-              demoReady.map((s) => (
-                <SubmissionCard 
-                  key={s.id} 
-                  submission={s} 
-                  onStatusUpdate={handleStatusUpdate} 
-                  onDelete={handleDelete} 
-                  onViewDetails={() => setSelectedLead(s)}
-                  nextStatus="COMPLETED" 
-                />
-              ))
-            )}
+
+              {/* Status/Security Info */}
+              <div className="space-y-6">
+                <div className="p-8 bg-zinc-900/30 border border-zinc-800 rounded-3xl">
+                  <h3 className="text-lg font-bold mb-4 flex items-center gap-2">
+                    <ShieldCheck size={20} className="text-emerald-500" />
+                    Security Protocol
+                  </h3>
+                  <ul className="space-y-4 text-sm text-zinc-400">
+                    <li className="flex gap-3">
+                      <div className="w-1.5 h-1.5 bg-rose-500 rounded-full mt-1.5 shrink-0" />
+                      Only members of the whitelist can access this panel.
+                    </li>
+                    <li className="flex gap-3">
+                      <div className="w-1.5 h-1.5 bg-rose-500 rounded-full mt-1.5 shrink-0" />
+                      harsha210108@gmail.com is hardcoded as Super Admin.
+                    </li>
+                    <li className="flex gap-3">
+                      <div className="w-1.5 h-1.5 bg-rose-500 rounded-full mt-1.5 shrink-0" />
+                      Unauthorized attempts are automatically redirected to home.
+                    </li>
+                  </ul>
+                </div>
+              </div>
+            </div>
           </div>
-        </div>
+        )}
 
         {/* DETAILS MODAL */}
         <AnimatePresence>

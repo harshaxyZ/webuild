@@ -102,29 +102,9 @@
   }
 }
 
-/* ── Cinematic Hero Animations ── */
-@keyframes floatSlow {
-  0%, 100% { transform: translateY(0) translateX(0); }
-  25% { transform: translateY(-15px) translateX(5px); }
-  50% { transform: translateY(-8px) translateX(-3px); }
-  75% { transform: translateY(-20px) translateX(2px); }
-}
-@keyframes floatMedium {
-  0%, 100% { transform: translateY(0) translateX(0); }
-  33% { transform: translateY(-12px) translateX(-8px); }
-  66% { transform: translateY(-6px) translateX(6px); }
-}
-@keyframes floatFast {
-  0%, 100% { transform: translateY(0); }
-  50% { transform: translateY(-18px); }
-}
-
-.animate-float-slow {
-  animation: floatSlow 6s ease-in-out infinite;
-}
-.animate-float-medium {
-  animation: floatMedium 4.5s ease-in-out infinite;
-}
-.animate-float-fast {
-  animation: floatFast 3s ease-in-out infinite;
+/* ── Custom Utilities ── */
+.glass {
+  background: rgba(255, 255, 255, 0.7);
+  backdrop-filter: blur(20px);
+  border: 1px solid rgba(255, 255, 255, 0.1);
 }

@@ -6,7 +6,8 @@ import { motion } from "framer-motion";
 import { Button } from "@/components/ui/button";
 import { useRouter } from "next/navigation";
 import { auth } from "@/lib/firebase";
-import { signInWithEmailAndPassword } from "firebase/auth";
+import { signInWithEmailAndPassword, signOut } from "firebase/auth";
+import { checkIsAdmin } from "@/lib/auth-utils";
 import { ZenithSpinner } from "@/components/ui/zenith-spinner";
 import { Lock } from "lucide-react";
 
@@ -27,11 +28,23 @@ export default function AdminLoginPage() {
         router.push("/admin");
         return;
       }
-      // For now, any firebase user can log in, but in a real app we'd check claims or a list of admin emails
-      await signInWithEmailAndPassword(auth, email, password);
+      
+      const userCredential = await signInWithEmailAndPassword(auth, email, password);
+      const isAdmin = await checkIsAdmin(userCredential.user.email);
+
+      if (!isAdmin) {
+        await signOut(auth);
+        setError("Not authorized. Access denied.");
+        return;
+      }
+
       router.push("/admin");
     } catch (err: any) {
-      setError(err.message || "Failed to log in.");
+      if (err.code === "auth/user-not-found" || err.code === "auth/wrong-password") {
+        setError("Invalid credentials.");
+      } else {
+        setError(err.message || "Failed to log in.");
+      }
     } finally {
       setLoading(false);
     }
