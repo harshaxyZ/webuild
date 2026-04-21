@@ -70,7 +70,7 @@ export default function AdminDashboardPage() {
 
       const isAdmin = await checkIsAdmin(u.email);
       if (!isAdmin) {
-        await signOut(auth);
+        await signOut(auth!);
         router.push("/");
         setLoading(false);
         return;
