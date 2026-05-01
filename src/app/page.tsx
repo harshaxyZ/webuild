@@ -49,7 +49,7 @@ export default function Home() {
       
       <main className="flex-1 flex flex-col relative">
         <HeroCinematic onBookClick={openBooking} />
-        <div className="relative z-20 overflow-hidden bg-white">
+        <div className="relative z-20 overflow-hidden bg-white -mt-1">
           <Services />
           <DepthSection />
           <ProcessSticky />

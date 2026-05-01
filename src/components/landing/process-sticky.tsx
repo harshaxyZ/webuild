@@ -84,14 +84,16 @@ export function ProcessSticky() {
   }, [scrollYProgress]);
 
   return (
-    <section id="process" ref={containerRef} className="relative h-[500vh] bg-white">
+    <section id="process" ref={containerRef} className="relative h-[500vh] bg-white overflow-hidden">
       <div className="sticky top-0 h-screen flex items-center overflow-hidden">
-        {/* Soft background glow changing based on step */}
-        <div className="absolute inset-0 bg-gradient-to-b from-white via-[#fcfcfc] to-[#fafafa] pointer-events-none" />
+        {/* Soft background glow and grid */}
+        <div className="absolute inset-0 bg-[radial-gradient(#e5e7eb_1px,transparent_1px)] [background-size:40px_40px] [mask-image:radial-gradient(ellipse_50%_50%_at_50%_50%,#000_70%,transparent_100%)] opacity-20 pointer-events-none" />
+        <div className="absolute inset-0 bg-gradient-to-b from-white via-[#f8f8f8] to-white pointer-events-none" />
+        
         <motion.div 
-          animate={{ opacity: [0.1, 0.2, 0.1] }}
-          transition={{ repeat: Infinity, duration: 4, ease: "easeInOut" }}
-          className="absolute inset-x-0 bottom-0 h-1/2 bg-[radial-gradient(ellipse_at_bottom,_var(--tw-gradient-stops))] from-rose-100/50 via-transparent to-transparent pointer-events-none" 
+          animate={{ opacity: [0.05, 0.1, 0.05] }}
+          transition={{ repeat: Infinity, duration: 6, ease: "easeInOut" }}
+          className="absolute inset-x-0 bottom-0 h-full bg-[radial-gradient(circle_at_50%_120%,_var(--tw-gradient-stops))] from-rose-100/30 via-transparent to-transparent pointer-events-none" 
         />
         
         <div className="container mx-auto px-6 grid grid-cols-1 md:grid-cols-2 gap-12 items-center relative z-10">

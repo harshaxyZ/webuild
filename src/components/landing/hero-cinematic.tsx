@@ -7,59 +7,73 @@ const PREMIUM_EASE = [0.16, 1, 0.3, 1] as const;
 
 export function HeroCinematic({ onBookClick }: { onBookClick: () => void }) {
   return (
-    <section className="relative w-full h-[90vh] min-h-[600px] bg-[#fbfbfd] overflow-hidden flex items-center justify-center">
+    <section className="relative w-full min-h-screen bg-[#fbfbfd] overflow-hidden flex flex-col pt-32 pb-20">
       {/* ── BACKGROUND IMAGE ── */}
-      <div className="absolute inset-0 w-full h-full">
+      <div className="absolute inset-0 w-full h-full pointer-events-none">
         <img
-          src="/hero-cinematic.webp"
+          src="/new-hero.png"
           alt="Hero Background"
-          className="w-full h-full object-cover object-center"
+          className="w-full h-full object-cover object-[center_top]"
           loading="eager"
           fetchPriority="high"
         />
-        {/* Subtle overlay for readability, keeping image bright */}
-        <div className="absolute inset-0 bg-gradient-to-b from-black/20 via-black/5 to-black/30" />
+        {/* Subtle overlay for better contrast if needed */}
+        <div className="absolute inset-0 bg-white/10" />
       </div>
 
-      {/* ── HEADLINE & TEXT ── */}
-      <div className="relative z-30 flex flex-col items-center justify-center">
-        <div className="text-center px-6 max-w-[1000px] mx-auto">
+      {/* ── CONTENT ── */}
+      <div className="relative z-30 container mx-auto px-6 md:px-12 flex-1 flex flex-col justify-center">
+        <div className="max-w-[1000px]">
+          {/* Status Badge */}
+          <motion.div
+            initial={{ opacity: 0, y: 10 }}
+            animate={{ opacity: 1, y: 0 }}
+            transition={{ duration: 0.8, delay: 0.2, ease: PREMIUM_EASE }}
+            className="inline-flex items-center gap-2.5 px-4 py-2 rounded-full bg-white/80 backdrop-blur-md border border-white/40 shadow-sm mb-12"
+          >
+            <div className="w-2.5 h-2.5 rounded-full bg-emerald-500 animate-pulse" />
+            <span className="text-[13px] font-semibold text-zinc-800 tracking-tight">Now accepting new projects</span>
+          </motion.div>
+
           <motion.h1
             initial={{ opacity: 0, y: 30 }}
             animate={{ opacity: 1, y: 0 }}
-            transition={{ duration: 1.2, delay: 0.2, ease: PREMIUM_EASE }}
-            className="text-[3.5rem] sm:text-6xl md:text-8xl lg:text-[7.5rem] tracking-tight text-white mb-6 leading-[1.05] font-heading"
-            style={{
-              textShadow: "0 10px 40px rgba(0,0,0,0.4), 0 2px 10px rgba(0,0,0,0.2)",
-              fontWeight: 500,
-              fontStyle: "italic"
-            }}
+            transition={{ duration: 1.2, delay: 0.3, ease: PREMIUM_EASE }}
+            className="text-[3.5rem] sm:text-6xl md:text-8xl lg:text-[7.5rem] tracking-tight text-zinc-950 mb-8 leading-[0.95] font-black"
           >
-            The Lost Art of<br />
-            Digital Dough.
+            We build websites<br />
+            that get you <span className="text-[#e94e77]">clients.</span>
           </motion.h1>
 
           <motion.p
             initial={{ opacity: 0, y: 20 }}
             animate={{ opacity: 1, y: 0 }}
-            transition={{ duration: 1, delay: 0.4, ease: PREMIUM_EASE }}
-            className="text-base sm:text-lg md:text-xl text-white/90 max-w-md md:max-w-xl mx-auto font-sans font-medium leading-relaxed mb-10 shadow-sm"
-            style={{ textShadow: "0 2px 10px rgba(0,0,0,0.6)" }}
+            transition={{ duration: 1, delay: 0.5, ease: PREMIUM_EASE }}
+            className="text-lg md:text-2xl text-zinc-600 max-w-2xl font-medium leading-relaxed mb-12"
           >
-            High-end web experiences crafted for brands who command authority. Elevate your presence deeply.
+            Premium websites for any Indian business.<br className="hidden md:block" />
+            Free working demo in 48 hours.
           </motion.p>
 
+          {/* Features */}
           <motion.div
             initial={{ opacity: 0, y: 20 }}
             animate={{ opacity: 1, y: 0 }}
-            transition={{ duration: 0.8, delay: 0.6, ease: PREMIUM_EASE }}
+            transition={{ duration: 0.8, delay: 0.7, ease: PREMIUM_EASE }}
+            className="flex flex-wrap gap-8 md:gap-12 mb-12"
           >
-            <Button
-              onClick={onBookClick}
-              className="h-14 sm:h-16 px-10 md:px-14 text-base md:text-lg font-sans font-semibold rounded-full bg-zinc-950 text-white hover:bg-zinc-800 hover:scale-[1.03] shadow-[0_10px_30px_rgba(0,0,0,0.3)] active:scale-[0.98] transition-all duration-300"
-            >
-              Apply for a Tour
-            </Button>
+            <div className="flex items-center gap-3">
+              <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="#18181b" strokeWidth="3" strokeLinecap="round" strokeLinejoin="round">
+                <polyline points="20 6 9 17 4 12"></polyline>
+              </svg>
+              <span className="text-lg font-bold text-zinc-900">Free demo in 48h</span>
+            </div>
+            <div className="flex items-center gap-3">
+              <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="#18181b" strokeWidth="3" strokeLinecap="round" strokeLinejoin="round">
+                <polyline points="20 6 9 17 4 12"></polyline>
+              </svg>
+              <span className="text-lg font-bold text-zinc-900">No upfront payment required</span>
+            </div>
           </motion.div>
         </div>
       </div>
