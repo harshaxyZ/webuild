@@ -61,7 +61,7 @@ export function HeroCinematic({ onBookClick }: { onBookClick: () => void }) {
               className="text-[clamp(2rem,6vw,7.5rem)] tracking-tight text-white mb-8 leading-[1.1] md:leading-[0.95] font-black"
             >
               We build websites<br />
-              that get you <span className="text-rose-500">clients.</span>
+              that get you <span className="text-rose-500 font-playfair italic font-medium">customers.</span>
             </motion.h1>
 
             <motion.p

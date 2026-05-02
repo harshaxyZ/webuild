@@ -16,7 +16,6 @@ export function Navbar({ onBookClick }: { onBookClick?: () => void }) {
         {/* Left: Brand */}
         <Link href="/" className="group flex items-center gap-0">
           <span className="text-xl md:text-2xl font-black tracking-tighter text-white">we build</span>
-          <span className="w-1.5 h-1.5 rounded-full bg-rose-500 ml-1 mt-1.5"></span>
         </Link>
  
         {/* Right: Navigation & CTA */}

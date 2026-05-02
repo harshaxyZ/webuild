@@ -334,7 +334,7 @@ export function MultiStepForm() {
               {currentStep === 0 && (
                 <div className="space-y-4">
                   <h3 className="text-2xl md:text-3xl font-bold tracking-tight text-white mb-6">What do you want to build?</h3>
-                  <div className="grid grid-cols-1 md:grid-cols-2 gap-3">
+                  <div className="grid grid-cols-2 gap-2 md:gap-3">
                     {conceptOptions.map(opt => {
                       const Icon = opt.icon;
                       const isSelected = formData.concept === opt.id;
@@ -345,14 +345,14 @@ export function MultiStepForm() {
                              handleInputChange("concept", opt.id);
                              handleInputChange("projectType", "");
                           }}
-                          className={`cursor-pointer p-6 rounded-[2rem] border-2 transition-all flex items-start gap-5 ${isSelected ? 'border-rose-500 bg-rose-500/5 shadow-[0_0_40px_-10px_rgba(244,63,94,0.2)]' : 'border-white/5 bg-white/5 hover:border-white/10 hover:bg-white/[0.07]'}`}
+                          className={`cursor-pointer p-4 md:p-6 rounded-[1.5rem] md:rounded-[2rem] border-2 transition-all flex flex-col md:flex-row items-start md:items-center gap-3 md:gap-5 ${isSelected ? 'border-rose-500 bg-rose-500/5 shadow-[0_0_40px_-10px_rgba(244,63,94,0.2)]' : 'border-white/5 bg-white/5 hover:border-white/10 hover:bg-white/[0.07]'}`}
                         >
-                           <div className={`p-4 rounded-2xl flex-shrink-0 transition-colors ${isSelected ? 'bg-rose-500 text-white' : 'bg-white/5 text-zinc-400'}`}>
-                              <Icon size={28} />
+                           <div className={`p-3 md:p-4 rounded-xl md:rounded-2xl flex-shrink-0 transition-colors ${isSelected ? 'bg-rose-500 text-white' : 'bg-white/5 text-zinc-400'}`}>
+                              <Icon className="w-5 h-5 md:w-7 md:h-7" />
                            </div>
                            <div className="flex-1">
-                             <h4 className={`font-bold text-lg ${isSelected ? 'text-white' : 'text-zinc-300'}`}>{opt.id}</h4>
-                             <p className="text-xs text-zinc-500 mt-1 leading-relaxed">{opt.desc}</p>
+                             <h4 className={`font-bold text-sm md:text-lg ${isSelected ? 'text-white' : 'text-zinc-300'}`}>{opt.id}</h4>
+                             <p className="text-[10px] md:text-xs text-zinc-500 mt-1 leading-relaxed hidden md:block">{opt.desc}</p>
                            </div>
                         </div>
                       )
@@ -366,14 +366,14 @@ export function MultiStepForm() {
               {currentStep === 1 && (
                 <div className="space-y-4">
                   <h3 className="text-xl md:text-3xl font-bold tracking-tight text-white mb-6">Select {formData.concept} Type</h3>
-                  <div className="flex flex-wrap gap-2 md:gap-3">
+                  <div className="grid grid-cols-2 md:flex md:flex-wrap gap-2 md:gap-3">
                     {getDynamicTypes().map(type => {
                        const isSelected = formData.projectType === type;
                        return (
                          <button
                            key={type}
                            onClick={() => handleInputChange("projectType", type)}
-                           className={`flex-1 min-w-[140px] md:flex-none px-4 md:px-6 py-3 md:py-4 rounded-xl md:rounded-2xl border-2 font-semibold transition-all text-xs md:text-sm ${isSelected ? 'border-rose-500 bg-rose-500 text-white shadow-lg shadow-rose-500/20' : 'border-white/5 bg-white/5 text-zinc-400 hover:border-white/20 hover:text-white'}`}
+                           className={`w-full md:w-auto px-2 md:px-6 py-3 md:py-4 rounded-xl md:rounded-2xl border-2 font-semibold transition-all text-[11px] md:text-sm ${isSelected ? 'border-rose-500 bg-rose-500 text-white shadow-lg shadow-rose-500/20' : 'border-white/5 bg-white/5 text-zinc-400 hover:border-white/20 hover:text-white'}`}
                          >
                            {type}
                          </button>

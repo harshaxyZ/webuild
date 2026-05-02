@@ -61,6 +61,7 @@
   --radius-lg: var(--radius);
   --radius-xl: calc(var(--radius) + 4px);
   --font-sans: var(--font-sans);
+  --font-playfair: var(--font-playfair);
 }
 
 @layer base {
