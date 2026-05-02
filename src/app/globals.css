@@ -79,11 +79,11 @@
 
 @layer components {
   .section-padding {
-    @apply py-24 md:py-32 px-6;
+    @apply py-16 md:py-32 px-5 md:px-6;
   }
   
   .card-hover-glow {
-    @apply transition-all duration-300 hover:border-blue-500/50 hover:shadow-[0_0_30px_rgba(59,130,246,0.15)];
+    @apply transition-all duration-300 hover:border-rose-500/30 hover:shadow-[0_0_30px_rgba(244,63,94,0.1)];
   }
   
   .btn-pill {

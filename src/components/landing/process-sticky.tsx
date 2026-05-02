@@ -1,8 +1,7 @@
 "use client";
 
-import { motion, useScroll, useTransform, AnimatePresence } from "framer-motion";
-import { useRef, useState, useEffect } from "react";
-import { Search, PenTool, Layout, FileText, Palette, Send, MessageSquare, ShieldCheck, Sparkles } from "lucide-react";
+import { motion } from "framer-motion";
+import { Search, PenTool, Layout, FileText, Palette, MessageSquare, Sparkles } from "lucide-react";
 
 export function ProcessSticky() {
   const steps = [
@@ -44,19 +43,19 @@ export function ProcessSticky() {
   ];
 
   return (
-    <section id="how-it-works" className="section-padding bg-zinc-950 relative overflow-hidden">
-      <div className="container mx-auto max-w-5xl relative z-10 px-6">
-        <div className="mb-20 text-center">
+    <section id="how-it-works" className="py-16 md:py-32 px-5 md:px-6 bg-zinc-950 relative overflow-hidden">
+      <div className="container mx-auto max-w-5xl relative z-10">
+        <div className="mb-16 md:mb-20 text-center">
           <span className="inline-block px-4 py-1.5 rounded-full bg-white/5 border border-white/10 text-[10px] font-bold tracking-[0.2em] text-rose-500 uppercase mb-6">HOW IT WORKS</span>
-          <h2 className="text-4xl md:text-7xl font-black tracking-tight text-white mb-6">How we build your <br className="hidden md:block" /> demo in <span className="text-rose-500 italic">48 hours.</span></h2>
-          <p className="text-zinc-400 text-lg md:text-2xl font-medium">Simple. Transparent. Zero risk for you.</p>
+          <h2 className="text-[clamp(1.75rem,5vw,4.5rem)] md:text-7xl font-black tracking-tight text-white mb-6 leading-[1.1]">How we build your <br className="hidden md:block" /> demo in <span className="text-rose-500 italic">48 hours.</span></h2>
+          <p className="text-zinc-400 text-base md:text-2xl font-medium">Simple. Transparent. Zero risk for you.</p>
         </div>
 
         <div className="relative">
           {/* Vertical Line */}
           <div className="absolute left-4 md:left-1/2 top-0 bottom-0 w-px bg-gradient-to-b from-rose-500/50 via-zinc-800 to-transparent md:-translate-x-1/2" />
 
-          <div className="space-y-16">
+          <div className="space-y-12 md:space-y-16">
             {steps.map((step, idx) => (
               <motion.div
                 key={idx}
@@ -75,12 +74,12 @@ export function ProcessSticky() {
 
                 {/* Content Container */}
                 <div className={`w-full md:w-1/2 pl-12 md:pl-0 ${idx % 2 === 0 ? "md:pr-16" : "md:pl-16"}`}>
-                  <div className="p-8 md:p-10 rounded-[2.5rem] bg-white/5 border border-white/10 card-hover-glow group transition-all duration-500 hover:border-rose-500/30">
-                    <div className="w-12 h-12 rounded-2xl bg-rose-500/10 flex items-center justify-center text-rose-500 mb-6 group-hover:scale-110 transition-transform duration-500">
+                  <div className="p-6 md:p-10 rounded-[2rem] md:rounded-[2.5rem] bg-white/5 border border-white/10 card-hover-glow group transition-all duration-500 hover:border-rose-500/30">
+                    <div className="w-12 h-12 rounded-2xl bg-rose-500/10 flex items-center justify-center text-rose-500 mb-5 md:mb-6 group-hover:scale-110 transition-transform duration-500">
                       {step.icon}
                     </div>
-                    <h3 className="text-2xl md:text-3xl font-bold text-white mb-4 leading-tight">{step.title}</h3>
-                    <p className="text-zinc-400 text-base md:text-lg font-medium leading-relaxed">{step.desc}</p>
+                    <h3 className="text-xl md:text-3xl font-bold text-white mb-3 md:mb-4 leading-tight">{step.title}</h3>
+                    <p className="text-zinc-400 text-sm md:text-lg font-medium leading-relaxed">{step.desc}</p>
                   </div>
                 </div>
 

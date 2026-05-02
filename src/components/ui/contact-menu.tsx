@@ -21,7 +21,7 @@ export function ContactMenu() {
       id: "email",
       icon: Mail,
       label: "Email Us",
-      href: `mailto:${emailAddress}?subject=Inquiry from we build`,
+      href: `mailto:${emailAddress}?subject=Inquiry from we build website`,
       color: "bg-rose-500",
     },
   ];

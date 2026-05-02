@@ -5,6 +5,8 @@ import { Layout, Zap, Shield, Check } from "lucide-react";
 
 import { Variants } from "framer-motion";
 
+const PREMIUM_EASE = [0.16, 1, 0.3, 1] as const;
+
 const containerVariants: Variants = {
   hidden: { opacity: 0 },
   visible: {
@@ -47,17 +49,17 @@ export function Services() {
   ];
 
   return (
-    <section id="services" className="section-padding bg-zinc-950 relative">
+    <section id="services" className="py-16 md:py-32 px-5 md:px-6 bg-zinc-950 relative">
       <div className="container mx-auto max-w-7xl relative z-10">
         <motion.div
            initial={{ opacity: 0, y: 30 }}
            whileInView={{ opacity: 1, y: 0 }}
            viewport={{ once: true, margin: "-100px" }}
            transition={{ duration: 1, ease: PREMIUM_EASE }}
-           className="mb-20 text-center"
+           className="mb-16 md:mb-20 text-center"
         >
            <span className="inline-block px-4 py-1.5 rounded-full bg-white/5 border border-white/10 text-[10px] font-bold tracking-[0.2em] text-rose-500 uppercase mb-6">WHAT WE BUILD</span>
-           <h2 className="text-4xl md:text-7xl font-black tracking-tight text-white max-w-4xl mx-auto leading-[1.1]">
+           <h2 className="text-[clamp(1.75rem,5vw,4.5rem)] md:text-7xl font-black tracking-tight text-white max-w-4xl mx-auto leading-[1.1]">
              Everything your business <br className="hidden md:block" />
              needs to <span className="text-rose-500 italic">win online.</span>
            </h2>
@@ -68,22 +70,22 @@ export function Services() {
           initial="hidden"
           whileInView="visible"
           viewport={{ once: true, margin: "-100px" }}
-          className="grid grid-cols-1 md:grid-cols-3 gap-8"
+          className="grid grid-cols-1 md:grid-cols-3 gap-4 md:gap-8"
         >
           {services.map((service, idx) => (
             <motion.div
               key={idx}
               variants={itemVariants}
-              className="card-hover-glow group relative p-8 md:p-10 rounded-[2.5rem] bg-white/5 border border-white/10 overflow-hidden"
+              className="card-hover-glow group relative p-6 md:p-10 rounded-[2rem] md:rounded-[2.5rem] bg-white/5 border border-white/10 overflow-hidden"
             >
               <div className="relative z-10">
-                <div className="w-16 h-16 rounded-2xl bg-white/5 border border-white/10 flex items-center justify-center mb-10 group-hover:scale-110 group-hover:bg-rose-500/10 transition-all duration-500">
+                <div className="w-16 h-16 rounded-2xl bg-white/5 border border-white/10 flex items-center justify-center mb-8 md:mb-10 group-hover:scale-110 group-hover:bg-rose-500/10 transition-all duration-500">
                   {service.icon}
                 </div>
                 
                 <div className="mb-8">
-                   <h3 className="text-3xl font-bold tracking-tight text-white mb-4">{service.title}</h3>
-                   <p className="text-zinc-400 font-medium leading-relaxed">
+                   <h3 className="text-2xl md:text-3xl font-bold tracking-tight text-white mb-4">{service.title}</h3>
+                   <p className="text-zinc-400 font-medium leading-relaxed text-sm md:text-base">
                      {service.description}
                    </p>
                 </div>
@@ -92,7 +94,7 @@ export function Services() {
 
                 <ul className="space-y-4">
                    {service.features.map((feature, i) => (
-                     <li key={i} className="flex items-center gap-3 text-[15px] font-semibold text-zinc-300">
+                     <li key={i} className="flex items-center gap-3 text-[14px] md:text-[15px] font-semibold text-zinc-300">
                         <div className="w-5 h-5 rounded-full bg-rose-500/10 flex items-center justify-center flex-shrink-0">
                            <Check size={12} className="text-rose-500" />
                         </div>
@@ -108,5 +110,3 @@ export function Services() {
     </section>
   );
 }
-
-const PREMIUM_EASE = [0.16, 1, 0.3, 1] as const;

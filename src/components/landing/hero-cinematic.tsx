@@ -2,15 +2,15 @@
 
 import { motion } from "framer-motion";
 import { Button } from "@/components/ui/button";
-import FloatingLines from "./floating-lines";
+import FloatingLines from "@/components/floating-lines";
 
 const PREMIUM_EASE = [0.16, 1, 0.3, 1] as const;
 
 export function HeroCinematic({ onBookClick }: { onBookClick: () => void }) {
   return (
     <section className="relative w-full min-h-screen bg-zinc-950 overflow-hidden flex flex-col pt-32 pb-20">
-      {/* ── CINEMATIC BACKGROUND ── */}
-      <div className="absolute inset-0 z-0 pointer-events-none w-full h-full">
+      {/* ── FLOATING LINES BACKGROUND ── */}
+      <div className="absolute inset-0 w-full h-full" style={{ zIndex: 0 }}>
         <FloatingLines 
           enabledWaves={['top','middle','bottom']} 
           lineCount={8} 
@@ -25,7 +25,7 @@ export function HeroCinematic({ onBookClick }: { onBookClick: () => void }) {
       </div>
 
       {/* ── CONTENT ── */}
-      <div className="relative z-10 container mx-auto px-6 md:px-12 flex-1 flex flex-col justify-center">
+      <div className="relative container mx-auto px-5 md:px-12 flex-1 flex flex-col justify-center" style={{ zIndex: 10 }}>
         <div className="max-w-[1000px]">
           {/* Status Badge */}
           <motion.div
@@ -43,7 +43,7 @@ export function HeroCinematic({ onBookClick }: { onBookClick: () => void }) {
             initial={{ opacity: 0, y: 30 }}
             animate={{ opacity: 1, y: 0 }}
             transition={{ duration: 1.2, delay: 0.3, ease: PREMIUM_EASE }}
-            className="text-[2.25rem] sm:text-6xl md:text-8xl lg:text-[7.5rem] tracking-tight text-white mb-8 leading-[1.1] md:leading-[0.95] font-black"
+            className="text-[clamp(2rem,6vw,7.5rem)] tracking-tight text-white mb-8 leading-[1.1] md:leading-[0.95] font-black"
           >
             We build websites<br />
             that get you <span className="text-rose-500">clients.</span>
@@ -53,7 +53,7 @@ export function HeroCinematic({ onBookClick }: { onBookClick: () => void }) {
             initial={{ opacity: 0, y: 20 }}
             animate={{ opacity: 1, y: 0 }}
             transition={{ duration: 1, delay: 0.5, ease: PREMIUM_EASE }}
-            className="text-lg md:text-2xl text-zinc-400 max-w-2xl font-medium leading-relaxed mb-12"
+            className="text-base md:text-2xl text-zinc-400 max-w-2xl font-medium leading-relaxed mb-12"
           >
             Your competitors already have a website. Make sure yours wins.<br className="hidden md:block" />
             Free demo delivered in 48 hours — no risk, no upfront payment.
@@ -68,7 +68,7 @@ export function HeroCinematic({ onBookClick }: { onBookClick: () => void }) {
           >
             <Button
               onClick={onBookClick}
-              className="btn-pill h-16 px-10 text-lg font-bold bg-white text-zinc-950 hover:bg-zinc-200 flex items-center gap-2 group"
+              className="btn-pill min-h-[44px] h-14 md:h-16 px-10 text-base md:text-lg font-bold bg-white text-zinc-950 hover:bg-zinc-200 flex items-center gap-2 group"
             >
               Get My Free Demo
               <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="3" strokeLinecap="round" strokeLinejoin="round" className="transition-transform group-hover:translate-x-1">
@@ -78,7 +78,8 @@ export function HeroCinematic({ onBookClick }: { onBookClick: () => void }) {
             </Button>
             <Button
               variant="outline"
-              className="btn-pill h-16 px-10 text-lg font-bold border-white/10 bg-white/5 text-white hover:bg-white/10"
+              className="btn-pill min-h-[44px] h-14 md:h-16 px-10 text-base md:text-lg font-bold border-white/10 bg-white/5 text-white hover:bg-white/10"
+              onClick={() => document.getElementById('how-it-works')?.scrollIntoView({ behavior: 'smooth' })}
             >
               See How It Works
             </Button>
@@ -103,31 +104,5 @@ export function HeroCinematic({ onBookClick }: { onBookClick: () => void }) {
         </div>
       </div>
     </section>
-  );
-}
-
-/* ── Micro-components ── */
-function StatBox({ label, value, change }: { label: string; value: string; change: string }) {
-  return (
-    <div className="bg-zinc-50 rounded-xl sm:rounded-2xl p-3 sm:p-4 border border-zinc-100 shadow-sm transition-all hover:bg-white hover:shadow-md">
-      <div className="text-[8px] sm:text-[10px] font-bold text-zinc-400 uppercase tracking-wider mb-1">{label}</div>
-      <div className="text-base sm:text-xl font-black text-zinc-900">{value}</div>
-      <div className="text-[8px] sm:text-[10px] font-bold text-green-500 mt-1">{change}</div>
-    </div>
-  );
-}
-
-function LiveItem({ icon, iconBg, iconColor, title, sub, trailing }: {
-  icon: string; iconBg: string; iconColor: string; title: string; sub: string; trailing: React.ReactNode;
-}) {
-  return (
-    <div className="flex items-center gap-2 sm:gap-3 bg-white rounded-lg sm:rounded-xl p-2 sm:p-3 shadow-[0_4px_12px_rgba(0,0,0,0.04)] border border-zinc-100 transition-all hover:shadow-[0_4px_20px_rgba(0,0,0,0.08)]">
-      <div className={`w-6 h-6 sm:w-9 sm:h-9 rounded-lg sm:rounded-xl ${iconBg} flex items-center justify-center ${iconColor} text-xs sm:text-sm shadow-sm`}>{icon}</div>
-      <div className="flex-1 min-w-0">
-        <div className="text-[10px] sm:text-xs font-bold text-zinc-800 truncate">{title}</div>
-        <div className="text-[8px] sm:text-[10px] text-zinc-400 mt-0.5">{sub}</div>
-      </div>
-      {trailing}
-    </div>
   );
 }

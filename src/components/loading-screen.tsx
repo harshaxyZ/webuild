@@ -32,7 +32,7 @@ export function LoadingScreen() {
               transition={{ duration: 0.8, ease: "easeOut" }}
               className="text-3xl font-black tracking-tight text-white"
             >
-              we build.
+              we build
             </motion.div>
 
             {/* Loading Bar Container */}
@@ -54,16 +54,6 @@ export function LoadingScreen() {
                 className="absolute inset-0 h-full bg-rose-500"
               />
             </motion.div>
-
-            {/* Tagline */}
-            <motion.p
-              initial={{ opacity: 0 }}
-              animate={{ opacity: 1 }}
-              transition={{ duration: 0.5, delay: 1.2 }}
-              className="mt-6 text-[10px] font-bold tracking-[0.2em] uppercase text-zinc-500"
-            >
-              Execution in 48H
-            </motion.p>
           </div>
         </motion.div>
       )}

@@ -192,7 +192,7 @@ export default function AdminDashboardPage() {
     <div className="min-h-screen bg-zinc-950 text-zinc-50 flex">
       {/* Admin Sidebar */}
       <aside className="w-64 border-r border-zinc-900 bg-zinc-950 p-6 hidden md:flex flex-col h-screen sticky top-0">
-        <div className="text-xl font-black tracking-tight mb-12 text-rose-500">we build. admin</div>
+        <div className="text-xl font-black tracking-tight mb-12 text-rose-500">we build admin</div>
         <nav className="space-y-2 flex-1">
           <Button 
             variant="ghost" 

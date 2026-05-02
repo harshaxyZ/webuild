@@ -12,10 +12,10 @@ export function Navbar({ onBookClick }: { onBookClick?: () => void }) {
       transition={{ duration: 1.2, ease: [0.16, 1, 0.3, 1] }}
       className="fixed top-0 w-full z-[100] bg-zinc-950/80 backdrop-blur-md border-b border-white/5"
     >
-      <div className="max-w-[1440px] mx-auto flex items-center justify-between px-6 md:px-12 py-5">
+      <div className="max-w-[1440px] mx-auto flex items-center justify-between px-5 md:px-12 py-5">
         {/* Left: Brand */}
         <Link href="/" className="text-xl md:text-2xl font-black tracking-tight text-white flex items-center gap-0">
-          we build.
+          we build
         </Link>
  
         {/* Right: Navigation & CTA */}
@@ -29,7 +29,7 @@ export function Navbar({ onBookClick }: { onBookClick?: () => void }) {
             className="btn-pill h-11 md:h-12 px-6 md:px-8 text-[14px] md:text-[15px] font-bold bg-white text-zinc-950 hover:bg-zinc-200 shadow-lg"
             onClick={onBookClick}
           >
-            Start For Free
+            Get Free Demo
           </Button>
         </div>
       </div>
