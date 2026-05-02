@@ -192,7 +192,7 @@ export default function AdminDashboardPage() {
     <div className="min-h-screen bg-zinc-950 text-zinc-50 flex">
       {/* Admin Sidebar */}
       <aside className="w-64 border-r border-zinc-900 bg-zinc-950 p-6 hidden md:flex flex-col h-screen sticky top-0">
-        <div className="text-xl font-bold tracking-tight mb-12 text-rose-500">we build admin</div>
+        <div className="text-xl font-black tracking-tight mb-12 text-rose-500">we build. admin</div>
         <nav className="space-y-2 flex-1">
           <Button 
             variant="ghost" 
@@ -256,6 +256,90 @@ export default function AdminDashboardPage() {
               </div>
             </header>
 
+            <div className="grid grid-cols-1 lg:grid-cols-3 gap-8">
+              {/* Column 1: New Leads */}
+              <div className="space-y-6">
+                <div className="flex items-center justify-between px-2">
+                  <h3 className="text-sm font-bold uppercase tracking-widest text-zinc-500 flex items-center gap-2">
+                    <div className="w-2 h-2 rounded-full bg-rose-500 animate-pulse" />
+                    New Leads ({submitted.length})
+                  </h3>
+                </div>
+                <div className="space-y-4">
+                  {submitted.length > 0 ? (
+                    submitted.map((s) => (
+                      <SubmissionCard 
+                        key={s.id} 
+                        submission={s} 
+                        onStatusUpdate={handleStatusUpdate} 
+                        onDelete={handleDelete}
+                        onViewDetails={() => setSelectedLead(s)}
+                        nextStatus="IN_PROGRESS"
+                      />
+                    ))
+                  ) : (
+                    <div className="p-12 border-2 border-dashed border-zinc-900 rounded-3xl text-center text-zinc-600 text-sm">
+                      No new leads.
+                    </div>
+                  )}
+                </div>
+              </div>
+
+              {/* Column 2: In Progress */}
+              <div className="space-y-6">
+                <div className="flex items-center justify-between px-2">
+                  <h3 className="text-sm font-bold uppercase tracking-widest text-zinc-500 flex items-center gap-2">
+                    <div className="w-2 h-2 rounded-full bg-blue-500" />
+                    In Progress ({inProgress.length})
+                  </h3>
+                </div>
+                <div className="space-y-4">
+                  {inProgress.length > 0 ? (
+                    inProgress.map((s) => (
+                      <SubmissionCard 
+                        key={s.id} 
+                        submission={s} 
+                        onStatusUpdate={handleStatusUpdate} 
+                        onDelete={handleDelete}
+                        onViewDetails={() => setSelectedLead(s)}
+                        nextStatus="DEMO_READY"
+                      />
+                    ))
+                  ) : (
+                    <div className="p-12 border-2 border-dashed border-zinc-900 rounded-3xl text-center text-zinc-600 text-sm">
+                      Nothing in progress.
+                    </div>
+                  )}
+                </div>
+              </div>
+
+              {/* Column 3: Ready / Completed */}
+              <div className="space-y-6">
+                <div className="flex items-center justify-between px-2">
+                  <h3 className="text-sm font-bold uppercase tracking-widest text-zinc-500 flex items-center gap-2">
+                    <div className="w-2 h-2 rounded-full bg-emerald-500" />
+                    Ready / Done ({demoReady.length})
+                  </h3>
+                </div>
+                <div className="space-y-4">
+                  {demoReady.length > 0 ? (
+                    demoReady.map((s) => (
+                      <SubmissionCard 
+                        key={s.id} 
+                        submission={s} 
+                        onStatusUpdate={handleStatusUpdate} 
+                        onDelete={handleDelete}
+                        onViewDetails={() => setSelectedLead(s)}
+                      />
+                    ))
+                  ) : (
+                    <div className="p-12 border-2 border-dashed border-zinc-900 rounded-3xl text-center text-zinc-600 text-sm">
+                      No completed demos.
+                    </div>
+                  )}
+                </div>
+              </div>
+            </div>
           </>
         ) : (
           <div className="max-w-4xl">

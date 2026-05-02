@@ -22,7 +22,7 @@ const step5Schema = z.object({ stylePreference: z.string().min(1, "Please select
 const step6Schema = z.object({
   name: z.string().min(2, "Name is required"),
   email: z.string().email("Valid email required"),
-  phone: z.string().optional(),
+  phone: z.string().min(10, "Phone number is required"),
 });
 
 interface FormData {
@@ -295,15 +295,15 @@ export function MultiStepForm() {
 
   if (isSuccess) {
     return (
-      <div className="w-full max-w-2xl mx-auto rounded-3xl bg-white border border-zinc-200 p-12 text-center shadow-xl shadow-zinc-200/50 flex flex-col items-center">
-         <div className="w-20 h-20 rounded-full bg-emerald-50 flex items-center justify-center mb-8">
-            <CheckCircle2 className="w-10 h-10 text-emerald-500" />
+      <div className="flex flex-col items-center justify-center py-20 text-center animate-in fade-in zoom-in duration-500">
+         <div className="w-24 h-24 bg-emerald-500/10 rounded-full flex items-center justify-center mb-8 border border-emerald-500/20">
+            <CheckCircle2 className="w-12 h-12 text-emerald-500" />
          </div>
-         <h2 className="text-3xl font-bold text-zinc-900 mb-4 tracking-tight">Request Received!</h2>
-         <p className="text-zinc-600 mb-8 max-w-sm text-lg">
-           We&apos;ll get back to you with a demo within <b>24–48 hours</b>. Keep an eye on your inbox!
+         <h2 className="text-4xl font-black text-white mb-4 tracking-tight">Request Received!</h2>
+         <p className="text-zinc-400 mb-10 max-w-sm text-lg leading-relaxed">
+           We'll reach out with your personalized demo within <b>24–48 hours</b>. Check your inbox!
          </p>
-          <Button onClick={() => window.location.href = "/"} className="h-14 px-10 rounded-2xl font-bold bg-zinc-950 text-white hover:bg-zinc-800 active:scale-95 transition-all">
+          <Button onClick={() => window.location.href = "/"} className="h-16 px-12 rounded-2xl font-bold bg-white text-zinc-950 hover:bg-zinc-200 active:scale-95 transition-all text-base shadow-xl">
             Return Home
           </Button>
       </div>
@@ -312,9 +312,9 @@ export function MultiStepForm() {
 
   return (
     <div className="w-full max-w-2xl mx-auto bg-transparent relative flex flex-col min-h-[600px]">
-      <div className="absolute top-0 left-0 w-full h-1 bg-muted rounded-full overflow-hidden">
+      <div className="absolute top-0 left-0 w-full h-1 bg-white/10 rounded-full overflow-hidden">
         <motion.div
-          className="h-full bg-zinc-950 shadow-[0_0_10px_rgba(0,0,0,0.1)]"
+          className="h-full bg-rose-500 shadow-[0_0_20px_rgba(244,63,94,0.5)]"
           initial={{ width: "0%" }}
           animate={{ width: `${((currentStep + 1) / steps.length) * 100}%` }}
           transition={{ duration: 0.4, ease: [0.16, 1, 0.3, 1] }}
@@ -322,10 +322,10 @@ export function MultiStepForm() {
       </div>
 
       <div className="pt-10 px-0 flex-1 flex flex-col">
-        <div className="mb-8">
-          <p className="text-xs font-bold text-zinc-400 uppercase tracking-[0.2em] mb-2 flex justify-between">
+        <div className="mb-10">
+          <p className="text-xs font-bold text-zinc-500 uppercase tracking-[0.2em] mb-2 flex justify-between">
             <span>Step {currentStep + 1} of {steps.length}</span>
-            <span className="text-zinc-900">{steps[currentStep]}</span>
+            <span className="text-rose-500">{steps[currentStep]}</span>
           </p>
         </div>
 
@@ -354,14 +354,14 @@ export function MultiStepForm() {
                              handleInputChange("concept", opt.id);
                              handleInputChange("projectType", ""); // reset step 2
                           }}
-                          className={`cursor-pointer p-4 md:p-5 rounded-2xl border-2 transition-all flex items-center md:items-start gap-4 ${isSelected ? 'border-zinc-950 bg-zinc-50' : 'border-zinc-200 bg-white hover:border-zinc-300'}`}
+                          className={`cursor-pointer p-6 rounded-[2rem] border-2 transition-all flex items-start gap-5 ${isSelected ? 'border-rose-500 bg-rose-500/5 shadow-[0_0_40px_-10px_rgba(244,63,94,0.2)]' : 'border-white/5 bg-white/5 hover:border-white/10 hover:bg-white/[0.07]'}`}
                         >
-                           <div className={`p-3 rounded-xl flex-shrink-0 ${isSelected ? 'bg-zinc-950 text-white' : 'bg-zinc-100 text-zinc-600'}`}>
-                              <Icon size={26} className="md:w-6 md:h-6" />
+                           <div className={`p-4 rounded-2xl flex-shrink-0 transition-colors ${isSelected ? 'bg-rose-500 text-white' : 'bg-white/5 text-zinc-400'}`}>
+                              <Icon size={28} />
                            </div>
                            <div className="flex-1">
-                             <h4 className={`font-bold text-sm md:text-base ${isSelected ? 'text-zinc-950' : 'text-zinc-700'}`}>{opt.id}</h4>
-                             <p className="text-[10px] md:text-xs text-zinc-500 mt-0.5 line-clamp-1 md:line-clamp-none">{opt.desc}</p>
+                             <h4 className={`font-bold text-lg ${isSelected ? 'text-white' : 'text-zinc-300'}`}>{opt.id}</h4>
+                             <p className="text-xs text-zinc-500 mt-1 leading-relaxed">{opt.desc}</p>
                            </div>
                         </div>
                       )

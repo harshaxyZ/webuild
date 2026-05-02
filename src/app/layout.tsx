@@ -1,21 +1,19 @@
 import type { Metadata } from "next";
-import { Outfit, Playfair_Display } from "next/font/google";
+import { Inter } from "next/font/google";
 import "./globals.css";
 
-const outfit = Outfit({
+const inter = Inter({
   variable: "--font-sans",
   subsets: ["latin"],
 });
 
-const playfair = Playfair_Display({
-  variable: "--font-heading",
-  subsets: ["latin"],
-});
-
 export const metadata: Metadata = {
-  title: "We Build | Elite Web Apps & Process Automation",
-  description: "Senior engineering agency building high-performance websites and automation systems that actually convert. Zero upfront risk. Mobile-first engineering.",
-  keywords: ["web development", "automation services", "conversion optimization", "SaaS development", "process automation"],
+  title: "we build. — Website Design Agency in Bengaluru | Free Demo in 48 Hours",
+  description: "Get a professional business website built in Bengaluru. Free working demo in 48 hours. No upfront payment. Starter from ₹7,999. Trusted by Indian businesses.",
+  keywords: "website design Bengaluru, web development India, business website India, affordable website design, e-commerce website India, web agency Bengaluru",
+  icons: {
+    icon: "/favicon.svg",
+  }
 };
 
 export default function RootLayout({
@@ -26,10 +24,10 @@ export default function RootLayout({
   return (
     <html
       lang="en"
-      className={`${outfit.variable} ${playfair.variable} h-full antialiased`}
+      className={`${inter.variable} h-full antialiased dark`}
     >
       <body 
-        className="min-h-full flex flex-col font-sans bg-[#fbfbfd]"
+        className="min-h-full flex flex-col font-sans bg-zinc-950 text-zinc-50 selection:bg-rose-500/30"
         suppressHydrationWarning
       >
         {children}
