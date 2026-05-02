@@ -16,7 +16,6 @@ export function Footer() {
           baseColor="#2F293A"
           activeColor="#f70ecb"
           proximity={120}
-          speedTrigger={100}
           shockRadius={250}
           shockStrength={5}
         />
