@@ -2,43 +2,30 @@
 
 import { motion } from "framer-motion";
 import { Button } from "@/components/ui/button";
+import FloatingLines from "./floating-lines";
 
 const PREMIUM_EASE = [0.16, 1, 0.3, 1] as const;
 
 export function HeroCinematic({ onBookClick }: { onBookClick: () => void }) {
   return (
     <section className="relative w-full min-h-screen bg-zinc-950 overflow-hidden flex flex-col pt-32 pb-20">
-      {/* ── PREMIUM BACKGROUND ── */}
-      <div className="absolute inset-0 pointer-events-none">
-        {/* Animated Lines Background */}
-        <div className="absolute inset-0 opacity-20">
-          {[...Array(6)].map((_, i) => (
-            <motion.div
-              key={i}
-              initial={{ pathLength: 0, opacity: 0 }}
-              animate={{ 
-                pathLength: [0, 1, 1, 0],
-                opacity: [0, 1, 1, 0],
-                y: [0, -20, 20, 0]
-              }}
-              transition={{ 
-                duration: 10 + i * 2, 
-                repeat: Infinity, 
-                ease: "linear",
-                delay: i * 2 
-              }}
-              className="absolute w-full h-[1px] bg-gradient-to-r from-transparent via-rose-500 to-transparent"
-              style={{ top: `${20 + i * 15}%` }}
-            />
-          ))}
-        </div>
+      {/* ── CINEMATIC BACKGROUND ── */}
+      <div className="absolute inset-0 z-0 pointer-events-none w-full h-full">
+        <FloatingLines 
+          enabledWaves={['top','middle','bottom']} 
+          lineCount={8} 
+          lineDistance={8} 
+          bendRadius={8} 
+          bendStrength={-2} 
+        />
+        
         {/* Radial Glows */}
         <div className="absolute top-1/4 -left-1/4 w-[600px] h-[600px] bg-rose-500/10 rounded-full blur-[120px]" />
         <div className="absolute bottom-1/4 -right-1/4 w-[500px] h-[500px] bg-blue-500/10 rounded-full blur-[100px]" />
       </div>
 
       {/* ── CONTENT ── */}
-      <div className="relative z-30 container mx-auto px-6 md:px-12 flex-1 flex flex-col justify-center">
+      <div className="relative z-10 container mx-auto px-6 md:px-12 flex-1 flex flex-col justify-center">
         <div className="max-w-[1000px]">
           {/* Status Badge */}
           <motion.div

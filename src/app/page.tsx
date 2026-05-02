@@ -54,7 +54,7 @@ export default function Home() {
         <div className="relative z-20">
           <Services />
           <ProcessSticky />
-          <Pricing />
+          <Pricing onBookClick={openBooking} />
           
           <section className="section-padding bg-zinc-950 relative overflow-hidden">
             {/* Background elements */}

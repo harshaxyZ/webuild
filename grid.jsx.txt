@@ -1,0 +1,15 @@
+<div style={{ width: '1080px', height: '1080px', position: 'relative' }}>
+  <DotGrid
+    dotSize={5}
+    gap={15}
+    baseColor="#2F293A"
+    activeColor="#f70ecb"
+    proximity={120}
+    speedTrigger={100}
+    shockRadius={250}
+    shockStrength={5}
+    maxSpeed={5000}
+    resistance={750}
+    returnDuration={1.5}
+  />
+</div>

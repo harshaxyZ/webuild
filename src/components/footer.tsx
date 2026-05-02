@@ -1,14 +1,27 @@
 "use client";
 
-import { motion } from "framer-motion";
 import Link from "next/link";
 import { Twitter, Github, Linkedin, Instagram, ArrowRight, ExternalLink } from "lucide-react";
+import DotGrid from "./landing/grid";
 
 export function Footer() {
   const currentYear = new Date().getFullYear();
 
   return (
     <footer className="bg-zinc-950 text-zinc-400 py-24 border-t border-white/5 relative overflow-hidden">
+      {/* ── DOT GRID BACKGROUND ── */}
+      <div className="absolute inset-0 z-0 pointer-events-none opacity-40">
+        <DotGrid
+          dotSize={5}
+          gap={15}
+          baseColor="#2F293A"
+          activeColor="#f70ecb"
+          proximity={120}
+          shockRadius={250}
+          shockStrength={5}
+        />
+      </div>
+
       <div className="container mx-auto px-6 relative z-10">
         <div className="flex flex-col md:flex-row justify-between items-start gap-12 mb-20">
           <div className="max-w-sm">

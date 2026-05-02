@@ -6,7 +6,7 @@ import { Button } from "@/components/ui/button";
 
 const PREMIUM_EASE = [0.16, 1, 0.3, 1] as const;
 
-export function Pricing() {
+export function Pricing({ onBookClick }: { onBookClick: () => void }) {
   const plans = [
     {
       name: "Starter",
@@ -52,10 +52,10 @@ export function Pricing() {
               whileInView={{ opacity: 1, y: 0 }}
               viewport={{ once: true }}
               transition={{ delay: idx * 0.1, ease: PREMIUM_EASE }}
-              className={`relative p-8 md:p-10 rounded-[2.5rem] bg-white/5 border ${plan.highlight ? "border-blue-500/50 shadow-[0_0_40px_rgba(59,130,246,0.1)]" : "border-white/10"} flex flex-col h-full card-hover-glow`}
+              className={`relative p-8 md:p-10 rounded-[2.5rem] bg-white/5 border ${plan.highlight ? "border-rose-500/50 shadow-[0_0_40px_rgba(244,63,94,0.1)]" : "border-white/10"} flex flex-col h-full card-hover-glow`}
             >
               {plan.highlight && (
-                <div className="absolute -top-4 left-1/2 -translate-x-1/2 px-4 py-1 rounded-full bg-blue-500 text-[10px] font-black text-white tracking-widest uppercase">
+                <div className="absolute -top-4 left-1/2 -translate-x-1/2 px-4 py-1 rounded-full bg-rose-500 text-[10px] font-black text-white tracking-widest uppercase">
                   {plan.tag}
                 </div>
               )}
@@ -74,8 +74,8 @@ export function Pricing() {
               <ul className="space-y-4 mb-12 flex-1">
                 {plan.features.map((feature, i) => (
                   <li key={i} className="flex items-center gap-3 text-[15px] font-semibold text-zinc-300">
-                    <div className="w-5 h-5 rounded-full bg-blue-500/10 flex items-center justify-center flex-shrink-0">
-                      <Check size={12} className="text-blue-500" />
+                    <div className="w-5 h-5 rounded-full bg-rose-500/10 flex items-center justify-center flex-shrink-0">
+                      <Check size={12} className="text-rose-500" />
                     </div>
                     {feature}
                   </li>
@@ -83,7 +83,8 @@ export function Pricing() {
               </ul>
 
               <Button 
-                className={`btn-pill h-14 w-full text-lg font-bold ${plan.highlight ? "bg-blue-600 text-white hover:bg-blue-500" : "bg-white text-zinc-950 hover:bg-zinc-200"}`}
+                onClick={onBookClick}
+                className={`btn-pill h-14 w-full text-lg font-bold ${plan.highlight ? "bg-rose-600 text-white hover:bg-rose-500" : "bg-white text-zinc-950 hover:bg-zinc-200"}`}
               >
                 {plan.buttonText}
               </Button>

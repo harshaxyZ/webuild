@@ -100,9 +100,6 @@ export function MultiStepForm() {
       else if (currentStep === 4) step5Schema.parse(formData);
       else if (currentStep === 5) {
         step6Schema.parse(formData);
-        if (isEmailVerified) {
-          // auto jump to submit if already verified
-        }
       }
       return true;
     } catch (error) {
@@ -115,7 +112,7 @@ export function MultiStepForm() {
       }
       return false;
     }
-  }, [currentStep, formData, isEmailVerified]);
+  }, [currentStep, formData]);
 
   const handleSendOtp = async () => {
     if (otpLockout) return;
@@ -159,7 +156,6 @@ export function MultiStepForm() {
     if (!validateCurrentStep()) return;
 
     if (currentStep === 5) {
-       // Proceed to step 6 (OTP Verify)
        setCurrentStep(6);
        if (!isEmailVerified && !otpSent) {
           handleSendOtp();
@@ -182,7 +178,6 @@ export function MultiStepForm() {
       const response = await fetch("/api/book", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
-        // filter empty references
         body: JSON.stringify({ ...formData, referenceUrls: formData.referenceUrls.filter(u => u.trim() !== "") }),
       });
 
@@ -199,7 +194,6 @@ export function MultiStepForm() {
     }
   };
 
-  // Auto-submit OTP when 4 digits are filled
   useEffect(() => {
     const otpValue = otp.join("");
     if (otpValue.length === 4 && currentStep === 6 && !isVerifyingOtp && !isEmailVerified) {
@@ -225,7 +219,6 @@ export function MultiStepForm() {
       setIsEmailVerified(true);
       setOtpError("");
       
-      // Submit form directly on success
       if (!isAuthenticated) {
         setShowAuthModal(true);
       } else {
@@ -249,7 +242,6 @@ export function MultiStepForm() {
     setOtp(newOtp);
     setOtpError("");
 
-    // Auto-focus next
     if (value && index < 3) {
       otpRefs[index + 1].current?.focus();
     }
@@ -272,7 +264,6 @@ export function MultiStepForm() {
      }
   };
 
-  // Options
   const conceptOptions = [
     { id: "Website", icon: Globe, desc: "Landing pages, E-commerce, Portfolios" },
     { id: "Mobile App", icon: Smartphone, desc: "iOS, Android, React Native" },
@@ -303,7 +294,7 @@ export function MultiStepForm() {
          <p className="text-zinc-400 mb-10 max-w-sm text-lg leading-relaxed">
            We'll reach out with your personalized demo within <b>24–48 hours</b>. Check your inbox!
          </p>
-          <Button onClick={() => window.location.href = "/"} className="h-16 px-12 rounded-2xl font-bold bg-white text-zinc-950 hover:bg-zinc-200 active:scale-95 transition-all text-base shadow-xl">
+          <Button onClick={() => window.location.href = "/"} className="h-16 px-12 rounded-2xl font-bold bg-white text-zinc-950 hover:bg-zinc-200 active:scale-95 transition-all text-base shadow-xl text-center flex items-center justify-center mx-auto">
             Return Home
           </Button>
       </div>
@@ -342,7 +333,7 @@ export function MultiStepForm() {
               {/* STEP 1: Concept */}
               {currentStep === 0 && (
                 <div className="space-y-4">
-                  <h3 className="text-2xl md:text-3xl font-bold tracking-tight text-[#1d1d1f] mb-6">What do you want to build?</h3>
+                  <h3 className="text-2xl md:text-3xl font-bold tracking-tight text-white mb-6">What do you want to build?</h3>
                   <div className="grid grid-cols-1 md:grid-cols-2 gap-3">
                     {conceptOptions.map(opt => {
                       const Icon = opt.icon;
@@ -352,7 +343,7 @@ export function MultiStepForm() {
                           key={opt.id}
                           onClick={() => {
                              handleInputChange("concept", opt.id);
-                             handleInputChange("projectType", ""); // reset step 2
+                             handleInputChange("projectType", "");
                           }}
                           className={`cursor-pointer p-6 rounded-[2rem] border-2 transition-all flex items-start gap-5 ${isSelected ? 'border-rose-500 bg-rose-500/5 shadow-[0_0_40px_-10px_rgba(244,63,94,0.2)]' : 'border-white/5 bg-white/5 hover:border-white/10 hover:bg-white/[0.07]'}`}
                         >
@@ -367,25 +358,22 @@ export function MultiStepForm() {
                       )
                     })}
                   </div>
-                  {validationErrors.concept && <p className="text-red-500 text-sm mt-2 flex items-center gap-1 font-medium"><AlertCircle size={14}/> {validationErrors.concept}</p>}
+                  {validationErrors.concept && <p className="text-rose-500 text-sm mt-2 flex items-center gap-1 font-medium"><AlertCircle size={14}/> {validationErrors.concept}</p>}
                 </div>
               )}
 
               {/* STEP 2: Type */}
               {currentStep === 1 && (
                 <div className="space-y-4">
-                  <h3 className="text-xl md:text-3xl font-bold tracking-tight text-[#1d1d1f] mb-6">Select {formData.concept} Type</h3>
+                  <h3 className="text-xl md:text-3xl font-bold tracking-tight text-white mb-6">Select {formData.concept} Type</h3>
                   <div className="flex flex-wrap gap-2 md:gap-3">
                     {getDynamicTypes().map(type => {
                        const isSelected = formData.projectType === type;
-                       const isOtherInList = type === "Other";
                        return (
                          <button
                            key={type}
-                           onClick={() => {
-                             handleInputChange("projectType", type);
-                           }}
-                           className={`flex-1 min-w-[140px] md:flex-none px-4 md:px-6 py-3 md:py-4 rounded-xl md:rounded-2xl border-2 font-semibold transition-all text-xs md:text-sm ${isSelected ? 'border-zinc-950 bg-zinc-950 text-white' : 'border-zinc-200 bg-white text-zinc-700 hover:border-zinc-300'}`}
+                           onClick={() => handleInputChange("projectType", type)}
+                           className={`flex-1 min-w-[140px] md:flex-none px-4 md:px-6 py-3 md:py-4 rounded-xl md:rounded-2xl border-2 font-semibold transition-all text-xs md:text-sm ${isSelected ? 'border-rose-500 bg-rose-500 text-white shadow-lg shadow-rose-500/20' : 'border-white/5 bg-white/5 text-zinc-400 hover:border-white/20 hover:text-white'}`}
                          >
                            {type}
                          </button>
@@ -393,31 +381,27 @@ export function MultiStepForm() {
                     })}
                   </div>
                   
-                  {/* Show "Specify" if selected type is not in the predefined list for that concept */}
                   {(!getDynamicTypes().includes(formData.projectType) || formData.projectType === "Other") && formData.projectType !== "" && (
-                    <motion.div 
-                       initial={{opacity:0, y: -10}} animate={{opacity:1, y: 0}}
-                       className="space-y-2 mt-4"
-                    >
-                       <label className="text-xs font-bold text-zinc-400 uppercase tracking-widest ml-1">Please specify your project type</label>
+                    <motion.div initial={{opacity:0, y: -10}} animate={{opacity:1, y: 0}} className="space-y-2 mt-4">
+                       <label className="text-xs font-bold text-zinc-500 uppercase tracking-widest ml-1">Please specify your project type</label>
                        <input 
                          type="text" 
                          autoFocus
-                         placeholder="E.g., Crypto Wallet, AI Agent, Ed-Tech Platform..." 
-                         className="w-full h-14 rounded-2xl border border-zinc-200 px-4 focus:border-zinc-950 outline-none text-base shadow-sm focus:ring-2 focus:ring-zinc-950/5 transition-all"
+                         placeholder="E.g., AI Platform, SaaS Dashboard..." 
+                         className="w-full h-16 rounded-2xl border border-white/10 bg-white/5 px-6 text-white outline-none focus:border-rose-500 transition-all"
                          value={formData.projectType === "Other" ? "" : formData.projectType}
                          onChange={(e) => handleInputChange("projectType", e.target.value)}
                        />
                     </motion.div>
                   )}
-                  {validationErrors.projectType && <p className="text-red-500 text-sm mt-2 flex items-center gap-1 font-medium"><AlertCircle size={14}/> {validationErrors.projectType}</p>}
+                  {validationErrors.projectType && <p className="text-rose-500 text-sm mt-2 flex items-center gap-1 font-medium"><AlertCircle size={14}/> {validationErrors.projectType}</p>}
                 </div>
               )}
 
               {/* STEP 3: References */}
               {currentStep === 2 && (
                 <div className="space-y-4">
-                  <h3 className="text-xl md:text-3xl font-bold tracking-tight text-[#1d1d1f] mb-2">Reference Links</h3>
+                  <h3 className="text-xl md:text-3xl font-bold tracking-tight text-white mb-2">Reference Links</h3>
                   <p className="text-zinc-500 text-xs md:text-sm mb-6">Provide URLs to sites, apps, or designs you like.</p>
                   
                   {formData.referenceUrls.map((url, i) => (
@@ -425,7 +409,7 @@ export function MultiStepForm() {
                        <input
                          type="url"
                          placeholder="https://example.com"
-                         className="flex-1 h-14 rounded-2xl border border-zinc-200 bg-white px-4 text-base focus:border-zinc-950 outline-none"
+                         className="flex-1 h-16 rounded-2xl border border-white/10 bg-white/5 px-6 text-white outline-none focus:border-rose-500 transition-all"
                          value={url}
                          onChange={(e) => {
                            const newUrls = [...formData.referenceUrls];
@@ -439,7 +423,7 @@ export function MultiStepForm() {
                               const newUrls = formData.referenceUrls.filter((_, idx) => idx !== i);
                               handleInputChange("referenceUrls", newUrls);
                            }}
-                           className="w-14 h-14 flex items-center justify-center rounded-2xl border border-zinc-200 bg-white text-zinc-400 hover:text-rose-500 hover:border-rose-200 transition-colors"
+                           className="w-16 h-16 flex items-center justify-center rounded-2xl border border-white/10 bg-white/5 text-zinc-400 hover:text-rose-500 hover:border-rose-500/30 transition-all"
                          >
                            <X size={20} />
                          </button>
@@ -449,7 +433,7 @@ export function MultiStepForm() {
                   <Button 
                     variant="outline" 
                     onClick={() => handleInputChange("referenceUrls", [...formData.referenceUrls, ""])}
-                    className="w-full h-14 rounded-2xl border-dashed border-2 text-zinc-500 hover:text-zinc-900 text-sm"
+                    className="w-full h-16 rounded-2xl border-dashed border-2 border-white/10 bg-transparent text-zinc-500 hover:text-white hover:border-white/20 transition-all"
                   >
                     <Plus size={16} className="mr-2" /> Add another reference
                   </Button>
@@ -459,59 +443,59 @@ export function MultiStepForm() {
               {/* STEP 4: Details */}
               {currentStep === 3 && (
                 <div className="space-y-4">
-                  <h3 className="text-xl md:text-3xl font-bold tracking-tight text-[#1d1d1f] mb-2">Describe your requirement</h3>
+                  <h3 className="text-xl md:text-3xl font-bold tracking-tight text-white mb-2">Describe your requirement</h3>
                   <p className="text-zinc-500 text-xs md:text-sm mb-6">What is the core problem this solves? Any key features?</p>
                   
                   <textarea
-                    className={`w-full min-h-[160px] md:min-h-[200px] rounded-3xl border ${validationErrors.description ? 'border-red-500' : 'border-zinc-200'} bg-white p-6 text-base focus:border-zinc-950 outline-none resize-none shadow-sm`}
-                    placeholder="E.g., I need a booking platform for my coaching business with Stripe integration, a dark mode UI, and an admin dashboard to track hours..."
+                    className={`w-full min-h-[160px] md:min-h-[250px] rounded-[2.5rem] border ${validationErrors.description ? 'border-rose-500' : 'border-white/10'} bg-white/5 p-8 text-lg text-white focus:border-rose-500 outline-none resize-none transition-all placeholder:text-zinc-600`}
+                    placeholder="E.g., I need a booking platform for my business with Stripe integration..."
                     value={formData.description}
                     onChange={(e) => handleInputChange("description", e.target.value)}
                   />
-                  {validationErrors.description && <p className="text-red-500 text-sm flex items-center gap-1 font-medium"><AlertCircle size={14}/> {validationErrors.description}</p>}
+                  {validationErrors.description && <p className="text-rose-500 text-sm flex items-center gap-1 font-medium"><AlertCircle size={14}/> {validationErrors.description}</p>}
                 </div>
               )}
 
-              {/* STEP 5: Style Preference */}
+              {/* STEP 5: Style */}
               {currentStep === 4 && (
                 <div className="space-y-4">
-                  <h3 className="text-xl md:text-3xl font-bold tracking-tight text-[#1d1d1f] mb-6">Style Preference</h3>
+                  <h3 className="text-xl md:text-3xl font-bold tracking-tight text-white mb-6">Style Preference</h3>
                   <div className="flex flex-wrap gap-2">
                     {styleChips.map(style => (
                        <button
                          key={style}
                          onClick={() => handleInputChange("stylePreference", style)}
-                         className={`px-4 md:px-5 py-2.5 md:py-3 rounded-full border-2 font-medium transition-all text-xs md:text-sm ${formData.stylePreference === style ? 'border-zinc-950 bg-zinc-950 text-white shadow-md' : 'border-zinc-200 bg-white text-zinc-600 hover:border-zinc-300 hover:bg-zinc-50'}`}
+                         className={`px-6 py-3 rounded-full border-2 font-semibold transition-all text-sm ${formData.stylePreference === style ? 'border-rose-500 bg-rose-500 text-white shadow-lg shadow-rose-500/20' : 'border-white/10 bg-white/5 text-zinc-400 hover:border-white/20 hover:text-white'}`}
                        >
                          {style}
                        </button>
                     ))}
                   </div>
-                  {validationErrors.stylePreference && <p className="text-red-500 text-sm mt-2 flex items-center gap-1 font-medium"><AlertCircle size={14}/> {validationErrors.stylePreference}</p>}
+                  {validationErrors.stylePreference && <p className="text-rose-500 text-sm mt-2 flex items-center gap-1 font-medium"><AlertCircle size={14}/> {validationErrors.stylePreference}</p>}
                 </div>
               )}
 
               {/* STEP 6: Contact */}
               {currentStep === 5 && (
                 <div className="space-y-6">
-                  <h3 className="text-xl md:text-3xl font-bold tracking-tight text-[#1d1d1f] mb-6">Almost there!</h3>
+                  <h3 className="text-xl md:text-3xl font-bold tracking-tight text-white mb-6">Almost there!</h3>
                   <div className="space-y-2">
                     <label className="text-sm font-semibold text-zinc-500 ml-1">Full Name</label>
                     <input
                       type="text"
-                      className={`h-14 w-full rounded-2xl border ${validationErrors.name ? 'border-red-500 ring-2 ring-red-500/10' : 'border-zinc-200'} bg-white px-4 text-base focus:border-zinc-950 outline-none`}
+                      className={`h-16 w-full rounded-2xl border ${validationErrors.name ? 'border-rose-500 ring-2 ring-rose-500/10' : 'border-white/10'} bg-white/5 px-6 text-white outline-none focus:border-rose-500 transition-all`}
                       placeholder="John Doe"
                       value={formData.name}
                       onChange={(e) => handleInputChange("name", e.target.value)}
                     />
-                    {validationErrors.name && <p className="text-red-500 text-xs px-1 flex items-center gap-1 font-medium"><AlertCircle size={12}/> {validationErrors.name}</p>}
+                    {validationErrors.name && <p className="text-rose-500 text-xs px-1 flex items-center gap-1 font-medium"><AlertCircle size={12}/> {validationErrors.name}</p>}
                   </div>
 
                   <div className="space-y-2">
                     <label className="text-sm font-semibold text-zinc-500 ml-1">Email Address</label>
                     <input
                       type="email"
-                      className={`h-14 w-full rounded-2xl border ${validationErrors.email ? 'border-red-500 ring-2 ring-red-500/10' : 'border-zinc-200'} bg-white px-4 text-base focus:border-zinc-950 outline-none`}
+                      className={`h-16 w-full rounded-2xl border ${validationErrors.email ? 'border-rose-500 ring-2 ring-rose-500/10' : 'border-white/10'} bg-white/5 px-6 text-white outline-none focus:border-rose-500 transition-all`}
                       placeholder="hello@example.com"
                       value={formData.email}
                       onChange={(e) => {
@@ -521,56 +505,55 @@ export function MultiStepForm() {
                           setOtp(["", "", "", ""]);
                       }}
                     />
-                    {validationErrors.email && <p className="text-red-500 text-xs px-1 flex items-center gap-1 font-medium"><AlertCircle size={12}/> {validationErrors.email}</p>}
+                    {validationErrors.email && <p className="text-rose-500 text-xs px-1 flex items-center gap-1 font-medium"><AlertCircle size={12}/> {validationErrors.email}</p>}
                   </div>
 
                   <div className="space-y-2">
-                    <label className="text-sm font-semibold text-zinc-500 ml-1">Phone <span className="opacity-50 font-normal">(Optional)</span></label>
+                    <label className="text-sm font-semibold text-zinc-500 ml-1">Phone Number</label>
                     <input
                       type="tel"
-                      className="h-14 w-full rounded-2xl border border-zinc-200 bg-white px-4 text-base focus:border-zinc-950 outline-none"
-                      placeholder="+1 (555) 000-0000"
+                      className={`h-16 w-full rounded-2xl border ${validationErrors.phone ? 'border-rose-500 ring-2 ring-rose-500/10' : 'border-white/10'} bg-white/5 px-6 text-white outline-none focus:border-rose-500 transition-all`}
+                      placeholder="+91 98765 43210"
                       value={formData.phone}
                       onChange={(e) => handleInputChange("phone", e.target.value)}
                     />
+                    {validationErrors.phone && <p className="text-rose-500 text-xs px-1 flex items-center gap-1 font-medium"><AlertCircle size={12}/> {validationErrors.phone}</p>}
                   </div>
                 </div>
               )}
 
               {/* STEP 7: Verify */}
               {currentStep === 6 && (
-                <div className="space-y-6 text-center mt-6">
-                  <div className="w-12 h-12 md:w-16 md:h-16 bg-rose-50 rounded-full flex items-center justify-center mx-auto mb-4">
-                     <svg className="w-6 h-6 md:w-8 md:h-8 text-rose-500" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                <div className="space-y-8 text-center mt-6">
+                  <div className="w-20 h-20 bg-rose-500/10 rounded-full flex items-center justify-center mx-auto mb-4 border border-rose-500/20">
+                     <svg className="w-10 h-10 text-rose-500" fill="none" viewBox="0 0 24 24" stroke="currentColor">
                        <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M3 19v-8.93a2 2 0 01.89-1.664l7-4.666a2 2 0 012.22 0l7 4.666A2 2 0 0121 10.07V19M3 19a2 2 0 002 2h14a2 2 0 002-2M3 19l6.75-4.5M21 19l-6.75-4.5M3 10l6.75 4.5M21 10l-6.75 4.5m0 0l-1.14.76a2 2 0 01-2.22 0l-1.14-.76" />
                      </svg>
                   </div>
-                  <h3 className="text-xl md:text-2xl font-bold text-[#1d1d1f]">Verify your email</h3>
-                  <p className="text-zinc-500 text-xs md:text-sm max-w-sm mx-auto px-4">
-                    We sent a 4-digit security code to <b className="text-zinc-900">{formData.email}</b>. 
+                  <h3 className="text-3xl font-black text-white">Verify your email</h3>
+                  <p className="text-zinc-400 text-base max-w-sm mx-auto px-4">
+                    Enter the 4-digit code sent to <b className="text-white">{formData.email}</b>. 
                   </p>
                   
-                  <div className="flex justify-center gap-2 md:gap-3 mt-8">
+                  <div className="flex justify-center gap-3 mt-8">
                     {[0, 1, 2, 3].map((index) => (
                       <input
                         key={index}
                         ref={otpRefs[index]}
                         type="text"
                         maxLength={1}
-                        className={`w-12 h-16 md:w-16 md:h-20 text-center text-2xl md:text-3xl font-bold rounded-xl md:rounded-2xl border-2 ${otpError ? 'border-red-400 bg-red-50 text-red-900' : 'border-zinc-200 bg-white text-zinc-900'} focus:border-zinc-950 outline-none transition-all shadow-sm`}
+                        className={`w-16 h-20 text-center text-4xl font-black rounded-2xl border-2 ${otpError ? 'border-rose-500 bg-rose-500/5 text-rose-500' : 'border-white/10 bg-white/5 text-white'} focus:border-rose-500 outline-none transition-all shadow-xl`}
                         value={otp[index]}
                         onChange={(e) => handleOtpChange(index, e.target.value)}
                         onKeyDown={(e) => handleOtpKeyDown(index, e)}
                         inputMode="numeric"
-                        autoComplete="one-time-code"
-                        required
                       />
                     ))}
                   </div>
                   
                   <div className="h-6 mt-4">
                     {otpError ? (
-                       <p className="text-red-500 text-sm font-semibold flex items-center justify-center gap-1"><AlertCircle size={14}/> {otpError}</p>
+                       <p className="text-rose-500 text-sm font-bold flex items-center justify-center gap-1"><AlertCircle size={14}/> {otpError}</p>
                     ) : isVerifyingOtp || isSubmitting ? (
                        <p className="text-zinc-500 text-sm font-medium flex items-center justify-center gap-2"><ZenithSpinner size={14}/> Authenticating...</p>
                     ) : null}
@@ -580,7 +563,7 @@ export function MultiStepForm() {
                      <button 
                        onClick={handleSendOtp} 
                        disabled={resendTimer > 0 || isSendingOtp || otpLockout}
-                       className="text-sm font-semibold text-zinc-500 hover:text-zinc-900 transition-colors disabled:opacity-50 disabled:hover:text-zinc-500"
+                       className="text-sm font-bold text-zinc-500 hover:text-white transition-colors disabled:opacity-50"
                      >
                        {isSendingOtp ? "Sending..." : resendTimer > 0 ? `Resend code in ${resendTimer}s` : "Didn't receive it? Resend"}
                      </button>
@@ -594,23 +577,37 @@ export function MultiStepForm() {
 
         {/* Footer actions */}
         {currentStep < 6 && (
-          <div className="flex items-center justify-between mt-10 pt-6 border-t border-zinc-100">
+          <div className="mt-12 flex gap-4 pt-8 border-t border-white/5">
             {currentStep > 0 ? (
-              <Button variant="ghost" onClick={handlePrev} className="gap-2 font-semibold text-zinc-500 hover:text-zinc-900 hover:bg-zinc-100 rounded-2xl h-14 px-6 transition-colors">
-                 <ChevronLeft className="w-4 h-4" /> Back
+              <Button 
+                variant="outline" 
+                onClick={handlePrev} 
+                className="h-16 px-8 rounded-2xl border-white/10 bg-white/5 text-zinc-400 hover:text-white hover:bg-white/10 transition-all font-bold"
+              >
+                 <ChevronLeft className="mr-2 w-5 h-5" /> Back
               </Button>
             ) : (
-              <Button variant="ghost" asChild className="font-semibold text-zinc-500 hover:text-zinc-900 hover:bg-zinc-100 rounded-2xl h-14 px-6 transition-colors">
+              <Button 
+                variant="outline" 
+                asChild 
+                className="h-16 px-8 rounded-2xl border-white/10 bg-white/5 text-zinc-400 hover:text-white hover:bg-white/10 transition-all font-bold"
+              >
                  <Link href="/">Cancel</Link>
               </Button>
             )}
 
             <Button 
-              variant="default"
               onClick={handleNext} 
-              className="h-14 px-10 rounded-2xl font-bold bg-zinc-950 text-white hover:bg-zinc-800 shadow-xl shadow-zinc-200 transition-all ml-auto min-w-[160px]"
+              disabled={isSubmitting || isVerifyingOtp || isSendingOtp}
+              className="flex-1 h-16 rounded-2xl font-bold bg-white text-zinc-950 hover:bg-zinc-200 active:scale-95 transition-all text-base shadow-xl"
             >
-              {(currentStep === 5 && !isEmailVerified) ? "Verify Email" : "Continue"}
+              {isSubmitting ? (
+                <ZenithSpinner />
+              ) : currentStep === steps.length - 1 ? (
+                "Confirm & Submit"
+              ) : (
+                "Continue"
+              )}
             </Button>
           </div>
         )}
