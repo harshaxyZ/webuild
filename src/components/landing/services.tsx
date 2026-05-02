@@ -70,13 +70,13 @@ export function Services() {
           initial="hidden"
           whileInView="visible"
           viewport={{ once: true, margin: "-100px" }}
-          className="grid grid-cols-1 md:grid-cols-3 gap-4 md:gap-8"
+          className="flex overflow-x-auto snap-x snap-mandatory [&::-webkit-scrollbar]:hidden [-ms-overflow-style:none] [scrollbar-width:none] md:grid md:grid-cols-3 gap-4 md:gap-8 pb-4 md:pb-0 -mx-[20px] px-[20px] md:mx-0 md:px-0"
         >
           {services.map((service, idx) => (
             <motion.div
               key={idx}
               variants={itemVariants}
-              className="card-hover-glow group relative p-5 md:p-10 rounded-[2rem] md:rounded-[2.5rem] bg-white/5 border border-white/10 overflow-hidden"
+              className="card-hover-glow group relative p-5 md:p-10 rounded-[2rem] md:rounded-[2.5rem] bg-white/5 border border-white/10 overflow-hidden flex-none w-[85vw] md:w-auto snap-center"
             >
               <div className="relative z-10">
                 <div className="w-16 h-16 rounded-2xl bg-white/5 border border-white/10 flex items-center justify-center mb-8 md:mb-10 group-hover:scale-110 group-hover:bg-rose-500/10 transition-all duration-500">

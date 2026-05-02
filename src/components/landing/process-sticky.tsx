@@ -52,10 +52,11 @@ export function ProcessSticky() {
         </div>
 
         <div className="relative">
-          {/* Vertical Line */}
-          <div className="absolute left-4 md:left-1/2 top-0 bottom-0 w-px bg-gradient-to-b from-rose-500/50 via-zinc-800 to-transparent md:-translate-x-1/2" />
+          {/* Vertical Line - Hidden on Mobile */}
+          <div className="hidden md:block absolute left-1/2 top-0 bottom-0 w-px bg-gradient-to-b from-rose-500/50 via-zinc-800 to-transparent -translate-x-1/2" />
 
-          <div className="space-y-12 md:space-y-16">
+          {/* Wrapper */}
+          <div className="flex overflow-x-auto snap-x snap-mandatory [&::-webkit-scrollbar]:hidden [-ms-overflow-style:none] [scrollbar-width:none] md:block md:space-y-16 pb-8 md:pb-0 -mx-[20px] px-[20px] md:mx-0 md:px-0 gap-4 md:gap-0 pt-4 md:pt-0">
             {steps.map((step, idx) => (
               <motion.div
                 key={idx}
@@ -63,22 +64,28 @@ export function ProcessSticky() {
                 whileInView={{ opacity: 1, y: 0 }}
                 viewport={{ once: true, margin: "-50px" }}
                 transition={{ duration: 0.8, delay: idx * 0.05, ease: [0.16, 1, 0.3, 1] }}
-                className={`relative flex flex-col md:flex-row items-start md:items-center ${
+                className={`relative flex flex-col md:flex-row items-start md:items-center flex-none w-[85vw] md:w-auto snap-center ${
                   idx % 2 === 0 ? "md:flex-row" : "md:flex-row-reverse"
                 }`}
               >
-                {/* Step Circle */}
-                <div className="absolute left-0 md:left-1/2 w-[36px] h-[36px] md:w-16 md:h-16 rounded-full bg-zinc-950 border-2 border-rose-500 z-20 md:-translate-x-1/2 flex items-center justify-center text-[16px] md:text-2xl font-black text-white shadow-[0_0_15px_rgba(244,63,94,0.4)]">
+                {/* Step Circle - Desktop Absolute Center */}
+                <div className="hidden md:flex absolute left-1/2 w-16 h-16 rounded-full bg-zinc-950 border-2 border-rose-500 z-20 -translate-x-1/2 items-center justify-center text-2xl font-black text-white shadow-[0_0_15px_rgba(244,63,94,0.4)]">
                   {idx + 1}
                 </div>
 
                 {/* Content Container */}
-                <div className={`w-full md:w-1/2 pl-12 md:pl-0 ${idx % 2 === 0 ? "md:pr-16" : "md:pl-16"}`}>
-                  <div className="p-6 md:p-10 rounded-[2rem] md:rounded-[2.5rem] bg-white/5 border border-white/10 card-hover-glow group transition-all duration-500 hover:border-rose-500/30">
+                <div className={`w-full md:w-1/2 ${idx % 2 === 0 ? "md:pr-16" : "md:pl-16"}`}>
+                  <div className="relative p-6 md:p-10 rounded-[2rem] md:rounded-[2.5rem] bg-white/5 border border-white/10 card-hover-glow group transition-all duration-500 hover:border-rose-500/30">
+                    
+                    {/* Step Circle - Mobile Top Left */}
+                    <div className="md:hidden absolute -top-4 -left-2 w-[40px] h-[40px] rounded-full bg-zinc-950 border-2 border-rose-500 z-20 flex items-center justify-center text-[16px] font-black text-white shadow-[0_0_15px_rgba(244,63,94,0.4)]">
+                      {idx + 1}
+                    </div>
+
                     <div className="w-12 h-12 rounded-2xl bg-rose-500/10 flex items-center justify-center text-rose-500 mb-5 md:mb-6 group-hover:scale-110 transition-transform duration-500">
                       {step.icon}
                     </div>
-                    <h3 className="text-[16px] md:text-2xl font-bold md:font-black text-white mb-3 md:mb-4 leading-tight">{step.title}</h3>
+                    <h3 className="text-[18px] md:text-2xl font-bold md:font-black text-white mb-3 md:mb-4 leading-tight">{step.title}</h3>
                     <p className="text-zinc-400 text-[14px] md:text-[16px] font-medium leading-relaxed">{step.desc}</p>
                   </div>
                 </div>

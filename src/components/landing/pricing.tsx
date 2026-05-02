@@ -44,7 +44,7 @@ export function Pricing() {
           <p className="text-zinc-400 text-base md:text-2xl font-medium max-w-3xl mx-auto">One time payment. No monthly fees. No hidden charges. Pay only when you are happy.</p>
         </div>
 
-        <div className="grid grid-cols-1 md:grid-cols-3 gap-4 md:gap-8">
+        <div className="flex overflow-x-auto snap-x snap-mandatory [&::-webkit-scrollbar]:hidden [-ms-overflow-style:none] [scrollbar-width:none] md:grid md:grid-cols-3 gap-4 md:gap-8 pb-4 md:pb-0 -mx-[20px] px-[20px] md:mx-0 md:px-0">
           {plans.map((plan, idx) => (
             <motion.div
               key={idx}
@@ -52,7 +52,7 @@ export function Pricing() {
               whileInView={{ opacity: 1, y: 0 }}
               viewport={{ once: true }}
               transition={{ delay: idx * 0.1, ease: PREMIUM_EASE }}
-              className={`relative p-5 md:p-10 rounded-[2rem] md:rounded-[2.5rem] bg-white/5 border ${plan.highlight ? "border-rose-500/50 shadow-[0_0_40px_rgba(244,63,94,0.1)]" : "border-white/10"} flex flex-col h-full card-hover-glow`}
+              className={`relative p-5 md:p-10 rounded-[2rem] md:rounded-[2.5rem] bg-white/5 border ${plan.highlight ? "border-rose-500/50 shadow-[0_0_40px_rgba(244,63,94,0.1)]" : "border-white/10"} flex flex-col h-full card-hover-glow flex-none w-[85vw] md:w-auto snap-center`}
             >
               {plan.highlight && (
                 <div className="absolute -top-4 left-1/2 -translate-x-1/2 px-4 py-1 rounded-full bg-rose-500 text-[10px] font-black text-white tracking-widest uppercase">
