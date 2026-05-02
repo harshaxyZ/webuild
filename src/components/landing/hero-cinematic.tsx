@@ -1,5 +1,6 @@
 "use client";
 
+import { useState, useEffect } from "react";
 import { motion } from "framer-motion";
 import { Button } from "@/components/ui/button";
 import FloatingLines from "@/components/floating-lines";
@@ -7,13 +8,22 @@ import FloatingLines from "@/components/floating-lines";
 const PREMIUM_EASE = [0.16, 1, 0.3, 1] as const;
 
 export function HeroCinematic({ onBookClick }: { onBookClick: () => void }) {
+  const [lineCount, setLineCount] = useState(8);
+
+  useEffect(() => {
+    const handleResize = () => setLineCount(window.innerWidth < 768 ? 4 : 8);
+    handleResize(); // Set initial value
+    window.addEventListener('resize', handleResize);
+    return () => window.removeEventListener('resize', handleResize);
+  }, []);
+
   return (
-    <section className="relative w-full min-h-screen bg-zinc-950 overflow-hidden flex flex-col pt-32 pb-20">
+    <section className="relative w-full min-h-screen bg-zinc-950 overflow-hidden flex flex-col pt-32 pb-[60px] md:pb-[100px]">
       {/* ── FLOATING LINES BACKGROUND ── */}
       <div style={{ width: '100%', height: '100%', position: 'absolute', inset: 0, zIndex: 0 }}>
         <FloatingLines
           enabledWaves={["top","middle","bottom"]}
-          lineCount={[8]}
+          lineCount={[lineCount]}
           lineDistance={[8]}
           bendRadius={8}
           bendStrength={-2}
@@ -30,7 +40,7 @@ export function HeroCinematic({ onBookClick }: { onBookClick: () => void }) {
 
       {/* ── CONTENT ── */}
       <div className="relative" style={{ zIndex: 10 }}>
-        <div className="container mx-auto px-5 md:px-12 flex-1 flex flex-col justify-center">
+        <div className="container mx-auto px-[20px] md:px-[6%] flex-1 flex flex-col justify-center">
           <div className="max-w-[1000px]">
             {/* Status Badge */}
             <motion.div

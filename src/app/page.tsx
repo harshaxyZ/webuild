@@ -55,11 +55,11 @@ export default function Home() {
           <ProcessSticky />
           <Pricing />
           
-          <section className="py-16 md:py-32 px-5 md:px-6 bg-zinc-950 relative overflow-hidden">
+          <section className="py-[60px] md:py-[100px] px-[20px] md:px-[6%] bg-zinc-950 relative overflow-hidden">
             {/* Background elements */}
             <div className="absolute top-0 right-1/4 w-[600px] h-[600px] bg-rose-500/10 rounded-full blur-[120px] pointer-events-none" />
             <div className="container mx-auto max-w-6xl">
-              <div className="text-center p-8 md:p-24 rounded-[2.5rem] md:rounded-[3.5rem] bg-white/5 border border-white/10 relative overflow-hidden shadow-2xl">
+              <div className="text-center p-5 md:p-24 rounded-[2.5rem] md:rounded-[3.5rem] bg-white/5 border border-white/10 relative overflow-hidden shadow-2xl">
                  <div className="absolute inset-0 bg-gradient-to-tr from-rose-500/10 via-transparent to-blue-500/10 opacity-70" />
                  
                  <motion.div
@@ -69,8 +69,8 @@ export default function Home() {
                    transition={{ duration: 1, ease: [0.16, 1, 0.3, 1] }}
                    className="relative z-10 flex flex-col items-center"
                  >
-                    <h2 className="text-[clamp(1.75rem,5vw,4.5rem)] md:text-7xl font-black mb-6 md:mb-8 tracking-tight leading-[1.1]">Your business deserves a <br className="hidden md:block" /> better website.</h2>
-                    <p className="text-zinc-400 text-base md:text-2xl max-w-2xl mx-auto mb-8 md:mb-12 leading-relaxed font-medium">
+                    <h2 className="text-[clamp(24px,5vw,48px)] md:text-7xl font-black mb-6 md:mb-8 tracking-tight leading-[1.1]">Your business deserves a <br className="hidden md:block" /> better website.</h2>
+                    <p className="text-zinc-400 text-[14px] md:text-[16px] max-w-2xl mx-auto mb-8 md:mb-12 leading-relaxed font-medium">
                       Get a free working demo in 48 hours. <br className="hidden md:block" />
                       If you don&apos;t love it — you pay absolutely nothing.
                     </p>

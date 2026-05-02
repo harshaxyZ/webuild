@@ -49,7 +49,7 @@ export function Services() {
   ];
 
   return (
-    <section id="services" className="py-16 md:py-32 px-5 md:px-6 bg-zinc-950 relative">
+    <section id="services" className="py-[60px] md:py-[100px] px-[20px] md:px-[6%] bg-zinc-950 relative">
       <div className="container mx-auto max-w-7xl relative z-10">
         <motion.div
            initial={{ opacity: 0, y: 30 }}
@@ -59,7 +59,7 @@ export function Services() {
            className="mb-16 md:mb-20 text-center"
         >
            <span className="inline-block px-4 py-1.5 rounded-full bg-white/5 border border-white/10 text-[10px] font-bold tracking-[0.2em] text-rose-500 uppercase mb-6">WHAT WE BUILD</span>
-           <h2 className="text-[clamp(1.75rem,5vw,4.5rem)] md:text-7xl font-black tracking-tight text-white max-w-4xl mx-auto leading-[1.1]">
+           <h2 className="text-[clamp(24px,5vw,48px)] md:text-7xl font-black tracking-tight text-white max-w-4xl mx-auto leading-[1.1]">
              Everything your business <br className="hidden md:block" />
              needs to <span className="text-rose-500 italic">win online.</span>
            </h2>
@@ -76,7 +76,7 @@ export function Services() {
             <motion.div
               key={idx}
               variants={itemVariants}
-              className="card-hover-glow group relative p-6 md:p-10 rounded-[2rem] md:rounded-[2.5rem] bg-white/5 border border-white/10 overflow-hidden"
+              className="card-hover-glow group relative p-5 md:p-10 rounded-[2rem] md:rounded-[2.5rem] bg-white/5 border border-white/10 overflow-hidden"
             >
               <div className="relative z-10">
                 <div className="w-16 h-16 rounded-2xl bg-white/5 border border-white/10 flex items-center justify-center mb-8 md:mb-10 group-hover:scale-110 group-hover:bg-rose-500/10 transition-all duration-500">
@@ -84,7 +84,7 @@ export function Services() {
                 </div>
                 
                 <div className="mb-8">
-                   <h3 className="text-2xl md:text-3xl font-bold tracking-tight text-white mb-4">{service.title}</h3>
+                   <h3 className="text-[18px] md:text-3xl font-bold tracking-tight text-white mb-4">{service.title}</h3>
                    <p className="text-zinc-400 font-medium leading-relaxed text-sm md:text-base">
                      {service.description}
                    </p>

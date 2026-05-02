@@ -79,7 +79,7 @@
 
 @layer components {
   .section-padding {
-    @apply py-16 md:py-32 px-5 md:px-6;
+    @apply py-[60px] md:py-[100px] px-[20px] md:px-[6%];
   }
   
   .card-hover-glow {

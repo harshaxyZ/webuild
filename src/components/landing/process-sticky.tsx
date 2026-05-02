@@ -43,11 +43,11 @@ export function ProcessSticky() {
   ];
 
   return (
-    <section id="how-it-works" className="py-16 md:py-32 px-5 md:px-6 bg-zinc-950 relative overflow-hidden">
+    <section id="how-it-works" className="py-[60px] md:py-[100px] px-[20px] md:px-[6%] bg-zinc-950 relative overflow-hidden">
       <div className="container mx-auto max-w-5xl relative z-10">
         <div className="mb-16 md:mb-20 text-center">
           <span className="inline-block px-4 py-1.5 rounded-full bg-white/5 border border-white/10 text-[10px] font-bold tracking-[0.2em] text-rose-500 uppercase mb-6">HOW IT WORKS</span>
-          <h2 className="text-[clamp(1.75rem,5vw,4.5rem)] md:text-7xl font-black tracking-tight text-white mb-6 leading-[1.1]">How we build your <br className="hidden md:block" /> demo in <span className="text-rose-500 italic">48 hours.</span></h2>
+          <h2 className="text-[clamp(24px,5vw,48px)] md:text-7xl font-black tracking-tight text-white mb-6 leading-[1.1]">How we build your <br className="hidden md:block" /> demo in <span className="text-rose-500 italic">48 hours.</span></h2>
           <p className="text-zinc-400 text-base md:text-2xl font-medium">Simple. Transparent. Zero risk for you.</p>
         </div>
 
@@ -68,7 +68,7 @@ export function ProcessSticky() {
                 }`}
               >
                 {/* Step Circle */}
-                <div className="absolute left-0 md:left-1/2 w-8 h-8 rounded-full bg-zinc-950 border-2 border-rose-500 z-20 md:-translate-x-1/2 flex items-center justify-center text-[12px] font-black text-white shadow-[0_0_15px_rgba(244,63,94,0.4)]">
+                <div className="absolute left-0 md:left-1/2 w-[36px] h-[36px] md:w-16 md:h-16 rounded-full bg-zinc-950 border-2 border-rose-500 z-20 md:-translate-x-1/2 flex items-center justify-center text-[16px] md:text-2xl font-black text-white shadow-[0_0_15px_rgba(244,63,94,0.4)]">
                   {idx + 1}
                 </div>
 
@@ -78,8 +78,8 @@ export function ProcessSticky() {
                     <div className="w-12 h-12 rounded-2xl bg-rose-500/10 flex items-center justify-center text-rose-500 mb-5 md:mb-6 group-hover:scale-110 transition-transform duration-500">
                       {step.icon}
                     </div>
-                    <h3 className="text-xl md:text-3xl font-bold text-white mb-3 md:mb-4 leading-tight">{step.title}</h3>
-                    <p className="text-zinc-400 text-sm md:text-lg font-medium leading-relaxed">{step.desc}</p>
+                    <h3 className="text-[16px] md:text-2xl font-bold md:font-black text-white mb-3 md:mb-4 leading-tight">{step.title}</h3>
+                    <p className="text-zinc-400 text-[14px] md:text-[16px] font-medium leading-relaxed">{step.desc}</p>
                   </div>
                 </div>
 

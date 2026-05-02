@@ -5,6 +5,7 @@ import "./globals.css";
 const inter = Inter({
   variable: "--font-sans",
   subsets: ["latin"],
+  display: "swap",
 });
 
 export const metadata: Metadata = {
@@ -12,7 +13,7 @@ export const metadata: Metadata = {
   description: "Get a professional business website built in Bengaluru. Free working demo in 48 hours. No upfront payment. Starting from ₹7,999. Trusted by Indian businesses.",
   keywords: "website design Bengaluru, web development India, business website India, affordable website design, e-commerce website Bengaluru, web agency Bengaluru",
   icons: {
-    icon: "/favicon.ico",
+    icon: "/favicon.svg",
   },
   openGraph: {
     title: "we build — Website Design Agency in Bengaluru | Free Demo in 48 Hours",
@@ -39,7 +40,7 @@ export default function RootLayout({
       className={`${inter.variable} h-full antialiased dark`}
     >
       <head>
-        <link rel="icon" href="/favicon.ico" />
+        <link rel="icon" type="image/svg+xml" href="/favicon.svg" />
         <script
           type="application/ld+json"
           dangerouslySetInnerHTML={{

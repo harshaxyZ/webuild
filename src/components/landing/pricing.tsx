@@ -36,11 +36,11 @@ export function Pricing() {
   ];
 
   return (
-    <section id="pricing" className="py-16 md:py-32 px-5 md:px-6 bg-zinc-950 relative overflow-hidden">
+    <section id="pricing" className="py-[60px] md:py-[100px] px-[20px] md:px-[6%] bg-zinc-950 relative overflow-hidden">
       <div className="container mx-auto max-w-7xl relative z-10">
         <div className="mb-16 md:mb-20 text-center">
           <span className="inline-block px-4 py-1.5 rounded-full bg-white/5 border border-white/10 text-[10px] font-bold tracking-[0.2em] text-rose-500 uppercase mb-6">PRICING</span>
-          <h2 className="text-[clamp(1.75rem,5vw,4.5rem)] md:text-7xl font-black tracking-tight text-white mb-6 leading-[1.1]">Simple pricing. <span className="text-rose-500 italic">No surprises.</span></h2>
+          <h2 className="text-[clamp(24px,5vw,48px)] md:text-7xl font-black tracking-tight text-white mb-6 leading-[1.1]">Simple pricing. <span className="text-rose-500 italic">No surprises.</span></h2>
           <p className="text-zinc-400 text-base md:text-2xl font-medium max-w-3xl mx-auto">One time payment. No monthly fees. No hidden charges. Pay only when you are happy.</p>
         </div>
 
@@ -63,7 +63,7 @@ export function Pricing() {
               <div className="mb-8">
                 <h3 className="text-2xl font-bold text-white mb-2">{plan.name}</h3>
                 <div className="flex items-baseline gap-1 mb-4">
-                  <span className="text-[36px] md:text-5xl font-black text-white">{plan.price}</span>
+                  <span className="text-[32px] md:text-5xl font-black text-white">{plan.price}</span>
                   <span className="text-zinc-500 font-bold">one time</span>
                 </div>
                 <p className="text-zinc-400 font-medium">{plan.description}</p>
@@ -71,7 +71,7 @@ export function Pricing() {
 
               <div className="h-px bg-white/10 mb-8" />
 
-              <ul className="space-y-4 mb-12 flex-1">
+              <ul className="space-y-4 mb-2 flex-1">
                 {plan.features.map((feature, i) => (
                   <li key={i} className="flex items-center gap-3 text-[15px] font-semibold text-zinc-300">
                     <div className="w-5 h-5 rounded-full bg-rose-500/10 flex items-center justify-center flex-shrink-0">
@@ -81,13 +81,6 @@ export function Pricing() {
                   </li>
                 ))}
               </ul>
-
-              <Link 
-                href="#contact"
-                className={`btn-pill min-h-[44px] h-14 w-full text-base md:text-lg font-bold flex items-center justify-center rounded-[100px] transition-all duration-300 active:scale-[0.98] ${plan.highlight ? "bg-rose-600 text-white hover:bg-rose-500" : "bg-white text-zinc-950 hover:bg-zinc-200"}`}
-              >
-                {plan.buttonText}
-              </Link>
             </motion.div>
           ))}
         </div>

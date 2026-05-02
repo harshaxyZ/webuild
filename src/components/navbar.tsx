@@ -27,7 +27,7 @@ export function Navbar({ onBookClick }: { onBookClick?: () => void }) {
           </nav>
           
           <Button 
-            className="btn-pill h-11 md:h-12 px-6 md:px-8 text-[14px] md:text-[15px] font-bold bg-white text-zinc-950 hover:bg-zinc-200 shadow-lg"
+            className="btn-pill min-h-[44px] px-[14px] py-[8px] md:px-8 md:py-0 md:h-12 text-[12px] md:text-[15px] font-bold bg-white text-zinc-950 hover:bg-zinc-200 shadow-lg rounded-[100px] transition-all"
             onClick={onBookClick}
           >
             Get Free Demo
