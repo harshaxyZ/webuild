@@ -14,8 +14,9 @@ export function Navbar({ onBookClick }: { onBookClick?: () => void }) {
     >
       <div className="max-w-[1440px] mx-auto flex items-center justify-between px-5 md:px-12 py-5">
         {/* Left: Brand */}
-        <Link href="/" className="text-xl md:text-2xl font-black tracking-tight text-white flex items-center gap-0">
-          we build
+        <Link href="/" className="group flex items-center gap-0">
+          <span className="text-xl md:text-2xl font-black tracking-tighter text-white">we build</span>
+          <span className="w-1.5 h-1.5 rounded-full bg-rose-500 ml-1 mt-1.5"></span>
         </Link>
  
         {/* Right: Navigation & CTA */}

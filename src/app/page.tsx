@@ -5,9 +5,9 @@ import { Navbar } from "@/components/navbar";
 import { HeroCinematic } from "@/components/landing/hero-cinematic";
 import { Services } from "@/components/landing/services";
 import { ProcessSticky } from "@/components/landing/process-sticky";
-import { Portfolio } from "@/components/landing/portfolio";
+
 import { Pricing } from "@/components/landing/pricing";
-import { ContactForm } from "@/components/landing/contact-form";
+
 import { Footer } from "@/components/footer";
 import { BookingOverlay } from "@/components/booking/booking-overlay";
 import { ContactMenu } from "@/components/ui/contact-menu";
@@ -53,7 +53,6 @@ export default function Home() {
         <div className="relative z-20">
           <Services />
           <ProcessSticky />
-          <Portfolio />
           <Pricing />
           
           <section className="py-16 md:py-32 px-5 md:px-6 bg-zinc-950 relative overflow-hidden">
@@ -90,7 +89,6 @@ export default function Home() {
             </div>
           </section>
 
-          <ContactForm />
           <Footer />
         </div>
       </main>
