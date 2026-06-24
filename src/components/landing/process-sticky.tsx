@@ -43,11 +43,11 @@ export function ProcessSticky() {
   ];
 
   return (
-    <section id="how-it-works" className="py-[60px] md:py-[100px] px-[20px] md:px-[6%] bg-zinc-950 relative overflow-hidden">
+    <section id="how-it-works" className="py-[60px] md:py-[100px] px-[20px] md:px-[6%] bg-zinc-950 relative overflow-x-hidden">
       <div className="container mx-auto max-w-5xl relative z-10">
         <div className="mb-16 md:mb-20 text-center">
           <span className="inline-block px-4 py-1.5 rounded-full bg-white/5 border border-white/10 text-[10px] font-bold tracking-[0.2em] text-rose-500 uppercase mb-6">HOW IT WORKS</span>
-          <h2 className="text-[clamp(24px,5vw,48px)] md:text-7xl font-black tracking-tight text-white mb-6 leading-[1.1]">How we build your <br className="hidden md:block" /> demo in <span className="text-rose-500 italic">48 hours.</span></h2>
+          <h2 className="text-[clamp(22px,5vw,48px)] md:text-7xl font-black tracking-tight text-white mb-6 leading-[1.1]">How we build your <br className="hidden md:block" /> demo in <span className="text-rose-500 italic">48 hours.</span></h2>
           <p className="text-zinc-400 text-base md:text-2xl font-medium">Simple. Transparent. Zero risk for you.</p>
         </div>
 
@@ -55,8 +55,8 @@ export function ProcessSticky() {
           {/* Vertical Line - Hidden on Mobile */}
           <div className="hidden md:block absolute left-1/2 top-0 bottom-0 w-px bg-gradient-to-b from-rose-500/50 via-zinc-800 to-transparent -translate-x-1/2" />
 
-          {/* Wrapper */}
-          <div className="flex overflow-x-auto snap-x snap-mandatory [&::-webkit-scrollbar]:hidden [-ms-overflow-style:none] [scrollbar-width:none] md:block md:space-y-16 pb-8 md:pb-0 -mx-[20px] px-[20px] md:mx-0 md:px-0 gap-4 md:gap-0 pt-4 md:pt-0">
+          {/* Wrapper — vertical column on mobile, alternating desktop layout */}
+          <div className="flex flex-col gap-6 md:block md:space-y-16 overflow-hidden">
             {steps.map((step, idx) => (
               <motion.div
                 key={idx}
@@ -64,7 +64,7 @@ export function ProcessSticky() {
                 whileInView={{ opacity: 1, y: 0 }}
                 viewport={{ once: true, margin: "-50px" }}
                 transition={{ duration: 0.8, delay: idx * 0.05, ease: [0.16, 1, 0.3, 1] }}
-                className={`relative flex flex-col md:flex-row items-start md:items-center flex-none w-[85vw] md:w-auto snap-center ${
+                className={`relative flex flex-col md:flex-row items-start md:items-center w-full ${
                   idx % 2 === 0 ? "md:flex-row" : "md:flex-row-reverse"
                 }`}
               >
@@ -75,17 +75,17 @@ export function ProcessSticky() {
 
                 {/* Content Container */}
                 <div className={`w-full md:w-1/2 ${idx % 2 === 0 ? "md:pr-16" : "md:pl-16"}`}>
-                  <div className="relative p-6 md:p-10 rounded-[2rem] md:rounded-[2.5rem] bg-white/5 border border-white/10 card-hover-glow group transition-all duration-500 hover:border-rose-500/30">
+                  <div className="relative p-6 md:p-10 rounded-[2rem] md:rounded-[2.5rem] bg-white/5 border border-white/10 card-hover-glow group transition-all duration-300 hover:border-rose-500/30">
                     
                     {/* Step Circle - Mobile Top Left */}
-                    <div className="md:hidden absolute -top-4 -left-2 w-[40px] h-[40px] rounded-full bg-zinc-950 border-2 border-rose-500 z-20 flex items-center justify-center text-[16px] font-black text-white shadow-[0_0_15px_rgba(244,63,94,0.4)]">
+                    <div className="md:hidden absolute -top-4 -left-2 w-[36px] h-[36px] rounded-full bg-zinc-950 border-2 border-rose-500 z-20 flex items-center justify-center text-[16px] font-black text-white">
                       {idx + 1}
                     </div>
 
-                    <div className="w-12 h-12 rounded-2xl bg-rose-500/10 flex items-center justify-center text-rose-500 mb-5 md:mb-6 group-hover:scale-110 transition-transform duration-500">
+                    <div className="w-12 h-12 rounded-2xl bg-rose-500/10 flex items-center justify-center text-rose-500 mb-5 md:mb-6 group-hover:scale-110 transition-transform duration-300">
                       {step.icon}
                     </div>
-                    <h3 className="text-[18px] md:text-2xl font-bold md:font-black text-white mb-3 md:mb-4 leading-tight">{step.title}</h3>
+                    <h3 className="text-[16px] md:text-2xl font-bold md:font-black text-white mb-3 md:mb-4 leading-tight">{step.title}</h3>
                     <p className="text-zinc-400 text-[14px] md:text-[16px] font-medium leading-relaxed">{step.desc}</p>
                   </div>
                 </div>

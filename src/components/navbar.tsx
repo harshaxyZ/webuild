@@ -1,38 +1,47 @@
 "use client";
 
+import { useEffect, useState } from "react";
 import Link from "next/link";
-import { Button } from "./ui/button";
-import { motion } from "framer-motion";
+import { useBooking } from "./BookingProvider";
+import { useTheme } from "next-themes";
+import { Moon, Sun } from "lucide-react";
 
-export function Navbar({ onBookClick }: { onBookClick?: () => void }) {
+export function Navbar() {
+  const [scrolled, setScrolled] = useState(false);
+  const { setBookingOpen } = useBooking();
+  const { resolvedTheme, setTheme } = useTheme();
+
+  useEffect(() => {
+    const handleScroll = () => {
+      setScrolled(window.scrollY > 80);
+    };
+    window.addEventListener("scroll", handleScroll);
+    return () => window.removeEventListener("scroll", handleScroll);
+  }, []);
+
   return (
-    <motion.header
-      initial={{ y: -20, opacity: 0 }}
-      animate={{ y: 0, opacity: 1 }}
-      transition={{ duration: 1.2, ease: [0.16, 1, 0.3, 1] }}
-      className="fixed top-0 w-full z-[100] bg-zinc-950/80 backdrop-blur-md border-b border-white/5"
+    <nav
+      className={`fixed top-0 left-0 right-0 z-40 transition-all duration-300 ${
+        scrolled ? "bg-[var(--bg)]/80 backdrop-blur-xl border-b border-[var(--border)]" : "bg-transparent py-4"
+      }`}
     >
-      <div className="max-w-[1440px] mx-auto flex items-center justify-between px-5 md:px-12 py-5">
-        {/* Left: Brand */}
-        <Link href="/" className="group flex items-center gap-0">
-          <span className="text-xl md:text-2xl font-black tracking-tighter text-white">we build</span>
+      <div className="max-w-7xl mx-auto px-[20px] md:px-[6%] h-16 flex items-center justify-between animate-in fade-in slide-in-from-top-4 duration-500">
+        <Link href="/" className="text-xl font-semibold tracking-tight text-[var(--text-primary)]">
+          we build
         </Link>
- 
-        {/* Right: Navigation & CTA */}
-        <div className="flex items-center gap-8">
-          <nav className="hidden md:flex items-center gap-10">
-            <Link href="#how-it-works" className="text-[14px] font-medium text-zinc-400 hover:text-white transition-colors">How it works</Link>
-            <Link href="#pricing" className="text-[14px] font-medium text-zinc-400 hover:text-white transition-colors">Pricing</Link>
-          </nav>
-          
-          <Button 
-            className="btn-pill min-h-[44px] px-[14px] py-[8px] md:px-8 md:py-0 md:h-12 text-[12px] md:text-[15px] font-bold bg-white text-zinc-950 hover:bg-zinc-200 shadow-lg rounded-[100px] transition-all"
-            onClick={onBookClick}
+        <div className="flex items-center gap-4">
+          <button
+            onClick={() => setTheme(resolvedTheme === "light" ? "dark" : "light")}
+            className="p-2 rounded-full hover:bg-[var(--surface-2)] transition-colors text-[var(--text-secondary)] hover:text-[var(--text-primary)]"
+            aria-label="Toggle theme"
           >
-            Get Free Demo
-          </Button>
+            {resolvedTheme === "light" ? <Moon className="h-5 w-5" /> : <Sun className="h-5 w-5" />}
+          </button>
+          <button onClick={() => setBookingOpen(true)} className="btn-pill text-sm py-2 px-5">
+            Book a Call &rarr;
+          </button>
         </div>
       </div>
-    </motion.header>
+    </nav>
   );
 }

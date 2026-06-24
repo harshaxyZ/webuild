@@ -11,7 +11,7 @@ export function HeroCinematic({ onBookClick }: { onBookClick: () => void }) {
   const [lineCount, setLineCount] = useState(8);
 
   useEffect(() => {
-    const handleResize = () => setLineCount(window.innerWidth < 768 ? 4 : 8);
+    const handleResize = () => setLineCount(window.innerWidth < 768 ? 3 : 8);
     handleResize(); // Set initial value
     window.addEventListener('resize', handleResize);
     return () => window.removeEventListener('resize', handleResize);
@@ -33,9 +33,9 @@ export function HeroCinematic({ onBookClick }: { onBookClick: () => void }) {
           linesGradient={["#e945f5", "#6f6f6f", "#6a6a6a"]}
         />
         
-        {/* Radial Glows */}
-        <div className="absolute top-1/4 -left-1/4 w-[600px] h-[600px] bg-rose-500/10 rounded-full blur-[120px]" />
-        <div className="absolute bottom-1/4 -right-1/4 w-[500px] h-[500px] bg-blue-500/10 rounded-full blur-[100px]" />
+        {/* Radial Glows — contained so they can't cause overflow */}
+        <div className="absolute top-1/4 -left-1/4 w-[600px] h-[600px] bg-rose-500/10 rounded-full blur-[120px] pointer-events-none" />
+        <div className="absolute bottom-1/4 -right-1/4 w-[500px] h-[500px] bg-blue-500/10 rounded-full blur-[100px] pointer-events-none" />
       </div>
 
       {/* ── CONTENT ── */}
@@ -86,7 +86,7 @@ export function HeroCinematic({ onBookClick }: { onBookClick: () => void }) {
                 className="btn-pill min-h-[44px] h-14 md:h-16 px-10 text-base md:text-lg font-bold bg-white text-zinc-950 hover:bg-zinc-200 flex items-center gap-2 group"
               >
                 Get My Free Demo
-                <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="3" strokeLinecap="round" strokeLinejoin="round" className="transition-transform group-hover:translate-x-1">
+                <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="3" strokeLinecap="round" strokeLinejoin="round" className="transition-transform duration-200 group-hover:translate-x-1">
                   <line x1="5" y1="12" x2="19" y2="12"></line>
                   <polyline points="12 5 19 12 12 19"></polyline>
                 </svg>

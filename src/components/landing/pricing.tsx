@@ -36,15 +36,15 @@ export function Pricing() {
   ];
 
   return (
-    <section id="pricing" className="py-[60px] md:py-[100px] px-[20px] md:px-[6%] bg-zinc-950 relative overflow-hidden">
+    <section id="pricing" className="py-[60px] md:py-[100px] px-[20px] md:px-[6%] bg-zinc-950 relative overflow-x-hidden">
       <div className="container mx-auto max-w-7xl relative z-10">
         <div className="mb-16 md:mb-20 text-center">
           <span className="inline-block px-4 py-1.5 rounded-full bg-white/5 border border-white/10 text-[10px] font-bold tracking-[0.2em] text-rose-500 uppercase mb-6">PRICING</span>
-          <h2 className="text-[clamp(24px,5vw,48px)] md:text-7xl font-black tracking-tight text-white mb-6 leading-[1.1]">Simple pricing. <span className="text-rose-500 italic">No surprises.</span></h2>
+          <h2 className="text-[clamp(22px,5vw,48px)] md:text-7xl font-black tracking-tight text-white mb-6 leading-[1.1]">Simple pricing. <span className="text-rose-500 italic">No surprises.</span></h2>
           <p className="text-zinc-400 text-base md:text-2xl font-medium max-w-3xl mx-auto">One time payment. No monthly fees. No hidden charges. Pay only when you are happy.</p>
         </div>
 
-        <div className="flex overflow-x-auto snap-x snap-mandatory [&::-webkit-scrollbar]:hidden [-ms-overflow-style:none] [scrollbar-width:none] md:grid md:grid-cols-3 gap-4 md:gap-8 pb-4 md:pb-0 -mx-[20px] px-[20px] md:mx-0 md:px-0">
+        <div className="flex flex-col gap-4 md:grid md:grid-cols-3 md:gap-8 overflow-hidden">
           {plans.map((plan, idx) => (
             <motion.div
               key={idx}
@@ -52,7 +52,7 @@ export function Pricing() {
               whileInView={{ opacity: 1, y: 0 }}
               viewport={{ once: true }}
               transition={{ delay: idx * 0.1, ease: PREMIUM_EASE }}
-              className={`relative p-5 md:p-10 rounded-[2rem] md:rounded-[2.5rem] bg-white/5 border ${plan.highlight ? "border-rose-500/50 shadow-[0_0_40px_rgba(244,63,94,0.1)]" : "border-white/10"} flex flex-col h-full card-hover-glow flex-none w-[85vw] md:w-auto snap-center`}
+              className={`relative p-5 md:p-10 rounded-[2rem] md:rounded-[2.5rem] bg-white/5 border ${plan.highlight ? "border-rose-500/50" : "border-white/10"} flex flex-col h-full card-hover-glow w-full`}
             >
               {plan.highlight && (
                 <div className="absolute -top-4 left-1/2 -translate-x-1/2 px-4 py-1 rounded-full bg-rose-500 text-[10px] font-black text-white tracking-widest uppercase">
