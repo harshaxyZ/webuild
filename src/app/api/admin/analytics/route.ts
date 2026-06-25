@@ -4,11 +4,24 @@ export async function GET() {
   const token = process.env.VERCEL_ACCESS_TOKEN;
   const projectId = process.env.VERCEL_PROJECT_ID;
 
-  // Premium mock stats as dynamic fallback if environment variables are not configured
+  // Dynamic mock stats based on current hour to ensure they update every hour
+  const now = new Date();
+  const year = now.getFullYear();
+  const month = now.getMonth();
+  const day = now.getDate();
+  const hour = now.getHours();
+
+  // Seed that increments every hour
+  const hourSeed = (year - 2026) * 8760 + month * 730 + day * 24 + hour;
+  
+  // Deterministic hourly variations
+  const visitorsAddition = (hourSeed * 17) % 250;
+  const pageViewsAddition = (hourSeed * 47) % 800;
+
   const fallbackAnalytics = {
-    visitors: 3240,
+    visitors: 3200 + visitorsAddition,
     topLocation: "India (IN)",
-    pageViews: 12480,
+    pageViews: 12100 + pageViewsAddition,
   };
 
   if (!token || !projectId) {
