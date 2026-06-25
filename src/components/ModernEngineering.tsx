@@ -13,6 +13,63 @@ const frameworks = [
   { name: "Framer", svg: <path d="M4 2h16v8h-8l8 8H4V2z" fill="#0055FF"/> },
 ];
 
+const RingSystem = ({ isFront, isInView }: { isFront: boolean; isInView: boolean }) => (
+  <div 
+    className="absolute top-1/2 left-1/2 w-[900px] h-[900px] -translate-x-1/2 -translate-y-1/2 pointer-events-none"
+    style={{
+      transform: "translate(-50%, -50%) scaleY(0.35)", 
+      clipPath: isFront ? "polygon(0 50%, 100% 50%, 100% 100%, 0 100%)" : "polygon(0 0, 100% 0, 100% 50%, 0 50%)",
+      zIndex: isFront ? 30 : 10
+    }}
+  >
+    {/* Concentric Rings */}
+    <div className="absolute top-1/2 left-1/2 w-[550px] h-[550px] -translate-x-1/2 -translate-y-1/2 rounded-full border-[1px] border-white/20" />
+    <div className="absolute top-1/2 left-1/2 w-[650px] h-[650px] -translate-x-1/2 -translate-y-1/2 rounded-full border-[12px] border-[#c49c71]/20 shadow-[0_0_40px_rgba(196,156,113,0.15)] animate-[spin_80s_linear_infinite_reverse]" />
+    <div className="absolute top-1/2 left-1/2 w-[720px] h-[720px] -translate-x-1/2 -translate-y-1/2 rounded-full border-[3px] border-[#f4dfc4]/10 animate-[spin_60s_linear_infinite]" />
+    <div className="absolute top-1/2 left-1/2 w-[820px] h-[820px] -translate-x-1/2 -translate-y-1/2 rounded-full border-[24px] border-[#6e492b]/20 border-dashed animate-[spin_100s_linear_infinite]" />
+    
+    {/* Orbiting Frameworks */}
+    {frameworks.map((fw, i) => {
+      const delay = (i * -5) + "s";
+      const radius = 290 + (i % 3) * 50; 
+      
+      return (
+        <div 
+          key={fw.name}
+          className="absolute top-1/2 left-1/2 w-0 h-0"
+          style={{
+            animation: isInView ? `orbit 40s linear infinite` : 'none',
+            animationDelay: delay
+          }}
+        >
+          <div className="absolute" style={{ transform: `translateX(${radius}px)` }}>
+            <div 
+              className="flex flex-col items-center justify-center"
+              style={{
+                animation: isInView ? `anti-orbit 40s linear infinite` : 'none',
+                animationDelay: delay
+              }}
+            >
+              {/* Counter-scale the 0.35 squash (1 / 0.35 = 2.857) */}
+              <div className="flex flex-col items-center gap-4" style={{ transform: "scaleY(2.857)" }}>
+                <div className="w-14 h-14 rounded-full bg-black/90 border border-white/10 shadow-[0_10px_30px_rgba(0,0,0,0.9)] flex items-center justify-center text-white relative group overflow-hidden">
+                  <div className="absolute inset-0 bg-gradient-to-tr from-white/10 to-transparent opacity-40" />
+                  <svg viewBox="0 0 24 24" className="w-6 h-6 z-10" fill="currentColor">
+                    {fw.svg}
+                  </svg>
+                </div>
+                <span className="text-white/80 text-[11px] font-semibold tracking-wider drop-shadow-lg uppercase bg-black/40 px-2 py-1 rounded-md backdrop-blur-sm">
+                  {fw.name}
+                </span>
+              </div>
+            </div>
+          </div>
+        </div>
+      );
+    })}
+  </div>
+);
+
 export default function ModernEngineering() {
   const ref = useRef(null);
   const isInView = useInView(ref, { once: false, margin: "-100px" });
@@ -20,14 +77,14 @@ export default function ModernEngineering() {
   return (
     <section 
       ref={ref} 
-      className="relative min-h-[120vh] w-full bg-black flex flex-col items-center pt-32 pb-32 overflow-hidden"
+      className="relative min-h-[140vh] w-full bg-black flex flex-col items-center pt-32 pb-40 overflow-hidden"
     >
       {/* Ultra Minimalist Space Background */}
       <div className="absolute inset-0 bg-[url('/minimal-stars.webp')] bg-cover bg-center opacity-70" />
       <div className="absolute inset-0 bg-[radial-gradient(ellipse_at_top,transparent_0%,black_100%)] opacity-90" />
 
       {/* Copy */}
-      <div className="relative z-20 max-w-[650px] mx-auto text-center px-6">
+      <div className="relative z-40 max-w-[650px] mx-auto text-center px-6">
         <motion.div
           initial={{ opacity: 0, y: 20 }}
           whileInView={{ opacity: 1, y: 0 }}
@@ -46,98 +103,43 @@ export default function ModernEngineering() {
         </motion.div>
       </div>
 
-      {/* 3D Scene */}
-      <div className="relative w-full h-[700px] mt-20 flex items-center justify-center perspective-[1200px]">
+      {/* Flawless 2D Split-Ring System */}
+      <div className="relative w-full h-[700px] mt-32 flex items-center justify-center">
         
-        {/* Tilt Container */}
         <motion.div 
           initial={{ opacity: 0, scale: 0.8 }}
           whileInView={{ opacity: 1, scale: 1 }}
           viewport={{ once: true }}
           transition={{ duration: 1.5, ease: [0.16, 1, 0.3, 1] }}
-          className="relative w-[800px] h-[800px] preserve-3d"
-          style={{ transform: "rotateX(75deg)" }}
+          className="relative w-full h-full flex items-center justify-center"
         >
-          
-          {/* Animated Realistic Rings */}
-          <div className="absolute top-1/2 left-1/2 w-[500px] h-[500px] -translate-x-1/2 -translate-y-1/2 rounded-full border-[1px] border-white/10 preserve-3d" />
-          <div className="absolute top-1/2 left-1/2 w-[600px] h-[600px] -translate-x-1/2 -translate-y-1/2 rounded-full border-[10px] border-[#c49c71]/10 shadow-[0_0_30px_rgba(196,156,113,0.1)] preserve-3d animate-[spin_100s_linear_infinite_reverse]" />
-          <div className="absolute top-1/2 left-1/2 w-[680px] h-[680px] -translate-x-1/2 -translate-y-1/2 rounded-full border-[4px] border-[#f4dfc4]/5 preserve-3d animate-[spin_80s_linear_infinite]" />
-          <div className="absolute top-1/2 left-1/2 w-[760px] h-[760px] -translate-x-1/2 -translate-y-1/2 rounded-full border-[20px] border-[#6e492b]/10 border-dashed preserve-3d animate-[spin_120s_linear_infinite]" />
-          
-          {/* Subtle cosmic dust in rings */}
-          <div className="absolute top-1/2 left-1/2 w-[800px] h-[800px] -translate-x-1/2 -translate-y-1/2 rounded-full bg-[conic-gradient(from_0deg,transparent_0%,rgba(196,156,113,0.05)_20%,transparent_40%,rgba(244,223,196,0.05)_70%,transparent_100%)] animate-[spin_60s_linear_infinite] preserve-3d pointer-events-none mix-blend-screen" />
+          {/* Back Rings (Z: 10) */}
+          <RingSystem isFront={false} isInView={isInView} />
 
-          {/* Orbiting Frameworks */}
-          {frameworks.map((fw, i) => {
-            const delay = (i * -5) + "s";
-            const radius = 260 + (i % 3) * 50; // Spread across 260, 310, 360
-            
-            return (
-              <div 
-                key={fw.name}
-                className="absolute top-1/2 left-1/2 w-0 h-0 preserve-3d"
-                style={{
-                  animation: isInView ? `orbit 40s linear infinite` : 'none',
-                  animationDelay: delay
-                }}
-              >
-                <div className="absolute preserve-3d" style={{ transform: `translateX(${radius}px)` }}>
-                  <div 
-                    className="flex flex-col items-center justify-center preserve-3d"
-                    style={{
-                      animation: isInView ? `anti-orbit 40s linear infinite` : 'none',
-                      animationDelay: delay
-                    }}
-                  >
-                    {/* Face Camera */}
-                    <div className="flex flex-col items-center gap-3 preserve-3d" style={{ transform: "rotateX(-75deg)" }}>
-                      <div className="w-12 h-12 rounded-full bg-black/80 border border-white/10 shadow-[0_4px_24px_rgba(0,0,0,0.8)] flex items-center justify-center text-white relative group overflow-hidden">
-                        <div className="absolute inset-0 bg-gradient-to-tr from-white/10 to-transparent opacity-30" />
-                        <svg viewBox="0 0 24 24" className="w-5 h-5 z-10" fill="currentColor">
-                          {fw.svg}
-                        </svg>
-                      </div>
-                      <span className="text-white/60 text-[10px] font-medium tracking-wider drop-shadow-lg uppercase">
-                        {fw.name}
-                      </span>
-                    </div>
-                  </div>
-                </div>
-              </div>
-            );
-          })}
-
-          {/* Transparent WebP Planet Body */}
-          <div 
-            className="absolute top-1/2 left-1/2 w-[340px] h-[340px] -translate-x-1/2 -translate-y-1/2 rounded-full"
-            style={{ transform: "translate(-50%, -50%) rotateX(-75deg)" }} 
-          >
-             {/* Glow behind planet */}
-             <div className="absolute inset-0 rounded-full shadow-[0_0_60px_rgba(196,156,113,0.3)]" />
-             {/* The true transparent planet image */}
+          {/* Planet Body (Z: 20) */}
+          <div className="absolute top-1/2 left-1/2 w-[340px] h-[340px] -translate-x-1/2 -translate-y-1/2 rounded-full overflow-hidden z-20 shadow-[0_0_80px_rgba(196,156,113,0.3)] bg-black">
+             {/* The true transparent planet image forced into a perfect circular mask */}
              <img 
                src="/saturn-transparent.webp" 
                alt="Saturn" 
-               className="w-full h-full object-contain drop-shadow-xl" 
+               className="absolute top-1/2 left-1/2 w-[110%] h-[110%] max-w-none -translate-x-1/2 -translate-y-1/2 object-cover" 
              />
           </div>
 
+          {/* Front Rings (Z: 30) */}
+          <RingSystem isFront={true} isInView={isInView} />
         </motion.div>
       </div>
 
       <style dangerouslySetInnerHTML={{ __html: `
-        .preserve-3d { transform-style: preserve-3d; }
-        .perspective-\\[1200px\\] { perspective: 1200px; }
-        
         @keyframes orbit {
-          from { transform: rotateZ(0deg); }
-          to { transform: rotateZ(360deg); }
+          from { transform: rotate(0deg); }
+          to { transform: rotate(360deg); }
         }
         
         @keyframes anti-orbit {
-          from { transform: rotateZ(0deg); }
-          to { transform: rotateZ(-360deg); }
+          from { transform: rotate(0deg); }
+          to { transform: rotate(-360deg); }
         }
       `}} />
     </section>
