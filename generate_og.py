@@ -7,83 +7,60 @@ def main():
     regular_font_path = "Outfit-Regular.ttf"
     bold_font_path = "Outfit-Bold.ttf"
 
-    # Download fonts if they don't exist
-    if not os.path.exists(regular_font_path) or not os.path.exists(bold_font_path):
-        try:
-            print("Downloading Outfit font from Google Fonts...")
-            headers = {'User-Agent': 'Mozilla/5.0 (Windows NT 10.0; Win64; x64)'}
-            
-            # Fetch css to get ttf files
-            req = urllib.request.Request("https://fonts.googleapis.com/css2?family=Outfit:wght@400;700", headers=headers)
-            with urllib.request.urlopen(req) as response:
-                css = response.read().decode('utf-8')
-            
-            # Find all font urls
-            urls = re.findall(r'url\((https://fonts\.gstatic\.com/s/[^)]+\.ttf)\)', css)
-            
-            if len(urls) >= 2:
-                # The CSS rules contain regular and bold
-                # Let's download the files
-                urllib.request.urlretrieve(urls[0], regular_font_path)
-                urllib.request.urlretrieve(urls[1], bold_font_path)
-                print("Fonts downloaded.")
-            else:
-                # Fallback URL if regex parser is strict
-                print("Using fallback URLs...")
-                urllib.request.urlretrieve("https://github.com/google/fonts/raw/main/ofl/outfit/Outfit%5Bwght%5D.ttf", regular_font_path)
-                bold_font_path = regular_font_path
-        except Exception as e:
-            print("Could not download Google Font, using default Pillow font:", e)
-            regular_font_path = None
-            bold_font_path = None
-
-    # Create a 1200x630 white canvas
+    # Create a 1200x630 dark canvas matching the website background
     width = 1200
     height = 630
-    img = Image.new("RGB", (width, height), "white")
+    img = Image.new("RGB", (width, height), "#0a0a0a")
     draw = ImageDraw.Draw(img)
 
+    # 1. Draw the subtle grid background (60px grid lines)
+    grid_color = "#181818" # Dark grid color
+    grid_size = 60
+    for x in range(0, width, grid_size):
+        draw.line([(x, 0), (x, height)], fill=grid_color, width=1)
+    for y in range(0, height, grid_size):
+        draw.line([(0, y), (width, y)], fill=grid_color, width=1)
+
     # Load fonts
-    if regular_font_path and os.path.exists(regular_font_path):
-        font_logo = ImageFont.truetype(bold_font_path, 160)
-        font_title = ImageFont.truetype(bold_font_path, 56)
-        font_sub = ImageFont.truetype(regular_font_path, 26)
+    if os.path.exists(bold_font_path):
+        font_logo = ImageFont.truetype(bold_font_path, 80)
+        font_title = ImageFont.truetype(bold_font_path, 105)
     else:
-        # Fallback to default
         font_logo = ImageFont.load_default()
         font_title = ImageFont.load_default()
-        font_sub = ImageFont.load_default()
 
-    # Draw centered elements
-    # 1. Draw big black "w" logo in the center top
-    logo_text = "w"
-    logo_bbox = draw.textbbox((0, 0), logo_text, font=font_logo)
-    logo_w = logo_bbox[2] - logo_bbox[0]
-    logo_h = logo_bbox[3] - logo_bbox[1]
-    logo_x = (width - logo_w) / 2
-    logo_y = 130 # top margin
-
-    draw.text((logo_x, logo_y), logo_text, fill="black", font=font_logo)
-
-    # 2. Draw "we build" in bold below it
+    # 2. Calculate centering for Squircle logo + "we build" text
+    logo_size = 140
+    gap = 40
+    
     title_text = "we build"
     title_bbox = draw.textbbox((0, 0), title_text, font=font_title)
     title_w = title_bbox[2] - title_bbox[0]
     title_h = title_bbox[3] - title_bbox[1]
-    title_x = (width - title_w) / 2
-    title_y = logo_y + logo_h + 60 # gap of 60px
+    
+    total_w = logo_size + gap + title_w
+    start_x = (width - total_w) / 2
+    start_y = (height - logo_size) / 2
 
-    draw.text((title_x, title_y), title_text, fill="black", font=font_title)
+    # 3. Draw the white squircle logo block
+    squircle_box = [start_x, start_y, start_x + logo_size, start_y + logo_size]
+    draw.rounded_rectangle(squircle_box, radius=32, fill="white")
 
-    # 3. Draw description "Premium Digital Products" below it
-    sub_text = "Premium Digital Products"
-    sub_bbox = draw.textbbox((0, 0), sub_text, font=font_sub)
-    sub_w = sub_bbox[2] - sub_bbox[0]
-    sub_h = sub_bbox[3] - sub_bbox[1]
-    sub_x = (width - sub_w) / 2
-    sub_y = title_y + title_h + 30 # gap of 30px
+    # 4. Draw black "w" inside the squircle
+    w_text = "w"
+    w_bbox = draw.textbbox((0, 0), w_text, font=font_logo)
+    w_w = w_bbox[2] - w_bbox[0]
+    w_h = w_bbox[3] - w_bbox[1]
+    # Adjust for letter alignment offset in typography
+    w_x = start_x + (logo_size - w_w) / 2 - 2
+    w_y = start_y + (logo_size - w_h) / 2 - 12
+    draw.text((w_x, w_y), w_text, fill="black", font=font_logo)
 
-    draw.text((sub_x, sub_y), sub_text, fill="#666666", font=font_sub)
+    # 5. Draw "we build" text in bold white
+    title_x = start_x + logo_size + gap
+    # Align text vertically with the logo block
+    title_y = start_y + (logo_size - title_h) / 2 - 12
+    draw.text((title_x, title_y), title_text, fill="white", font=font_title)
 
     # Save to public/og-image.png
     dest_path = os.path.join("public", "og-image.png")
