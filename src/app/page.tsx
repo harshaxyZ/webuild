@@ -18,6 +18,31 @@ export default function Home() {
     <main className="relative">
       <Navbar onOpenPanel={() => setIsPanelOpen(true)} />
       
+      {/* Structured Schema.org Data for SEO */}
+      <script
+        type="application/ld+json"
+        dangerouslySetInnerHTML={{
+          __html: JSON.stringify({
+            "@context": "https://schema.org",
+            "@type": "WebDesignAgency",
+            "name": "We Build",
+            "url": "https://webuildnow.in",
+            "logo": "https://webuildnow.in/og-image.png",
+            "image": "https://webuildnow.in/og-image.png",
+            "description": "We are a premium digital product and web engineering agency building fast, reliable Next.js apps.",
+            "contactPoint": {
+              "@type": "ContactPoint",
+              "telephone": "+917899214458",
+              "contactType": "sales",
+              "availableLanguage": "en"
+            },
+            "sameAs": [
+              "https://github.com/harshaxyZ/webuild"
+            ]
+          })
+        }}
+      />
+      
       <Hero onOpenPanel={() => setIsPanelOpen(true)} />
       <Marquee />
       <Approach />

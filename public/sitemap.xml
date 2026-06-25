@@ -6,13 +6,18 @@
     <priority>1.0</priority>
   </url>
   <url>
-    <loc>https://webuildnow.in/#pricing</loc>
+    <loc>https://webuildnow.in/login</loc>
     <changefreq>monthly</changefreq>
     <priority>0.8</priority>
   </url>
   <url>
-    <loc>https://webuildnow.in/#how-it-works</loc>
-    <changefreq>monthly</changefreq>
-    <priority>0.8</priority>
+    <loc>https://webuildnow.in/privacy-policy</loc>
+    <changefreq>yearly</changefreq>
+    <priority>0.5</priority>
+  </url>
+  <url>
+    <loc>https://webuildnow.in/terms-of-service</loc>
+    <changefreq>yearly</changefreq>
+    <priority>0.5</priority>
   </url>
 </urlset>
