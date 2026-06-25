@@ -26,8 +26,8 @@ export default function Navbar({ onOpenPanel }: { onOpenPanel?: () => void }) {
       <header className={`fixed top-0 left-0 w-full z-50 transition-all duration-500 ${scrolled ? "bg-[var(--glass)] backdrop-blur-2xl border-b border-[var(--border)]" : "bg-transparent border-b border-transparent"}`}>
         <nav className="max-w-7xl mx-auto flex items-center justify-between px-6 py-5">
           <Link href="#" className="flex items-center gap-3 text-lg font-medium tracking-tighter">
-            <div className="w-8 h-8 rounded-md flex items-center justify-center font-bold bg-[var(--text)] text-[var(--bg)]">W</div>
-            We Build
+            <div className="w-8 h-8 rounded-md flex items-center justify-center font-bold bg-[var(--text)] text-[var(--bg)]">w</div>
+            we build
           </Link>
 
           <div className="hidden md:flex items-center gap-10 text-sm font-light text-[var(--muted)]">

@@ -28,9 +28,9 @@ export default function Hero({ onOpenPanel }: { onOpenPanel: () => void }) {
           <span className="text-xs font-light tracking-wide text-[var(--muted)]">Accepting first founding partners Q3</span>
         </motion.div>
         
-        <h1 className="text-[16vw] md:text-[10vw] font-semibold tracking-tighter leading-[0.85] mb-8">
+        <h1 className="text-6xl md:text-8xl lg:text-[7rem] font-semibold tracking-tighter leading-[0.95] mb-8">
           <span className="block overflow-hidden"><motion.span initial={{ y: "100%" }} animate={{ y: 0 }} transition={{ duration: 1, ease: [0.16, 1, 0.3, 1] }} className="block">We build</motion.span></span>
-          <span className="block overflow-hidden"><motion.span initial={{ y: "100%" }} animate={{ y: 0 }} transition={{ duration: 1, delay: 0.1, ease: [0.16, 1, 0.3, 1] }} className="block" style={{ color: "transparent", WebkitTextStroke: "1px var(--text)", opacity: 0.6 }}>things that</motion.span></span>
+          <span className="block overflow-hidden"><motion.span initial={{ y: "100%" }} animate={{ y: 0 }} transition={{ duration: 1, delay: 0.1, ease: [0.16, 1, 0.3, 1] }} className="block bg-gradient-to-r from-[var(--text)] to-[var(--muted)] bg-clip-text text-transparent">things that</motion.span></span>
           <span className="block overflow-hidden"><motion.span initial={{ y: "100%" }} animate={{ y: 0 }} transition={{ duration: 1, delay: 0.2, ease: [0.16, 1, 0.3, 1] }} className="block">work.</motion.span></span>
         </h1>
         
