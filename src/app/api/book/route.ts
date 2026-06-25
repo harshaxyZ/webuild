@@ -1,5 +1,4 @@
 import { NextResponse } from "next/server";
-import { getServiceSupabase } from "@/lib/supabase";
 import * as z from "zod";
 
 const bookingSchema = z.object({
@@ -24,7 +23,7 @@ export async function POST(req: Request) {
       return NextResponse.json({ success: true });
     }
 
-    // 3. Sanitize inputs (Zod handles basic types, but we strip HTML tags just in case)
+    // 3. Sanitize inputs
     const sanitize = (str: string | undefined) => 
       str ? str.replace(/<[^>]*>?/gm, "").trim() : null;
 
@@ -37,16 +36,9 @@ export async function POST(req: Request) {
       description: sanitize(validatedData.description),
     };
 
-    // 4. Insert into Supabase
-    const supabase = getServiceSupabase();
-    const { error } = await supabase
-      .from("bookings")
-      .insert([sanitizedData]);
-
-    if (error) {
-      console.error("Supabase insert error:", error);
-      return NextResponse.json({ error: "Internal Server Error" }, { status: 500 });
-    }
+    // For now, we are just logging the booking request. 
+    // Email integration (Nodemailer/Resend) can be hooked up here later if needed.
+    console.log("New Booking Received:", sanitizedData);
 
     return NextResponse.json({ success: true });
   } catch (error) {
