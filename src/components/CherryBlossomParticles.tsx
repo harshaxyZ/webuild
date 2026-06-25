@@ -21,7 +21,7 @@ class Petal {
     this.z = Math.random() * 0.8 + 0.2; // depth for parallax
     this.vx = (Math.random() * 2 - 1) * this.z;
     this.vy = (Math.random() * 2 + 1) * this.z;
-    this.size = (Math.random() * 8 + 4) * this.z;
+    this.size = (Math.random() * 12 + 6) * this.z;
     this.rotation = Math.random() * Math.PI * 2;
     this.rotationSpeed = (Math.random() * 0.05 - 0.025);
   }
@@ -45,22 +45,34 @@ class Petal {
     }
   }
 
-  draw(ctx: CanvasRenderingContext2D) {
+  draw(ctx: CanvasRenderingContext2D, petalImage: HTMLCanvasElement) {
     ctx.save();
     ctx.translate(this.x, this.y);
     ctx.rotate(this.rotation);
-    
-    // Draw a cherry blossom petal shape
-    ctx.beginPath();
-    ctx.moveTo(0, -this.size / 2);
-    ctx.bezierCurveTo(this.size / 2, -this.size / 2, this.size / 2, this.size / 2, 0, this.size / 2);
-    ctx.bezierCurveTo(-this.size / 2, this.size / 2, -this.size / 2, -this.size / 2, 0, -this.size / 2);
-    
-    // Pink with varying opacity based on depth
-    ctx.fillStyle = `rgba(255, 183, 197, ${this.z * 0.8})`;
-    ctx.fill();
+    ctx.globalAlpha = this.z * 0.8;
+    // Draw the pre-rendered image centered on the petal's coordinate
+    ctx.drawImage(petalImage, -this.size / 2, -this.size / 2, this.size, this.size);
     ctx.restore();
   }
+}
+
+// Pre-render a petal to an offscreen canvas to massively save CPU/GPU cycles
+function createPetalCanvas() {
+  const canvas = document.createElement("canvas");
+  canvas.width = 40;
+  canvas.height = 40;
+  const ctx = canvas.getContext("2d");
+  if (!ctx) return canvas;
+
+  ctx.translate(20, 20);
+  ctx.beginPath();
+  ctx.moveTo(0, -15);
+  ctx.bezierCurveTo(15, -15, 15, 15, 0, 15);
+  ctx.bezierCurveTo(-15, 15, -15, -15, 0, -15);
+  ctx.fillStyle = "rgba(255, 183, 197, 1)";
+  ctx.fill();
+
+  return canvas;
 }
 
 export function CherryBlossomParticles() {
@@ -73,9 +85,11 @@ export function CherryBlossomParticles() {
     const canvas = canvasRef.current;
     if (!canvas) return;
 
-    const ctx = canvas.getContext("2d");
+    // Use desynchronized for lower latency if supported
+    const ctx = canvas.getContext("2d", { alpha: true, desynchronized: true });
     if (!ctx) return;
 
+    const petalImage = createPetalCanvas();
     let animationFrameId: number;
     let petals: Petal[] = [];
 
@@ -83,26 +97,33 @@ export function CherryBlossomParticles() {
       canvas.width = window.innerWidth;
       canvas.height = window.innerHeight;
       
-      // Re-initialize petals based on screen size
-      const numPetals = Math.min(window.innerWidth / 10, 100); 
+      // Limit petals for performance. Max 50 for super smooth 60fps on mobile.
+      const numPetals = Math.min(Math.floor(window.innerWidth / 20), 50); 
       petals = Array.from({ length: numPetals }, () => new Petal(canvas));
     };
 
     window.addEventListener("resize", resize);
     resize();
 
-    const animate = () => {
+    let lastTime = performance.now();
+    
+    const animate = (time: number) => {
+      animationFrameId = requestAnimationFrame(animate);
+      
+      // Frame capping ~60fps
+      const delta = time - lastTime;
+      if (delta < 16) return;
+      lastTime = time - (delta % 16);
+
       ctx.clearRect(0, 0, canvas.width, canvas.height);
       
       petals.forEach((petal) => {
         petal.update();
-        petal.draw(ctx);
+        petal.draw(ctx, petalImage);
       });
-
-      animationFrameId = requestAnimationFrame(animate);
     };
 
-    animate();
+    animationFrameId = requestAnimationFrame(animate);
 
     return () => {
       window.removeEventListener("resize", resize);
@@ -115,7 +136,7 @@ export function CherryBlossomParticles() {
   return (
     <canvas
       ref={canvasRef}
-      className="fixed inset-0 pointer-events-none z-0 mix-blend-multiply opacity-70"
+      className="fixed inset-0 pointer-events-none z-0 opacity-60"
       aria-hidden="true"
     />
   );

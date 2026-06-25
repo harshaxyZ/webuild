@@ -15,6 +15,7 @@ const inter = Inter({
 });
 
 export const metadata: Metadata = {
+  metadataBase: new URL("https://www.webuildnow.in"),
   title: "we build — Apps, Websites & AI Agents",
   description: "We build apps, websites, and AI automations for businesses that want results. Book a call and let's talk.",
   alternates: {
