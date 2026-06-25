@@ -41,7 +41,7 @@ export default function Hero({ onOpenPanel }: { onOpenPanel: () => void }) {
           className="flex flex-col items-center gap-8 max-w-2xl"
         >
           <p className="text-lg md:text-xl font-light leading-relaxed text-[var(--muted)]">
-            We aren't bogged down by legacy code or outdated stacks. We are a new breed of agency ready to engineer your idea from scratch with absolute modern precision.
+            We aren't bogged down by legacy code. As a premium web development agency, we engineer custom Next.js websites, React web apps, and scalable digital products from scratch with modern precision.
           </p>
           <button onClick={onOpenPanel} className="group flex items-center gap-2 bg-[var(--text)] text-[var(--bg)] px-8 py-4 rounded-full text-base font-medium hover:opacity-80 transition-opacity">
             Start Your Project <ArrowRight size={16} className="group-hover:translate-x-1 transition-transform" />

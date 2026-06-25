@@ -10,12 +10,12 @@ import Script from "next/script";
 const outfit = Outfit({ subsets: ["latin"], variable: "--font-outfit" });
 
 export const metadata: Metadata = {
-  title: "We Build — Premium Digital Products",
-  description: "We are a new breed of agency ready to engineer your idea from scratch with absolute modern precision. Next.js, React, and serverless — built in weeks, not months.",
+  title: "We Build — Premium Web Development Agency & Next.js Developers",
+  description: "We Build is a premium web development agency. We engineer custom high-performance Next.js websites, React web apps, and serverless products. Hire expert website builders today.",
   metadataBase: new URL("https://webuildnow.in"),
   openGraph: {
-    title: "We Build — Premium Digital Products",
-    description: "We are a new breed of agency ready to engineer your idea from scratch with absolute modern precision. Next.js, React, and serverless — built in weeks, not months.",
+    title: "We Build — Premium Web Development Agency & Next.js Developers",
+    description: "We Build is a premium web development agency. We engineer custom high-performance Next.js websites, React web apps, and serverless products. Hire expert website builders today.",
     url: "https://webuildnow.in",
     siteName: "We Build",
     locale: "en_US",
@@ -25,14 +25,14 @@ export const metadata: Metadata = {
         url: "/og-image.png",
         width: 1200,
         height: 630,
-        alt: "We Build — Premium Digital Products",
+        alt: "We Build — Premium Web Development Agency",
       },
     ],
   },
   twitter: {
     card: "summary_large_image",
-    title: "We Build — Premium Digital Products",
-    description: "Engineering your idea from scratch with absolute modern precision.",
+    title: "We Build — Premium Web Development Agency & Next.js Developers",
+    description: "Engineering custom Next.js websites, React web apps, and serverless digital products.",
     images: ["/og-image.png"],
   },
   icons: {

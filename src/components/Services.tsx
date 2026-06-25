@@ -5,8 +5,8 @@ import ScrollReveal from "./ScrollReveal";
 
 const services = [
   { icon: Smartphone, title: "Mobile Apps", desc: "Native iOS and Android experiences built with React Native. Optimized for 60fps performance and offline-first architecture.", num: "01" },
-  { icon: Monitor, title: "Web Platforms", desc: "Next.js powered dashboards, e-commerce, and SaaS products. Server-side rendered, edge-deployed, and SEO optimized.", num: "02" },
-  { icon: Cpu, title: "AI & Automation", desc: "Integrating OpenAI and custom ML models to automate workflows, enhance user experiences, and reduce operational overhead.", num: "03" }
+  { icon: Monitor, title: "Web Development", desc: "Premium Next.js dashboards, custom e-commerce web apps, and SaaS platforms. Server-side rendered, edge-deployed, and fully SEO optimized.", num: "02" },
+  { icon: Cpu, title: "AI & Automation", desc: "Integrating OpenAI and custom ML models to automate workflows, build custom AI agents, and reduce operational overhead.", num: "03" }
 ];
 
 export default function Services() {
@@ -15,7 +15,7 @@ export default function Services() {
       <div className="max-w-7xl mx-auto">
         <div className="mb-20 flex flex-col md:flex-row justify-between items-start gap-8">
           <h2 className="text-5xl md:text-7xl font-semibold tracking-tighter">
-            <span className="block overflow-hidden"><motion.span initial={{ y: "100%" }} whileInView={{ y: 0 }} viewport={{ once: true }} transition={{ duration: 1, ease: [0.16, 1, 0.3, 1] }} className="block">Our Expertise</motion.span></span>
+            <span className="block overflow-hidden"><motion.span initial={{ y: "100%" }} whileInView={{ y: 0 }} viewport={{ once: true }} transition={{ duration: 1, ease: [0.16, 1, 0.3, 1] }} className="block">Web Agency Services</motion.span></span>
           </h2>
           <ScrollReveal className="max-w-md text-lg font-light text-[var(--muted)]">
             We merge engineering rigor with design intuition to ship products that scale flawlessly.
