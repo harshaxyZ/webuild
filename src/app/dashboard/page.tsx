@@ -6,14 +6,29 @@ import { onAuthStateChanged, signOut } from "firebase/auth";
 import { useRouter } from "next/navigation";
 import Navbar from "@/components/Navbar";
 import { BackButton } from "@/components/BackButton";
-import { LogOut, Calendar, ExternalLink, MessageSquare, Clock } from "lucide-react";
+import { LogOut, Calendar, ExternalLink, MessageSquare, Clock, RefreshCw } from "lucide-react";
 import toast from "react-hot-toast";
 
 export default function Dashboard() {
   const [user, setUser] = useState<any>(null);
   const [bookings, setBookings] = useState<any[]>([]);
   const [loading, setLoading] = useState(true);
+  const [refreshing, setRefreshing] = useState(false);
   const router = useRouter();
+
+  const fetchUserBookings = async (email: string) => {
+    try {
+      const res = await fetch(`/api/booking?email=${encodeURIComponent(email)}`);
+      if (res.ok) {
+        const data = await res.json();
+        setBookings(data);
+      } else {
+        console.error("Failed to load bookings");
+      }
+    } catch (err) {
+      console.error("Error fetching bookings:", err);
+    }
+  };
 
   useEffect(() => {
     let unsubscribe = () => {};
@@ -53,24 +68,18 @@ export default function Dashboard() {
       }
     };
 
-    // 2. Fetch User Bookings from GET API
-    const fetchUserBookings = async (email: string) => {
-      try {
-        const res = await fetch(`/api/booking?email=${encodeURIComponent(email)}`);
-        if (res.ok) {
-          const data = await res.json();
-          setBookings(data);
-        } else {
-          console.error("Failed to load bookings");
-        }
-      } catch (err) {
-        console.error("Error fetching bookings:", err);
-      }
-    };
-
     resolveUser();
     return () => unsubscribe();
   }, [router]);
+
+  const handleRefresh = async () => {
+    if (user?.email) {
+      setRefreshing(true);
+      await fetchUserBookings(user.email);
+      setRefreshing(false);
+      toast.success("Dashboard refreshed!");
+    }
+  };
 
   const handleSignOut = async () => {
     if (auth) {
@@ -120,10 +129,20 @@ export default function Dashboard() {
 
         <div className="space-y-8">
           <section>
-            <h2 className="text-2xl font-medium mb-6 flex items-center gap-2">
-              <Calendar className="w-5 h-5 text-neutral-400" /> 
-              My Lead & Project Bookings
-            </h2>
+            <div className="flex justify-between items-center mb-6">
+              <h2 className="text-2xl font-medium flex items-center gap-2">
+                <Calendar className="w-5 h-5 text-neutral-400" /> 
+                My Lead & Project Bookings
+              </h2>
+              <button 
+                onClick={handleRefresh}
+                disabled={refreshing}
+                className="flex items-center gap-1.5 border border-white/[0.08] text-neutral-400 hover:text-white px-4 py-2.5 rounded-xl text-xs font-medium hover:bg-white/5 transition-all disabled:opacity-50 active:scale-95"
+              >
+                <RefreshCw size={12} className={refreshing ? "animate-spin" : ""} />
+                Refresh Bookings
+              </button>
+            </div>
             
             {bookings.length === 0 ? (
               <div className="bg-neutral-900/40 border border-white/[0.06] p-12 rounded-[24px] text-center backdrop-blur-sm">

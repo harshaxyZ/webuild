@@ -1,7 +1,6 @@
 "use client";
-import { useEffect, useState } from "react";
-import { Users2, MapPin, Clock, ExternalLink, Copy } from "lucide-react";
-import Navbar from "@/components/Navbar";
+import { useEffect, useState, useCallback } from "react";
+import { Users2, MapPin, Clock, ExternalLink, Copy, RefreshCw, LogOut } from "lucide-react";
 import toast from "react-hot-toast";
 
 export default function AdminPanel() {
@@ -10,49 +9,96 @@ export default function AdminPanel() {
   const [bookingsError, setBookingsError] = useState<string | null>(null);
   const [analytics, setAnalytics] = useState<any>(null);
   const [analyticsError, setAnalyticsError] = useState<string | null>(null);
-  
-  useEffect(() => {
-    // Fetch live bookings from server API
-    async function fetchBookings() {
-      try {
-        const res = await fetch("/api/admin/bookings");
-        const data = await res.json();
-        if (res.ok) {
-          setBookings(data);
-        } else {
-          setBookingsError(data.error || "Failed to load bookings");
-        }
-      } catch (err) {
-        setBookingsError("An error occurred fetching bookings");
-      } finally {
-        setLoadingBookings(false);
-      }
-    }
+  const [refreshing, setRefreshing] = useState(false);
 
-    // Fetch Analytics
-    async function fetchAnalytics() {
-      try {
-        const res = await fetch("/api/admin/analytics");
-        const data = await res.json();
-        if (res.ok) {
-          setAnalytics(data);
-        } else {
-          setAnalyticsError(data.error);
-        }
-      } catch (err) {
-        setAnalyticsError("Failed to load analytics.");
+  // Fetch live bookings from server API
+  const fetchBookings = useCallback(async () => {
+    try {
+      const res = await fetch("/api/admin/bookings");
+      const data = await res.json();
+      if (res.ok) {
+        setBookings(data);
+        setBookingsError(null);
+      } else {
+        setBookingsError(data.error || "Failed to load bookings");
       }
+    } catch (err) {
+      setBookingsError("An error occurred fetching bookings");
+    } finally {
+      setLoadingBookings(false);
     }
-
-    fetchBookings();
-    fetchAnalytics();
   }, []);
+
+  // Fetch Analytics
+  const fetchAnalytics = useCallback(async () => {
+    try {
+      const res = await fetch("/api/admin/analytics");
+      const data = await res.json();
+      if (res.ok) {
+        setAnalytics(data);
+        setAnalyticsError(null);
+      } else {
+        setAnalyticsError(data.error);
+      }
+    } catch (err) {
+      setAnalyticsError("Failed to load analytics.");
+    }
+  }, []);
+
+  const loadData = useCallback(async () => {
+    await Promise.all([fetchBookings(), fetchAnalytics()]);
+  }, [fetchBookings, fetchAnalytics]);
+
+  useEffect(() => {
+    loadData();
+  }, [loadData]);
+
+  const handleRefresh = async () => {
+    setRefreshing(true);
+    setLoadingBookings(true);
+    await loadData();
+    setRefreshing(false);
+    toast.success("Admin dashboard data refreshed!");
+  };
+
+  const handleSignOut = () => {
+    document.cookie = "admin_token=; path=/; max-age=0;";
+    toast.success("Admin session terminated.");
+    window.location.href = "/";
+  };
 
   return (
     <main className="min-h-screen bg-[var(--bg)] text-[var(--text)]">
-      <Navbar />
+      {/* Custom Clean Admin Navbar */}
+      <header className="fixed top-0 left-0 w-full z-50 bg-[var(--glass)] backdrop-blur-2xl border-b border-[var(--border)]">
+        <nav className="max-w-7xl mx-auto flex items-center justify-between px-6 py-5">
+          <div className="flex items-center gap-3 text-lg font-medium tracking-tighter">
+            <div className="w-8 h-8 rounded-md flex items-center justify-center font-bold bg-[var(--text)] text-[var(--bg)]">w</div>
+            <span className="font-semibold text-[var(--text)]">we build</span>
+            <span className="px-2 py-0.5 text-[9px] bg-red-500/10 text-red-400 border border-red-500/20 rounded-full uppercase tracking-wider font-semibold">Admin Panel</span>
+          </div>
+
+          <div className="flex items-center gap-4">
+            <button 
+              onClick={handleRefresh} 
+              disabled={refreshing}
+              className="flex items-center gap-1.5 border border-[var(--border)] text-[var(--text)] px-4 py-2.5 rounded-xl text-xs font-medium hover:bg-[var(--border)]/30 transition-colors disabled:opacity-50 active:scale-95"
+            >
+              <RefreshCw size={13} className={refreshing ? "animate-spin" : ""} />
+              Refresh
+            </button>
+            <button 
+              onClick={handleSignOut} 
+              className="flex items-center gap-1.5 bg-red-500/10 text-red-400 border border-red-500/20 px-4 py-2.5 rounded-xl text-xs font-medium hover:bg-red-500/20 transition-colors active:scale-95"
+            >
+              <LogOut size={13} />
+              Sign Out
+            </button>
+          </div>
+        </nav>
+      </header>
       
-      <div className="pt-32 pb-20 px-6 max-w-7xl mx-auto">
+      <div className="pt-36 pb-20 px-6 max-w-7xl mx-auto">
         <h1 className="text-4xl font-semibold tracking-tighter mb-10">Admin Dashboard</h1>
 
         {/* Analytics Section */}

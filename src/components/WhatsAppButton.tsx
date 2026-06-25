@@ -1,11 +1,17 @@
 "use client";
 import { MessageCircle } from "lucide-react";
 import { motion } from "framer-motion";
+import { usePathname } from "next/navigation";
 
 export default function WhatsAppButton() {
+  const pathname = usePathname();
   const phoneNumber = "917899214458";
   const message = "hey, i want to book a call for website development";
   const url = `https://wa.me/${phoneNumber}?text=${encodeURIComponent(message)}`;
+
+  if (pathname?.startsWith("/admin") || pathname?.startsWith("/dashboard")) {
+    return null;
+  }
 
   return (
     <motion.a
