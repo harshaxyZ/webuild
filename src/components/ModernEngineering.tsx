@@ -190,7 +190,7 @@ export default function ModernEngineering() {
 
   return (
     <section className="relative w-full bg-black overflow-hidden">
-      <div className="relative w-full min-h-screen md:min-h-[120vh] flex flex-col items-center pt-24 md:pt-32 pb-32 md:pb-40">
+      <div className="relative w-full h-screen md:min-h-[120vh] flex flex-col items-center pt-16 md:pt-32 pb-8 md:pb-40">
         {/* Pure black background + CSS stars */}
         <div className="absolute inset-0 bg-black" />
         <Stars />
@@ -216,7 +216,7 @@ export default function ModernEngineering() {
         </div>
 
         {/* Saturn System */}
-        <div className="relative w-full flex-1 flex items-center justify-center mt-12 md:mt-20">
+        <div className="relative w-full flex-1 flex items-center justify-center mt-4 md:mt-20">
           <motion.div
             initial={{ opacity: 0, scale: 0.85 }}
             whileInView={{ opacity: 1, scale: 1 }}
@@ -225,8 +225,8 @@ export default function ModernEngineering() {
             className="relative flex items-center justify-center"
             style={{ width: 900, height: 600 }}
           >
-            {/* Scale wrapper for responsive — pure CSS transform, no layout recalc */}
-            <div className="absolute inset-0 flex items-center justify-center origin-center scale-[0.35] sm:scale-[0.5] md:scale-[0.7] lg:scale-[0.85] xl:scale-100">
+            {/* Scale wrapper for responsive */}
+            <div className="absolute inset-0 flex items-center justify-center origin-center scale-[0.55] sm:scale-[0.6] md:scale-[0.7] lg:scale-[0.85] xl:scale-100">
               {/* Back ring bands */}
               <RingBands isFront={false} />
 

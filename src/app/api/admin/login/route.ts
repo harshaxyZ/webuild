@@ -2,9 +2,9 @@ import { NextResponse } from 'next/server';
 
 export async function POST(request: Request) {
   try {
-    const { username, password } = await request.json();
+    const { password } = await request.json();
 
-    if (username === 'username' && password === 'password') {
+    if (password === 'I am the admin bro') {
       const response = NextResponse.json({ success: true });
       response.cookies.set('admin_token', 'authenticated', {
         httpOnly: true,
