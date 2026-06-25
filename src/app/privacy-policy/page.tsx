@@ -1,11 +1,13 @@
 import { Navbar } from "@/components/Navbar";
 import { Footer } from "@/components/Footer";
+import { BackButton } from "@/components/BackButton";
 
 export default function PrivacyPolicy() {
   return (
     <>
       <Navbar />
       <main className="flex-1 pt-32 pb-20 px-[20px] md:px-[6%] max-w-4xl mx-auto w-full">
+        <BackButton />
         <h1 className="text-4xl md:text-5xl font-semibold tracking-tight mb-12">Privacy Policy</h1>
         
         <div className="prose prose-invert prose-lg max-w-none space-y-8">
@@ -26,7 +28,7 @@ export default function PrivacyPolicy() {
           <section>
             <h2 className="text-2xl font-semibold mb-4 text-[var(--text-primary)]">3. How it's stored</h2>
             <p className="text-[var(--text-secondary)]">
-              Your data is securely stored in our Supabase database. It is encrypted at rest and transmitted over secure HTTPS connections.
+              Your data is securely stored using industry-standard database providers. It is encrypted at rest and transmitted over secure HTTPS connections.
             </p>
           </section>
 
@@ -40,7 +42,7 @@ export default function PrivacyPolicy() {
           <section>
             <h2 className="text-2xl font-semibold mb-4 text-[var(--text-primary)]">5. Your rights</h2>
             <p className="text-[var(--text-secondary)]">
-              You have the right to request the deletion of your personal data at any time. To do so, please email us.
+              You have the right to request the deletion of your personal data at any time. To do so, please <a href="mailto:harsha210108@gmail.com" className="text-[var(--accent)] hover:underline">email us</a>.
             </p>
           </section>
 
@@ -54,7 +56,7 @@ export default function PrivacyPolicy() {
           <section>
             <h2 className="text-2xl font-semibold mb-4 text-[var(--text-primary)]">7. Contact</h2>
             <p className="text-[var(--text-secondary)]">
-              For any privacy-related questions, please email us at <a href="mailto:harsha210108@gmail.com" className="text-[var(--text-primary)] underline">harsha210108@gmail.com</a>.
+              For any privacy-related questions, please <a href="mailto:harsha210108@gmail.com" className="text-[var(--accent)] hover:underline">email</a> us.
             </p>
           </section>
         </div>

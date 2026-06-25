@@ -1,14 +1,13 @@
 import type { Metadata } from "next";
-import { Inter } from "next/font/google";
+import { Outfit } from "next/font/google";
 import { Toaster } from "react-hot-toast";
 import "./globals.css";
 import { ThemeProvider } from "@/components/ThemeProvider";
 import { CookieBanner } from "@/components/CookieBanner";
 import { BookingProvider } from "@/components/BookingProvider";
 import { BookingSheet } from "@/components/BookingSheet";
-import { CherryBlossomParticles } from "@/components/CherryBlossomParticles";
 
-const inter = Inter({
+const outfit = Outfit({
   variable: "--font-sans",
   subsets: ["latin"],
   display: "swap",
@@ -41,14 +40,13 @@ export default function RootLayout({
   children: React.ReactNode;
 }>) {
   return (
-    <html lang="en" className={`${inter.variable} h-full antialiased dark`} suppressHydrationWarning>
+    <html lang="en" className={`${outfit.variable} h-full antialiased dark`} suppressHydrationWarning>
       <head>
         <link rel="icon" type="image/svg+xml" href="/favicon.svg" />
       </head>
       <body suppressHydrationWarning className="min-h-full flex flex-col font-sans">
         <ThemeProvider attribute="class" defaultTheme="dark" enableSystem={false}>
           <BookingProvider>
-            <CherryBlossomParticles />
             {children}
             <BookingSheet />
             <CookieBanner />

@@ -8,15 +8,17 @@ import { zodResolver } from "@hookform/resolvers/zod";
 import * as z from "zod";
 import toast from "react-hot-toast";
 import { useBooking } from "./BookingProvider";
+import { auth, db } from "@/lib/firebase";
+import { onAuthStateChanged, User } from "firebase/auth";
+import { collection, addDoc, serverTimestamp } from "firebase/firestore";
+import { useRouter } from "next/navigation";
 
 const bookingSchema = z.object({
   name: z.string().min(2, "Name is required"),
-  email: z.string().email("Invalid email address"),
   whatsapp: z.string().regex(/^(?:\+91|91)?[6-9]\d{9}$/, "Must be a valid 10-digit Indian mobile number"),
   service: z.enum(["Website", "App", "Automation & AI Agent", "Not sure yet"]),
   time: z.enum(["Morning 9–12", "Afternoon 12–4", "Evening 4–8", "Anytime"]),
   description: z.string().max(300).optional(),
-  website: z.string().optional(), // Honeypot
 });
 
 type BookingFormValues = z.infer<typeof bookingSchema>;
@@ -24,6 +26,17 @@ type BookingFormValues = z.infer<typeof bookingSchema>;
 export function BookingSheet() {
   const { isBookingOpen, setBookingOpen } = useBooking();
   const [isSuccess, setIsSuccess] = React.useState(false);
+  const [user, setUser] = React.useState<User | null>(null);
+  const router = useRouter();
+
+  React.useEffect(() => {
+    if (auth) {
+      const unsubscribe = onAuthStateChanged(auth, (currentUser) => {
+        setUser(currentUser);
+      });
+      return () => unsubscribe();
+    }
+  }, []);
 
   const {
     register,
@@ -35,31 +48,25 @@ export function BookingSheet() {
   });
 
   const onSubmit = async (data: BookingFormValues) => {
-    // Check honeypot
-    if (data.website) {
-      toast.success("We'll reach out within 24 hours. Check your WhatsApp.");
-      setIsSuccess(true);
+    if (!user) {
+      toast.error("You must be logged in to book a call.");
       return;
     }
 
-    // Check rate limit
-    const lastSubmit = localStorage.getItem("wb_last_submit");
-    if (lastSubmit && Date.now() - parseInt(lastSubmit) < 10 * 60 * 1000) {
-      toast.success("You already submitted recently. We'll be in touch!");
-      setIsSuccess(true);
+    if (!db) {
+      toast.error("Database connection not configured.");
       return;
     }
 
     try {
-      const res = await fetch("/api/book", {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify(data),
+      await addDoc(collection(db, "bookings"), {
+        ...data,
+        userId: user.uid,
+        email: user.email,
+        status: "Pending Review",
+        createdAt: serverTimestamp(),
       });
 
-      if (!res.ok) throw new Error("Failed to submit");
-
-      localStorage.setItem("wb_last_submit", Date.now().toString());
       setIsSuccess(true);
       toast.success("Request sent successfully!");
     } catch (error) {
@@ -84,7 +91,7 @@ export function BookingSheet() {
         <DialogPrimitive.Content className="fixed inset-y-0 right-0 z-50 w-full md:max-w-md bg-[var(--surface)] border-l border-[var(--border)] p-6 shadow-2xl transition ease-in-out data-[state=open]:animate-in data-[state=closed]:animate-out data-[state=closed]:slide-out-to-right data-[state=open]:slide-in-from-right duration-300 sm:duration-500 overflow-y-auto">
           <div className="flex items-center justify-between mb-8">
             <DialogPrimitive.Title className="text-xl font-semibold tracking-tight">
-              Book a Call
+              Start Your Project
             </DialogPrimitive.Title>
             <DialogPrimitive.Close className="rounded-sm opacity-70 transition-opacity hover:opacity-100 focus:outline-none focus:ring-2 focus:ring-[var(--accent)]">
               <X className="h-5 w-5" />
@@ -92,7 +99,21 @@ export function BookingSheet() {
             </DialogPrimitive.Close>
           </div>
 
-          {isSuccess ? (
+          {!user ? (
+            <div className="flex flex-col items-center justify-center h-[60vh] text-center space-y-4">
+              <h3 className="text-xl font-medium">You must be logged in</h3>
+              <p className="text-[var(--text-secondary)] mb-6">Please log in or create an account to start a project and track its progress.</p>
+              <button 
+                onClick={() => {
+                  setBookingOpen(false);
+                  router.push("/login?redirect=/dashboard");
+                }}
+                className="btn-pill"
+              >
+                Sign In / Sign Up
+              </button>
+            </div>
+          ) : isSuccess ? (
             <div className="flex flex-col items-center justify-center h-[60vh] text-center space-y-4">
               <div className="w-12 h-12 rounded-full bg-[var(--success)]/20 flex items-center justify-center text-[var(--success)] mb-4">
                 <svg className="w-6 h-6" fill="none" viewBox="0 0 24 24" stroke="currentColor">
@@ -100,18 +121,27 @@ export function BookingSheet() {
                 </svg>
               </div>
               <h3 className="text-xl font-medium">We'll reach out within 24 hours.</h3>
-              <p className="text-[var(--text-secondary)]">Check your WhatsApp.</p>
-              <button 
-                onClick={() => handleOpenChange(false)}
-                className="mt-8 px-6 py-2 bg-[var(--surface-2)] text-[var(--text-primary)] rounded-md hover:bg-[var(--border)] transition-colors"
-              >
-                Close
-              </button>
+              <p className="text-[var(--text-secondary)]">You can track this project in your dashboard.</p>
+              <div className="flex gap-4 mt-8">
+                <button 
+                  onClick={() => handleOpenChange(false)}
+                  className="px-6 py-2 bg-[var(--surface-2)] text-[var(--text-primary)] rounded-[var(--radius-pill)] hover:bg-[var(--border)] transition-colors"
+                >
+                  Close
+                </button>
+                <button 
+                  onClick={() => {
+                    handleOpenChange(false);
+                    router.push("/dashboard");
+                  }}
+                  className="btn-pill"
+                >
+                  Go to Dashboard
+                </button>
+              </div>
             </div>
           ) : (
             <form onSubmit={handleSubmit(onSubmit)} className="space-y-6">
-              <input type="text" {...register("website")} className="hidden" tabIndex={-1} aria-hidden="true" />
-              
               <div className="space-y-2">
                 <label className="text-sm font-medium">Your Name *</label>
                 <input
@@ -123,17 +153,6 @@ export function BookingSheet() {
               </div>
 
               <div className="space-y-2">
-                <label className="text-sm font-medium">Email Address *</label>
-                <input
-                  {...register("email")}
-                  type="email"
-                  className="w-full bg-[var(--surface-2)] border border-[var(--border)] rounded-[var(--radius-input)] px-4 py-2.5 focus:outline-none focus:ring-2 focus:ring-[var(--accent)] transition-all"
-                  placeholder="john@example.com"
-                />
-                {errors.email && <p className="text-[var(--error)] text-sm">{errors.email.message}</p>}
-              </div>
-
-              <div className="space-y-2">
                 <label className="text-sm font-medium">WhatsApp Number *</label>
                 <input
                   {...register("whatsapp")}
@@ -141,7 +160,6 @@ export function BookingSheet() {
                   className="w-full bg-[var(--surface-2)] border border-[var(--border)] rounded-[var(--radius-input)] px-4 py-2.5 focus:outline-none focus:ring-2 focus:ring-[var(--accent)] transition-all"
                   placeholder="9876543210"
                 />
-                <p className="text-xs text-[var(--text-secondary)]">We'll send you a confirmation here</p>
                 {errors.whatsapp && <p className="text-[var(--error)] text-sm">{errors.whatsapp.message}</p>}
               </div>
 

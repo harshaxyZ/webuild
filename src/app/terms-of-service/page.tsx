@@ -1,11 +1,13 @@
 import { Navbar } from "@/components/Navbar";
 import { Footer } from "@/components/Footer";
+import { BackButton } from "@/components/BackButton";
 
 export default function TermsOfService() {
   return (
     <>
       <Navbar />
       <main className="flex-1 pt-32 pb-20 px-[20px] md:px-[6%] max-w-4xl mx-auto w-full">
+        <BackButton />
         <h1 className="text-4xl md:text-5xl font-semibold tracking-tight mb-12">Terms of Service</h1>
         
         <div className="prose prose-invert prose-lg max-w-none space-y-8">
