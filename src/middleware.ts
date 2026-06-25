@@ -2,11 +2,15 @@ import { NextResponse } from 'next/server';
 import type { NextRequest } from 'next/server';
 
 export function middleware(request: NextRequest) {
-  const url = request.nextUrl;
-  const path = url.pathname;
+  const path = request.nextUrl.pathname;
 
-  // Only protect /admin (the dashboard itself), NOT /admin/login
-  if (path === '/admin' || (path.startsWith('/admin') && !path.startsWith('/admin/login'))) {
+  // Skip the login page and API routes — they must be accessible
+  if (path.startsWith('/admin/login') || path.startsWith('/api/')) {
+    return NextResponse.next();
+  }
+
+  // Protect /admin dashboard
+  if (path.startsWith('/admin')) {
     const adminToken = request.cookies.get('admin_token');
     if (!adminToken || adminToken.value !== 'authenticated') {
       return NextResponse.redirect(new URL('/admin/login', request.url));
@@ -18,6 +22,7 @@ export function middleware(request: NextRequest) {
 
 export const config = {
   matcher: [
+    "/admin",
     "/admin/:path*",
   ],
 };
