@@ -3,6 +3,7 @@ import { useState, useEffect } from "react";
 import { motion, AnimatePresence } from "framer-motion";
 import { Moon, Sun, Menu, X, ArrowRight, LogOut, LayoutDashboard, User } from "lucide-react";
 import Link from "next/link";
+import { useRouter } from "next/navigation";
 import { auth } from "@/lib/firebase";
 import { onAuthStateChanged, signOut } from "firebase/auth";
 
@@ -11,6 +12,7 @@ export default function Navbar({ onOpenPanel }: { onOpenPanel?: () => void }) {
   const [isDark, setIsDark] = useState(true);
   const [menuOpen, setMenuOpen] = useState(false);
   const [user, setUser] = useState<any>(null);
+  const router = useRouter();
 
   useEffect(() => {
     const handleScroll = () => setScrolled(window.scrollY > 80);
@@ -113,7 +115,16 @@ export default function Navbar({ onOpenPanel }: { onOpenPanel?: () => void }) {
               </Link>
             )}
 
-            <button onClick={onOpenPanel} className="hidden md:flex items-center gap-2 bg-[var(--text)] text-[var(--bg)] px-5 py-2.5 rounded-full text-sm font-medium hover:opacity-80 transition-opacity group">
+            <button 
+              onClick={() => {
+                if (onOpenPanel) {
+                  onOpenPanel();
+                } else {
+                  router.push("/?book=true");
+                }
+              }} 
+              className="hidden md:flex items-center gap-2 bg-[var(--text)] text-[var(--bg)] px-5 py-2.5 rounded-full text-sm font-medium hover:opacity-80 transition-opacity group"
+            >
               Book a Call <ArrowRight size={14} className="group-hover:translate-x-1 transition-transform" />
             </button>
             <button onClick={() => setMenuOpen(true)} className="md:hidden p-2"><Menu size={24} /></button>
@@ -172,7 +183,14 @@ export default function Navbar({ onOpenPanel }: { onOpenPanel?: () => void }) {
             )}
 
             <button 
-              onClick={() => { setMenuOpen(false); if(onOpenPanel) onOpenPanel(); }} 
+              onClick={() => { 
+                setMenuOpen(false); 
+                if (onOpenPanel) {
+                  onOpenPanel();
+                } else {
+                  router.push("/?book=true");
+                }
+              }} 
               className="mt-8 w-full max-w-[280px] bg-[var(--text)] text-[var(--bg)] py-4 rounded-full text-base font-medium hover:opacity-90 active:scale-98 transition-all"
             >
               Book a Call

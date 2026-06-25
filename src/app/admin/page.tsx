@@ -109,50 +109,52 @@ export default function AdminPanel() {
             ) : bookingsError ? (
               <div className="p-16 text-center text-red-500/80">⚠️ {bookingsError}</div>
             ) : bookings.length > 0 ? (
-              <table className="w-full text-left border-collapse">
-                <thead>
-                  <tr className="border-b border-[var(--border)] text-sm text-[var(--muted)] bg-[var(--surface)]">
-                    <th className="p-5 font-medium">Client Info</th>
-                    <th className="p-5 font-medium">Project Specs</th>
-                    <th className="p-5 font-medium">Description</th>
-                    <th className="p-5 font-medium">Submitted</th>
-                    <th className="p-5 font-medium text-right">Actions</th>
-                  </tr>
-                </thead>
-                <tbody>
-                  {bookings.map((booking: any) => (
-                    <tr key={booking.id} className="border-b border-[var(--border)] last:border-b-0 hover:bg-[var(--border)]/30 transition-colors text-sm">
-                      <td className="p-5">
-                        <div className="font-medium text-[var(--text)]">{booking.name}</div>
-                        <div className="text-xs text-[var(--muted)] mt-1">{booking.whatsapp}</div>
-                        <div className="text-xs text-[var(--muted)]">{booking.email}</div>
-                      </td>
-                      <td className="p-5">
-                        <div className="font-medium capitalize text-[var(--text)]">{booking.projectType}</div>
-                        <div className="text-xs text-[var(--muted)] mt-1">Call: {booking.preferredTime}</div>
-                      </td>
-                      <td className="p-5 max-w-xs">
-                        <div className="text-xs text-[var(--text)] line-clamp-3 leading-relaxed" title={booking.description}>
-                          {booking.description}
-                        </div>
-                      </td>
-                      <td className="p-5 text-xs text-[var(--muted)] whitespace-nowrap">{booking.date}</td>
-                      <td className="p-5 text-right">
-                        <button
-                          onClick={() => {
-                            const details = `Lead Details:\n-----------------------------\nName: ${booking.name}\nWhatsApp: ${booking.whatsapp}\nEmail: ${booking.email}\nProject Type: ${booking.projectType}\nPreferred Call: ${booking.preferredTime}\nDescription: ${booking.description}\nSubmitted: ${booking.date}`;
-                            navigator.clipboard.writeText(details);
-                            toast.success("Lead details copied!");
-                          }}
-                          className="px-3 py-1.5 border border-[var(--border)] hover:border-[var(--text)] rounded-lg inline-flex items-center gap-1.5 text-xs font-medium text-[var(--text)] bg-[var(--surface)] transition-all active:scale-95"
-                        >
-                          <Copy size={13} /> Copy Details
-                        </button>
-                      </td>
+              <div className="overflow-x-auto w-full">
+                <table className="w-full min-w-[800px] text-left border-collapse">
+                  <thead>
+                    <tr className="border-b border-[var(--border)] text-sm text-[var(--muted)] bg-[var(--surface)]">
+                      <th className="p-5 font-medium">Client Info</th>
+                      <th className="p-5 font-medium">Project Specs</th>
+                      <th className="p-5 font-medium">Description</th>
+                      <th className="p-5 font-medium">Submitted</th>
+                      <th className="p-5 font-medium text-right">Actions</th>
                     </tr>
-                  ))}
-                </tbody>
-              </table>
+                  </thead>
+                  <tbody>
+                    {bookings.map((booking: any) => (
+                      <tr key={booking.id} className="border-b border-[var(--border)] last:border-b-0 hover:bg-[var(--border)]/30 transition-colors text-sm">
+                        <td className="p-5">
+                          <div className="font-medium text-[var(--text)]">{booking.name}</div>
+                          <div className="text-xs text-[var(--muted)] mt-1">{booking.whatsapp}</div>
+                          <div className="text-xs text-[var(--muted)]">{booking.email}</div>
+                        </td>
+                        <td className="p-5">
+                          <div className="font-medium capitalize text-[var(--text)]">{booking.projectType}</div>
+                          <div className="text-xs text-[var(--muted)] mt-1">Call: {booking.preferredTime}</div>
+                        </td>
+                        <td className="p-5 max-w-xs">
+                          <div className="text-xs text-[var(--text)] line-clamp-3 leading-relaxed" title={booking.description}>
+                            {booking.description}
+                          </div>
+                        </td>
+                        <td className="p-5 text-xs text-[var(--muted)] whitespace-nowrap">{booking.date}</td>
+                        <td className="p-5 text-right">
+                          <button
+                            onClick={() => {
+                              const details = `Lead Details:\n-----------------------------\nName: ${booking.name}\nWhatsApp: ${booking.whatsapp}\nEmail: ${booking.email}\nProject Type: ${booking.projectType}\nPreferred Call: ${booking.preferredTime}\nDescription: ${booking.description}\nSubmitted: ${booking.date}`;
+                              navigator.clipboard.writeText(details);
+                              toast.success("Lead details copied!");
+                            }}
+                            className="px-3 py-1.5 border border-[var(--border)] hover:border-[var(--text)] rounded-lg inline-flex items-center gap-1.5 text-xs font-medium text-[var(--text)] bg-[var(--surface)] transition-all active:scale-95"
+                          >
+                            <Copy size={13} /> Copy Details
+                          </button>
+                        </td>
+                      </tr>
+                    ))}
+                  </tbody>
+                </table>
+              </div>
             ) : (
               <div className="p-16 text-center text-[var(--muted)]">No booking requests yet.</div>
             )}

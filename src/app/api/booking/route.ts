@@ -15,21 +15,27 @@ export async function GET(req: Request) {
     }
 
     if (!adminDb) {
-      console.warn("Firebase Admin not initialized, returning mock bookings.");
-      return NextResponse.json(getMockBookings(email));
+      console.warn("Firebase Admin not initialized, returning mock bookings for simulator or empty.");
+      if (email === "client-test@webuildnow.in") {
+        return NextResponse.json(getMockBookings(email));
+      }
+      return NextResponse.json([]);
     }
 
     try {
+      // Query without orderBy to avoid needing composite indexes in Firestore
       const snapshot = await adminDb.collection("bookings")
         .where("email", "==", email)
-        .orderBy("createdAt", "desc")
         .get();
 
       const bookings = snapshot.docs.map((doc) => {
         const data = doc.data();
         let dateString = "N/A";
+        let createdAtMs = 0;
+
         if (data.createdAt) {
           const date = data.createdAt.toDate ? data.createdAt.toDate() : new Date(data.createdAt._seconds * 1000);
+          createdAtMs = date.getTime();
           dateString = date.toLocaleDateString("en-IN", {
             day: "numeric",
             month: "short",
@@ -46,13 +52,26 @@ export async function GET(req: Request) {
           description: data.description || "",
           status: data.status || "Pending Review",
           date: dateString,
+          createdAtMs,
         };
       });
 
+      // Sort bookings in memory descending
+      bookings.sort((a, b) => b.createdAtMs - a.createdAtMs);
+
+      // If database is available but has 0 bookings for this email, return empty array.
+      // Show mock bookings ONLY for the explicit simulation email.
+      if (bookings.length === 0 && email === "client-test@webuildnow.in") {
+        return NextResponse.json(getMockBookings(email));
+      }
+
       return NextResponse.json(bookings);
     } catch (dbError: any) {
-      console.error("Firestore read error (returning fallback):", dbError);
-      return NextResponse.json(getMockBookings(email));
+      console.error("Firestore read error:", dbError);
+      if (email === "client-test@webuildnow.in") {
+        return NextResponse.json(getMockBookings(email));
+      }
+      return NextResponse.json([]);
     }
   } catch (error: any) {
     console.error("GET Bookings API Error:", error);

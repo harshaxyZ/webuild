@@ -1,6 +1,6 @@
 // Trigger build: Google Search Console verification
 "use client";
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { motion } from "framer-motion";
 import { ArrowRight } from "lucide-react";
 import Navbar from "@/components/Navbar";
@@ -14,6 +14,18 @@ import ScrollReveal from "@/components/ScrollReveal";
 
 export default function Home() {
   const [isPanelOpen, setIsPanelOpen] = useState(false);
+
+  useEffect(() => {
+    if (typeof window !== "undefined") {
+      const params = new URLSearchParams(window.location.search);
+      if (params.get("book") === "true") {
+        setIsPanelOpen(true);
+        // Clear the query parameters from URL state
+        const newUrl = window.location.pathname;
+        window.history.replaceState({}, document.title, newUrl);
+      }
+    }
+  }, []);
 
   return (
     <main className="relative">
