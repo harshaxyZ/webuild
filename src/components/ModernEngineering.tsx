@@ -185,13 +185,13 @@ export default function ModernEngineering() {
 
   return (
     <section className="relative w-full bg-black overflow-hidden">
-      <div className="relative w-full h-screen md:min-h-[120vh] flex flex-col items-center pt-16 md:pt-32 pb-8 md:pb-40">
+      <div className="relative w-full min-h-screen flex flex-col items-center justify-center py-20 md:py-28 px-6">
         {/* Pure black background + CSS stars */}
         <div className="absolute inset-0 bg-black" />
         <Stars />
 
         {/* Copy */}
-        <div className="relative z-40 max-w-[650px] mx-auto text-center px-6">
+        <div className="relative z-40 max-w-[650px] mx-auto text-center mb-6 md:mb-12">
           <motion.div
             initial={{ opacity: 0, y: 20 }}
             whileInView={{ opacity: 1, y: 0 }}
@@ -211,14 +211,13 @@ export default function ModernEngineering() {
         </div>
 
         {/* Saturn System */}
-        <div className="relative w-full flex-1 flex items-center justify-center mt-4 md:mt-20">
+        <div className="relative w-full flex items-center justify-center">
           <motion.div
             initial={{ opacity: 0, scale: 0.85 }}
             whileInView={{ opacity: 1, scale: 1 }}
             viewport={{ once: true }}
             transition={{ duration: 1.2, ease: [0.16, 1, 0.3, 1] }}
-            className="relative flex items-center justify-center"
-            style={{ width: 900, height: 600 }}
+            className="relative flex items-center justify-center w-full max-w-[900px] h-[320px] md:h-[520px]"
           >
             {/* Scale wrapper for responsive and tilted rings */}
             <div className="absolute inset-0 flex items-center justify-center origin-center scale-[0.38] sm:scale-[0.58] md:scale-[0.78] lg:scale-[0.9] xl:scale-100 rotate-[-18deg]">

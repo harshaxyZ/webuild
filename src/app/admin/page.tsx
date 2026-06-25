@@ -1,7 +1,8 @@
 "use client";
 import { useEffect, useState } from "react";
-import { Users2, MapPin, Clock, ExternalLink } from "lucide-react";
+import { Users2, MapPin, Clock, ExternalLink, Copy } from "lucide-react";
 import Navbar from "@/components/Navbar";
+import toast from "react-hot-toast";
 
 export default function AdminPanel() {
   const [bookings, setBookings] = useState<any[]>([]);
@@ -115,6 +116,7 @@ export default function AdminPanel() {
                     <th className="p-5 font-medium">Project Specs</th>
                     <th className="p-5 font-medium">Description</th>
                     <th className="p-5 font-medium">Submitted</th>
+                    <th className="p-5 font-medium text-right">Actions</th>
                   </tr>
                 </thead>
                 <tbody>
@@ -135,6 +137,18 @@ export default function AdminPanel() {
                         </div>
                       </td>
                       <td className="p-5 text-xs text-[var(--muted)] whitespace-nowrap">{booking.date}</td>
+                      <td className="p-5 text-right">
+                        <button
+                          onClick={() => {
+                            const details = `Lead Details:\n-----------------------------\nName: ${booking.name}\nWhatsApp: ${booking.whatsapp}\nEmail: ${booking.email}\nProject Type: ${booking.projectType}\nPreferred Call: ${booking.preferredTime}\nDescription: ${booking.description}\nSubmitted: ${booking.date}`;
+                            navigator.clipboard.writeText(details);
+                            toast.success("Lead details copied!");
+                          }}
+                          className="px-3 py-1.5 border border-[var(--border)] hover:border-[var(--text)] rounded-lg inline-flex items-center gap-1.5 text-xs font-medium text-[var(--text)] bg-[var(--surface)] transition-all active:scale-95"
+                        >
+                          <Copy size={13} /> Copy Details
+                        </button>
+                      </td>
                     </tr>
                   ))}
                 </tbody>

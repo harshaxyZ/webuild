@@ -62,6 +62,18 @@ body {
   will-change: transform;
 }
 
+.global-grid {
+  position: fixed;
+  inset: 0;
+  background-image: 
+      linear-gradient(var(--border) 0.5px, transparent 0.5px),
+      linear-gradient(90deg, var(--border) 0.5px, transparent 0.5px);
+  background-size: 60px 60px;
+  opacity: 0.15;
+  z-index: 0;
+  pointer-events: none;
+}
+
 @keyframes marquee {
   from { transform: translateX(0); }
   to { transform: translateX(-50%); }

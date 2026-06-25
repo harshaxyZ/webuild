@@ -45,6 +45,7 @@ export default function RootLayout({ children }: Readonly<{ children: React.Reac
     <html lang="en" data-theme="dark" className={outfit.variable} suppressHydrationWarning>
       <body className="font-sans">
         <CustomCursor />
+        <div className="global-grid" />
         <SmoothScrolling>
           {children}
           <WhatsAppButton />
