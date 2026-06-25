@@ -8,7 +8,7 @@ import Hero from "@/components/Hero";
 import Marquee from "@/components/Marquee";
 import Approach from "@/components/Approach";
 import Services from "@/components/Services";
-import Testimonials from "@/components/Testimonials";
+import ModernEngineering from "@/components/ModernEngineering";
 import BookingPanel from "@/components/BookingPanel";
 import ScrollReveal from "@/components/ScrollReveal";
 
@@ -24,7 +24,7 @@ export default function Home() {
       <Marquee />
       <Approach />
       <Services />
-      <Testimonials />
+      <ModernEngineering />
 
       {/* Final CTA */}
       <section className="py-40 md:py-60 px-6 relative z-10 border-t border-[var(--border)] text-center">

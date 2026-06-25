@@ -29,22 +29,22 @@ export function CookieBanner() {
           className="fixed bottom-0 left-0 right-0 p-4 z-50 flex justify-center"
         >
           <div className="bg-[var(--surface)] border border-[var(--border)] rounded-lg shadow-2xl p-4 md:p-6 max-w-4xl w-full flex flex-col md:flex-row items-center justify-between gap-4 backdrop-blur-xl bg-opacity-90">
-            <p className="text-[var(--text-secondary)] text-sm leading-relaxed">
+            <p className="text-[var(--muted)] text-sm leading-relaxed">
               We use cookies to keep your session secure and remember your preferences. No tracking without your consent.{" "}
-              <Link href="/privacy-policy" className="text-[var(--text-primary)] underline underline-offset-2">
+              <Link href="/privacy-policy" className="text-[var(--text)] underline underline-offset-2">
                 Privacy Policy
               </Link>
             </p>
             <div className="flex items-center gap-3 shrink-0">
               <button
                 onClick={() => handleConsent("declined")}
-                className="px-4 py-2 text-sm text-[var(--text-secondary)] hover:text-[var(--text-primary)] transition-colors"
+                className="px-4 py-2 text-sm text-[var(--muted)] hover:text-[var(--text)] transition-colors"
               >
                 Decline
               </button>
               <button
                 onClick={() => handleConsent("accepted")}
-                className="px-6 py-2 text-sm bg-[var(--text-primary)] text-[var(--bg)] rounded-md font-medium hover:opacity-90 transition-opacity"
+                className="px-6 py-2 text-sm bg-[var(--text)] text-[var(--bg)] rounded-md font-medium hover:opacity-90 transition-opacity"
               >
                 Accept All
               </button>
