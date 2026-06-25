@@ -29,11 +29,8 @@
 
 /* Hide default cursor ONLY on non-touch desktop screens */
 @media (hover: hover) and (pointer: fine) {
-  html, body {
-    cursor: none;
-  }
-  a, button, input, textarea, select, [role="button"] {
-    cursor: none;
+  *, *:before, *:after {
+    cursor: none !important;
   }
 }
 

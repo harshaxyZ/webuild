@@ -10,7 +10,7 @@ import { BackButton } from "@/components/BackButton";
 import { LogOut, Calendar } from "lucide-react";
 
 export default function Dashboard() {
-  const [user, setUser] = useState<User | null>(null);
+  const [user, setUser] = useState<any>(null);
   const [bookings, setBookings] = useState<any[]>([]);
   const [loading, setLoading] = useState(true);
   const router = useRouter();
@@ -21,7 +21,7 @@ export default function Dashboard() {
       return;
     }
 
-    const unsubscribe = onAuthStateChanged(auth, async (currentUser) => {
+    const unsubscribe = onAuthStateChanged(auth, async (currentUser: any) => {
       if (!currentUser) {
         router.push("/login");
       } else {
@@ -31,7 +31,7 @@ export default function Dashboard() {
           try {
             const q = query(collection(db, "bookings"), where("userId", "==", currentUser.uid));
             const querySnapshot = await getDocs(q);
-            const userBookings = querySnapshot.docs.map(doc => ({ id: doc.id, ...doc.data() }));
+            const userBookings = querySnapshot.docs.map((doc: any) => ({ id: doc.id, ...doc.data() }));
             setBookings(userBookings);
           } catch (e) {
             console.error("Error fetching bookings:", e);

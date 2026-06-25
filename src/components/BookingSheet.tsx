@@ -26,12 +26,12 @@ type BookingFormValues = z.infer<typeof bookingSchema>;
 export function BookingSheet() {
   const { isBookingOpen, setBookingOpen } = useBooking();
   const [isSuccess, setIsSuccess] = React.useState(false);
-  const [user, setUser] = React.useState<User | null>(null);
+  const [user, setUser] = React.useState<any>(null);
   const router = useRouter();
 
   React.useEffect(() => {
     if (auth) {
-      const unsubscribe = onAuthStateChanged(auth, (currentUser) => {
+      const unsubscribe = onAuthStateChanged(auth, (currentUser: any) => {
         setUser(currentUser);
       });
       return () => unsubscribe();

@@ -5,20 +5,33 @@ import Navbar from "@/components/Navbar";
 
 export default function AdminPanel() {
   const [bookings, setBookings] = useState<any[]>([]);
+  const [loadingBookings, setLoadingBookings] = useState(true);
+  const [bookingsError, setBookingsError] = useState<string | null>(null);
   const [analytics, setAnalytics] = useState<any>(null);
   const [analyticsError, setAnalyticsError] = useState<string | null>(null);
   
   useEffect(() => {
-    // Fetch mock bookings
-    setBookings([
-      { id: 1, name: "Alice Johnson", whatsapp: "9876543210", description: "Need a FinTech dashboard.", date: "Today, 10:45 AM" },
-      { id: 2, name: "Bob Smith", whatsapp: "9876543211", description: "Looking for an e-commerce mobile app.", date: "Yesterday, 2:30 PM" },
-    ]);
+    // Fetch live bookings from server API
+    async function fetchBookings() {
+      try {
+        const res = await fetch("/api/admin/bookings");
+        const data = await res.json();
+        if (res.ok) {
+          setBookings(data);
+        } else {
+          setBookingsError(data.error || "Failed to load bookings");
+        }
+      } catch (err) {
+        setBookingsError("An error occurred fetching bookings");
+      } finally {
+        setLoadingBookings(false);
+      }
+    }
 
     // Fetch Analytics
     async function fetchAnalytics() {
       try {
-        const res = await fetch('/api/admin/analytics');
+        const res = await fetch("/api/admin/analytics");
         const data = await res.json();
         if (res.ok) {
           setAnalytics(data);
@@ -26,9 +39,11 @@ export default function AdminPanel() {
           setAnalyticsError(data.error);
         }
       } catch (err) {
-        setAnalyticsError('Failed to load analytics.');
+        setAnalyticsError("Failed to load analytics.");
       }
     }
+
+    fetchBookings();
     fetchAnalytics();
   }, []);
 
@@ -88,29 +103,44 @@ export default function AdminPanel() {
         <section>
           <h2 className="text-2xl font-medium mb-6">Recent Booking Requests</h2>
           <div className="bg-[var(--surface)] border border-[var(--border)] rounded-2xl overflow-hidden">
-            {bookings.length > 0 ? (
+            {loadingBookings ? (
+              <div className="p-16 text-center text-[var(--muted)]">Loading bookings...</div>
+            ) : bookingsError ? (
+              <div className="p-16 text-center text-red-500/80">⚠️ {bookingsError}</div>
+            ) : bookings.length > 0 ? (
               <table className="w-full text-left border-collapse">
                 <thead>
-                  <tr className="border-b border-[var(--border)] text-sm text-[var(--muted)]">
-                    <th className="p-4 font-medium">Name</th>
-                    <th className="p-4 font-medium">WhatsApp</th>
-                    <th className="p-4 font-medium">Project Description</th>
-                    <th className="p-4 font-medium">Date</th>
+                  <tr className="border-b border-[var(--border)] text-sm text-[var(--muted)] bg-[var(--surface)]">
+                    <th className="p-5 font-medium">Client Info</th>
+                    <th className="p-5 font-medium">Project Specs</th>
+                    <th className="p-5 font-medium">Description</th>
+                    <th className="p-5 font-medium">Submitted</th>
                   </tr>
                 </thead>
                 <tbody>
                   {bookings.map((booking: any) => (
                     <tr key={booking.id} className="border-b border-[var(--border)] last:border-b-0 hover:bg-[var(--border)]/30 transition-colors text-sm">
-                      <td className="p-4 font-medium">{booking.name}</td>
-                      <td className="p-4">{booking.whatsapp}</td>
-                      <td className="p-4 max-w-xs truncate" title={booking.description}>{booking.description}</td>
-                      <td className="p-4 text-[var(--muted)]">{booking.date}</td>
+                      <td className="p-5">
+                        <div className="font-medium text-[var(--text)]">{booking.name}</div>
+                        <div className="text-xs text-[var(--muted)] mt-1">{booking.whatsapp}</div>
+                        <div className="text-xs text-[var(--muted)]">{booking.email}</div>
+                      </td>
+                      <td className="p-5">
+                        <div className="font-medium capitalize text-[var(--text)]">{booking.projectType}</div>
+                        <div className="text-xs text-[var(--muted)] mt-1">Call: {booking.preferredTime}</div>
+                      </td>
+                      <td className="p-5 max-w-xs">
+                        <div className="text-xs text-[var(--text)] line-clamp-3 leading-relaxed" title={booking.description}>
+                          {booking.description}
+                        </div>
+                      </td>
+                      <td className="p-5 text-xs text-[var(--muted)] whitespace-nowrap">{booking.date}</td>
                     </tr>
                   ))}
                 </tbody>
               </table>
             ) : (
-              <div className="p-10 text-center text-[var(--muted)]">No booking requests yet.</div>
+              <div className="p-16 text-center text-[var(--muted)]">No booking requests yet.</div>
             )}
           </div>
         </section>

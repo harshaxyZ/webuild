@@ -225,8 +225,8 @@ export default function ModernEngineering() {
             className="relative flex items-center justify-center"
             style={{ width: 900, height: 600 }}
           >
-            {/* Scale wrapper for responsive */}
-            <div className="absolute inset-0 flex items-center justify-center origin-center scale-[0.55] sm:scale-[0.6] md:scale-[0.7] lg:scale-[0.85] xl:scale-100">
+            {/* Scale wrapper for responsive and tilted rings */}
+            <div className="absolute inset-0 flex items-center justify-center origin-center scale-[0.68] sm:scale-[0.75] md:scale-[0.85] lg:scale-[0.9] xl:scale-100 rotate-[-18deg]">
               {/* Back ring bands */}
               <RingBands isFront={false} />
 
@@ -238,7 +238,7 @@ export default function ModernEngineering() {
                   height: 300,
                   top: "50%",
                   left: "50%",
-                  transform: "translate(-50%, -50%)",
+                  transform: "translate(-50%, -50%) rotate(18deg)",
                   boxShadow:
                     "0 0 60px rgba(196,156,113,0.2), 0 0 150px rgba(196,156,113,0.08)",
                 }}
@@ -278,7 +278,7 @@ export default function ModernEngineering() {
                       animationDelay: `${delay}s`,
                     }}
                   >
-                    <div className="flex flex-col items-center gap-2">
+                    <div className="flex flex-col items-center gap-2 rotate-[18deg]">
                       <div
                         className="w-12 h-12 rounded-full flex items-center justify-center"
                         style={{
