@@ -5,7 +5,7 @@ import { auth, db } from "@/lib/firebase";
 import { onAuthStateChanged, signOut, User } from "firebase/auth";
 import { collection, query, where, getDocs } from "firebase/firestore";
 import { useRouter } from "next/navigation";
-import { Navbar } from "@/components/Navbar";
+import Navbar from "@/components/Navbar";
 import { BackButton } from "@/components/BackButton";
 import { LogOut, Calendar } from "lucide-react";
 

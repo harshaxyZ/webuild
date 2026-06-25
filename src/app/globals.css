@@ -1,159 +1,74 @@
-@import "tailwindcss";
-@plugin "tailwindcss-animate";
-
-/* Premium Design System */
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
 
 :root {
-  /* Default: Dark mode - Sleek, Deep Space */
-  --bg: #030712; /* Gray 950 */
-  --surface: #0a0a0a;
-  --surface-2: #111827; /* Gray 900 */
-  --border: #1f2937; /* Gray 800 */
-  --text-primary: #f9fafb; /* Gray 50 */
-  --text-secondary: #9ca3af; /* Gray 400 */
-  --accent: #3b82f6; /* Blue 500 */
-  --accent-hover: #60a5fa; /* Blue 400 */
-  --accent-glow: rgba(59, 130, 246, 0.2);
-  --success: #10b981;
-  --error: #ef4444;
-
-  --shadow-sm: 0 1px 3px rgba(0,0,0,0.5);
-  --shadow-md: 0 4px 24px rgba(0,0,0,0.6);
-  --shadow-glow: 0 0 40px rgba(59, 130, 246, 0.2);
-
-  --radius-card: 16px;
-  --radius-input: 8px;
-  --radius-pill: 9999px;
+  --bg: #fafafa;
+  --text: #0a0a0a;
+  --surface: #ffffff;
+  --border: #e5e5e5;
+  --muted: #6b6b6b;
+  --glass: rgba(250, 250, 250, 0.65);
 }
 
-:root[data-theme="light"], .light {
-  /* Clean Apple-like Light Mode */
-  --bg: #ffffff;
-  --surface: #f9fafb; /* Gray 50 */
-  --surface-2: #f3f4f6; /* Gray 100 */
-  --border: #e5e7eb; /* Gray 200 */
-  --text-primary: #111827; /* Gray 900 */
-  --text-secondary: #6b7280; /* Gray 500 */
-  --accent: #2563eb; /* Blue 600 */
-  --accent-hover: #1d4ed8; /* Blue 700 */
-  --accent-glow: rgba(37, 99, 235, 0.15);
-  --success: #059669;
-  --error: #dc2626;
-
-  --shadow-sm: 0 1px 3px rgba(0,0,0,0.05);
-  --shadow-md: 0 10px 40px rgba(0,0,0,0.05);
-  --shadow-glow: 0 0 40px rgba(37, 99, 235, 0.15);
+[data-theme="dark"] {
+  --bg: #0a0a0a;
+  --text: #fafafa;
+  --surface: #141414;
+  --border: #262626;
+  --muted: #888888;
+  --glass: rgba(10, 10, 10, 0.65);
 }
 
-@theme inline {
-  --color-bg: var(--bg);
-  --color-surface: var(--surface);
-  --color-surface-2: var(--surface-2);
-  --color-border: var(--border);
-  --color-text-primary: var(--text-primary);
-  --color-text-secondary: var(--text-secondary);
-  --color-accent: var(--accent);
-  --color-accent-hover: var(--accent-hover);
-  --color-accent-glow: var(--accent-glow);
-  --color-success: var(--success);
-  --color-error: var(--error);
-
-  --shadow-sm: var(--shadow-sm);
-  --shadow-md: var(--shadow-md);
-  --shadow-glow: var(--shadow-glow);
-
-  --radius-card: var(--radius-card);
-  --radius-input: var(--radius-input);
-  --radius-pill: var(--radius-pill);
+* {
+  box-sizing: border-box;
+  margin: 0;
+  padding: 0;
+  -webkit-font-smoothing: antialiased;
 }
 
-@layer base {
-  html {
-    scroll-behavior: smooth !important;
-    overflow-x: hidden;
-  }
-  body {
-    background-color: var(--bg);
-    color: var(--text-primary);
-    -webkit-font-smoothing: antialiased;
-    -moz-osx-font-smoothing: grayscale;
-    overflow-x: hidden;
-    overflow-wrap: break-word;
-    word-wrap: break-word;
-    line-height: 1.6;
-    font-size: 16px;
-    transition: background-color 0.4s ease, color 0.4s ease;
-  }
-  
-  h1, h2, h3, h4, h5, h6 {
-    letter-spacing: -0.04em;
-    line-height: 1.1;
-  }
+html.lenis { height: auto; }
+.lenis.lenis-smooth { scroll-behavior: auto !important; }
+
+body {
+  font-family: var(--font-outfit), sans-serif;
+  background-color: var(--bg);
+  color: var(--text);
+  overflow-x: hidden;
+  transition: background-color 0.4s ease, color 0.4s ease;
 }
 
-@layer components {
-  .section-padding {
-    padding-top: 80px;
-    padding-bottom: 80px;
-  }
-  @media (min-width: 768px) {
-    .section-padding {
-      padding-top: 160px;
-      padding-bottom: 160px;
-    }
-  }
+::-webkit-scrollbar { width: 0px; }
 
-  .btn-pill {
-    background-color: var(--accent);
-    color: #ffffff;
-    border-radius: var(--radius-pill);
-    padding: 14px 28px;
-    font-weight: 500;
-    transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
-    box-shadow: var(--shadow-md);
-    position: relative;
-    overflow: hidden;
-  }
-  .btn-pill::after {
-    content: '';
-    position: absolute;
-    top: 0; left: 0; right: 0; bottom: 0;
-    background: linear-gradient(rgba(255,255,255,0.1), rgba(255,255,255,0));
-    pointer-events: none;
-  }
-  .btn-pill:hover {
-    background-color: var(--accent-hover);
-    transform: translateY(-2px);
-    box-shadow: var(--shadow-glow);
-  }
-  .btn-pill:active {
-    transform: translateY(0) scale(0.98);
-  }
-
-  .service-card {
-    background-color: var(--surface);
-    border: 1px solid var(--border);
-    border-radius: var(--radius-card);
-    transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
-    backdrop-filter: blur(10px);
-  }
-  .service-card:hover {
-    border-color: var(--accent);
-    box-shadow: var(--shadow-glow);
-    transform: translateY(-8px);
-  }
-
-  .glass-nav {
-    background: color-mix(in srgb, var(--surface) 80%, transparent);
-    backdrop-filter: blur(16px);
-    -webkit-backdrop-filter: blur(16px);
-    border-bottom: 1px solid var(--border);
-  }
+.grid-bg {
+  position: absolute;
+  inset: 0;
+  background-image: 
+      linear-gradient(var(--border) 1px, transparent 1px),
+      linear-gradient(90deg, var(--border) 1px, transparent 1px);
+  background-size: 80px 80px;
+  mask-image: radial-gradient(ellipse 80% 60% at 50% 40%, black 0%, transparent 100%);
+  -webkit-mask-image: radial-gradient(ellipse 80% 60% at 50% 40%, black 0%, transparent 100%);
+  opacity: 0.3;
+  z-index: 0;
+  pointer-events: none;
+  will-change: transform;
 }
 
-/* Premium Hero Animation */
-.hero-gradient {
-  background: radial-gradient(circle at 15% 50%, var(--accent-glow), transparent 40%),
-              radial-gradient(circle at 85% 30%, rgba(139, 92, 246, 0.15), transparent 40%);
-  filter: blur(40px);
+.noise-overlay {
+  position: fixed;
+  inset: 0;
+  pointer-events: none;
+  z-index: 9999;
+  opacity: 0.015;
+  background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 200 200' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='noiseFilter'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.65' numOctaves='3' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23noiseFilter)'/%3E%3C/svg%3E");
+}
+
+@keyframes marquee {
+  from { transform: translateX(0); }
+  to { transform: translateX(-50%); }
+}
+.animate-marquee {
+  animation: marquee 40s linear infinite;
+  will-change: transform;
 }

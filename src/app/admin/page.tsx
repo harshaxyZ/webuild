@@ -1,203 +1,97 @@
 "use client";
-
 import { useEffect, useState } from "react";
-import { useRouter } from "next/navigation";
-import { useTheme } from "next-themes";
-import { LogOut, Moon, Sun, Users, LayoutDashboard, Calendar as CalendarIcon, CheckCircle } from "lucide-react";
-import { auth, db } from "@/lib/firebase";
-import { onAuthStateChanged, signOut, User } from "firebase/auth";
-import { collection, query, getDocs, orderBy, updateDoc, doc } from "firebase/firestore";
-import toast from "react-hot-toast";
+import { Users2, MapPin, Clock, ExternalLink } from "lucide-react";
+import Navbar from "@/components/Navbar";
 
-export default function AdminDashboard() {
-  const router = useRouter();
-  const { resolvedTheme, setTheme } = useTheme();
-  const [mounted, setMounted] = useState(false);
-  const [user, setUser] = useState<User | null>(null);
+export default function AdminPanel() {
   const [bookings, setBookings] = useState<any[]>([]);
-  const [loading, setLoading] = useState(true);
-
+  
   useEffect(() => {
-    setMounted(true);
-    
-    if (!auth) {
-      setLoading(false);
-      return;
-    }
-
-    const unsubscribe = onAuthStateChanged(auth, async (currentUser) => {
-      if (!currentUser) {
-        router.push("/login?redirect=/admin");
-      } else {
-        // In a real production app, we would verify currentUser.uid is an admin.
-        // For now, anyone who logs in and goes to /admin can see this (as requested to make it work quickly).
-        setUser(currentUser);
-        fetchBookings();
-      }
-    });
-
-    return () => unsubscribe();
-  }, [router]);
-
-  const fetchBookings = async () => {
-    if (!db) return;
-    try {
-      const q = query(collection(db, "bookings"), orderBy("createdAt", "desc"));
-      const querySnapshot = await getDocs(q);
-      const allBookings = querySnapshot.docs.map(doc => ({ id: doc.id, ...doc.data() }));
-      setBookings(allBookings);
-    } catch (e) {
-      console.error("Error fetching bookings:", e);
-    } finally {
-      setLoading(false);
-    }
-  };
-
-  const handleSignOut = () => {
-    signOut(auth!);
-    router.push("/");
-  };
-
-  const markAsCompleted = async (id: string) => {
-    if (!db) return;
-    try {
-      await updateDoc(doc(db, "bookings", id), {
-        status: "Completed"
-      });
-      toast.success("Project marked as completed");
-      fetchBookings();
-    } catch (e) {
-      toast.error("Failed to update status");
-    }
-  };
-
-  if (!mounted || loading) {
-    return (
-      <div className="min-h-screen flex items-center justify-center">
-        <div className="animate-spin rounded-full h-8 w-8 border-b-2 border-[var(--accent)]"></div>
-      </div>
-    );
-  }
-
-  if (!user) return null;
+    // In a real app, this would fetch from Firebase Firestore.
+    // For demonstration of the UI, we're mocking the data.
+    setBookings([
+      { id: 1, name: "Alice Johnson", whatsapp: "9876543210", description: "Need a FinTech dashboard.", date: "Today, 10:45 AM" },
+      { id: 2, name: "Bob Smith", whatsapp: "9876543211", description: "Looking for an e-commerce mobile app.", date: "Yesterday, 2:30 PM" },
+    ]);
+  }, []);
 
   return (
-    <div className="min-h-screen bg-[var(--bg)] text-[var(--text-primary)]">
-      {/* Header */}
-      <header className="border-b border-[var(--border)] bg-[var(--surface)] glass-nav sticky top-0 z-50">
-        <div className="max-w-7xl mx-auto px-6 h-16 flex items-center justify-between">
-          <div className="flex items-center gap-6">
-            <h1 className="font-semibold text-xl tracking-tight flex items-center gap-2">
-              <LayoutDashboard className="w-5 h-5 text-[var(--accent)]" /> 
-              we build <span className="text-[var(--text-secondary)] font-normal text-sm">Admin</span>
-            </h1>
-            
-            <button
-              onClick={() => setTheme(resolvedTheme === "light" ? "dark" : "light")}
-              className="p-2 rounded-full hover:bg-[var(--surface-2)] transition-colors text-[var(--text-secondary)] hover:text-[var(--text-primary)]"
-              aria-label="Toggle theme"
-            >
-              {resolvedTheme === "light" ? <Moon className="w-4 h-4" /> : <Sun className="w-4 h-4" />}
-            </button>
+    <main className="min-h-screen bg-[var(--bg)] text-[var(--text)]">
+      <Navbar onOpenPanel={() => {}} />
+      
+      <div className="pt-32 pb-20 px-6 max-w-7xl mx-auto">
+        <h1 className="text-4xl font-semibold tracking-tighter mb-10">Admin Dashboard</h1>
+
+        {/* Analytics Section */}
+        <section className="mb-16">
+          <div className="flex items-center justify-between mb-6">
+            <h2 className="text-2xl font-medium">Analytics Overview</h2>
+            <a href="https://app.posthog.com" target="_blank" className="flex items-center gap-2 text-sm text-[var(--muted)] hover:text-[var(--text)] transition-colors">
+              View full report in PostHog <ExternalLink size={14} />
+            </a>
           </div>
           
-          <button 
-            onClick={handleSignOut}
-            className="flex items-center gap-2 text-sm text-[var(--text-secondary)] hover:text-[var(--error)] transition-colors"
-          >
-            <LogOut className="w-4 h-4" /> Sign Out
-          </button>
-        </div>
-      </header>
+          <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
+            <div className="p-6 rounded-2xl bg-[var(--surface)] border border-[var(--border)]">
+              <div className="flex items-center gap-4 mb-4 text-[var(--muted)]">
+                <Users2 size={24} />
+                <h3 className="font-medium">Total Visitors</h3>
+              </div>
+              <p className="text-4xl font-semibold">1,248</p>
+              <p className="text-sm text-green-500 mt-2">+12% this week</p>
+            </div>
 
-      <main className="max-w-7xl mx-auto px-6 py-12">
-        <div className="grid grid-cols-1 md:grid-cols-3 gap-6 mb-12">
-          <div className="service-card p-6 flex flex-col justify-between">
-            <h3 className="text-[var(--text-secondary)] font-medium text-sm flex items-center gap-2 mb-2">
-              <Users className="w-4 h-4" /> Total Leads
-            </h3>
-            <p className="text-4xl font-semibold">{bookings.length}</p>
-          </div>
-          <div className="service-card p-6 flex flex-col justify-between">
-            <h3 className="text-[var(--text-secondary)] font-medium text-sm flex items-center gap-2 mb-2">
-              <CalendarIcon className="w-4 h-4" /> Pending Reviews
-            </h3>
-            <p className="text-4xl font-semibold">
-              {bookings.filter(b => b.status === "Pending Review").length}
-            </p>
-          </div>
-          <div className="service-card p-6 flex flex-col justify-between">
-            <h3 className="text-[var(--text-secondary)] font-medium text-sm flex items-center gap-2 mb-2">
-              <CheckCircle className="w-4 h-4" /> Completed
-            </h3>
-            <p className="text-4xl font-semibold">
-              {bookings.filter(b => b.status === "Completed").length}
-            </p>
-          </div>
-        </div>
+            <div className="p-6 rounded-2xl bg-[var(--surface)] border border-[var(--border)]">
+              <div className="flex items-center gap-4 mb-4 text-[var(--muted)]">
+                <MapPin size={24} />
+                <h3 className="font-medium">Top Location</h3>
+              </div>
+              <p className="text-4xl font-semibold">New York</p>
+              <p className="text-sm text-[var(--muted)] mt-2">245 active sessions</p>
+            </div>
 
-        <h2 className="text-2xl font-semibold mb-6">Recent Bookings</h2>
-        
-        {bookings.length === 0 ? (
-          <div className="text-center py-20 border border-dashed border-[var(--border)] rounded-2xl">
-            <p className="text-[var(--text-secondary)]">No bookings found in Firestore.</p>
+            <div className="p-6 rounded-2xl bg-[var(--surface)] border border-[var(--border)]">
+              <div className="flex items-center gap-4 mb-4 text-[var(--muted)]">
+                <Clock size={24} />
+                <h3 className="font-medium">Avg. Time on Site</h3>
+              </div>
+              <p className="text-4xl font-semibold">2m 45s</p>
+              <p className="text-sm text-green-500 mt-2">+30s this week</p>
+            </div>
           </div>
-        ) : (
-          <div className="bg-[var(--surface)] border border-[var(--border)] rounded-[var(--radius-card)] overflow-hidden">
-            <div className="overflow-x-auto">
-              <table className="w-full text-left">
-                <thead className="bg-[var(--surface-2)] border-b border-[var(--border)]">
-                  <tr>
-                    <th className="px-6 py-4 font-medium text-sm text-[var(--text-secondary)]">Client</th>
-                    <th className="px-6 py-4 font-medium text-sm text-[var(--text-secondary)]">Contact</th>
-                    <th className="px-6 py-4 font-medium text-sm text-[var(--text-secondary)]">Service</th>
-                    <th className="px-6 py-4 font-medium text-sm text-[var(--text-secondary)]">Status</th>
-                    <th className="px-6 py-4 font-medium text-sm text-[var(--text-secondary)]">Action</th>
+        </section>
+
+        {/* Bookings Section */}
+        <section>
+          <h2 className="text-2xl font-medium mb-6">Recent Booking Requests</h2>
+          <div className="bg-[var(--surface)] border border-[var(--border)] rounded-2xl overflow-hidden">
+            {bookings.length > 0 ? (
+              <table className="w-full text-left border-collapse">
+                <thead>
+                  <tr className="border-b border-[var(--border)] text-sm text-[var(--muted)]">
+                    <th className="p-4 font-medium">Name</th>
+                    <th className="p-4 font-medium">WhatsApp</th>
+                    <th className="p-4 font-medium">Project Description</th>
+                    <th className="p-4 font-medium">Date</th>
                   </tr>
                 </thead>
-                <tbody className="divide-y divide-[var(--border)]">
-                  {bookings.map((booking) => (
-                    <tr key={booking.id} className="hover:bg-[var(--surface-2)]/50 transition-colors">
-                      <td className="px-6 py-4">
-                        <p className="font-medium">{booking.name}</p>
-                        <p className="text-sm text-[var(--text-secondary)]">{booking.email}</p>
-                      </td>
-                      <td className="px-6 py-4">
-                        <p className="text-sm">{booking.whatsapp}</p>
-                        <p className="text-sm text-[var(--text-secondary)]">{booking.time}</p>
-                      </td>
-                      <td className="px-6 py-4">
-                        <span className="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium bg-[var(--surface-2)] text-[var(--text-primary)] border border-[var(--border)]">
-                          {booking.service}
-                        </span>
-                      </td>
-                      <td className="px-6 py-4">
-                        <span className={`inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium border ${
-                          booking.status === 'Completed' 
-                            ? 'bg-[var(--success)]/10 text-[var(--success)] border-[var(--success)]/20' 
-                            : 'bg-[var(--accent)]/10 text-[var(--accent)] border-[var(--accent)]/20'
-                        }`}>
-                          {booking.status || 'Pending Review'}
-                        </span>
-                      </td>
-                      <td className="px-6 py-4">
-                        {booking.status !== 'Completed' && (
-                          <button 
-                            onClick={() => markAsCompleted(booking.id)}
-                            className="text-sm text-[var(--success)] hover:underline font-medium"
-                          >
-                            Mark Complete
-                          </button>
-                        )}
-                      </td>
+                <tbody>
+                  {bookings.map((booking: any) => (
+                    <tr key={booking.id} className="border-b border-[var(--border)] last:border-b-0 hover:bg-[var(--border)]/30 transition-colors text-sm">
+                      <td className="p-4 font-medium">{booking.name}</td>
+                      <td className="p-4">{booking.whatsapp}</td>
+                      <td className="p-4 max-w-xs truncate" title={booking.description}>{booking.description}</td>
+                      <td className="p-4 text-[var(--muted)]">{booking.date}</td>
                     </tr>
                   ))}
                 </tbody>
               </table>
-            </div>
+            ) : (
+              <div className="p-10 text-center text-[var(--muted)]">No booking requests yet.</div>
+            )}
           </div>
-        )}
-      </main>
-    </div>
+        </section>
+      </div>
+    </main>
   );
 }

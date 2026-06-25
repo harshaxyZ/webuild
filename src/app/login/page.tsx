@@ -7,7 +7,7 @@ import { useRouter, useSearchParams } from "next/navigation";
 import toast from "react-hot-toast";
 import { motion } from "framer-motion";
 import { BackButton } from "@/components/BackButton";
-import { Navbar } from "@/components/Navbar";
+import Navbar from "@/components/Navbar";
 
 function LoginForm() {
   const [email, setEmail] = useState("");

@@ -1,73 +1,27 @@
 import type { Metadata } from "next";
 import { Outfit } from "next/font/google";
-import { Toaster } from "react-hot-toast";
 import "./globals.css";
-import { ThemeProvider } from "@/components/ThemeProvider";
-import { CookieBanner } from "@/components/CookieBanner";
-import { BookingProvider } from "@/components/BookingProvider";
-import { BookingSheet } from "@/components/BookingSheet";
-
-const outfit = Outfit({
-  variable: "--font-sans",
-  subsets: ["latin"],
-  display: "swap",
-});
+import { ReactLenis as LenisProvider } from "@studio-freight/react-lenis";
+import { PostHogProvider } from "@/components/PostHogProvider";
+import WhatsAppButton from "@/components/WhatsAppButton";
+const outfit = Outfit({ subsets: ["latin"], variable: "--font-outfit" });
 
 export const metadata: Metadata = {
-  metadataBase: new URL("https://www.webuildnow.in"),
-  title: "we build — Apps, Websites & AI Agents",
-  description: "We build apps, websites, and AI automations for businesses that want results. Book a call and let's talk.",
-  alternates: {
-    canonical: "https://www.webuildnow.in",
-  },
-  openGraph: {
-    title: "we build — Apps, Websites & AI Agents",
-    description: "We build apps, websites, and AI automations for businesses that want results. Book a call and let's talk.",
-    url: "https://www.webuildnow.in",
-    type: "website",
-    images: ["/og-image.png"],
-  },
-  twitter: {
-    card: "summary_large_image",
-    title: "we build — Apps, Websites & AI Agents",
-    description: "We build apps, websites, and AI automations for businesses that want results. Book a call and let's talk.",
-  },
+  title: "We Build — Premium Digital Products",
+  description: "Engineering your idea from scratch with absolute modern precision.",
 };
 
-export default function RootLayout({
-  children,
-}: Readonly<{
-  children: React.ReactNode;
-}>) {
+export default function RootLayout({ children }: Readonly<{ children: React.ReactNode }>) {
   return (
-    <html lang="en" className={`${outfit.variable} h-full antialiased dark`} suppressHydrationWarning>
-      <head>
-        <link rel="icon" type="image/svg+xml" href="/favicon.svg" />
-      </head>
-      <body suppressHydrationWarning className="min-h-full flex flex-col font-sans">
-        <ThemeProvider attribute="class" defaultTheme="dark" enableSystem={false}>
-          <BookingProvider>
+    <html lang="en" data-theme="dark" className={outfit.variable} suppressHydrationWarning>
+      <body className="font-sans cursor-none md:cursor-none cursor-auto">
+        <PostHogProvider>
+          <div className="noise-overlay" />
+          <LenisProvider root options={{ duration: 1.2, smoothWheel: true, easing: (t) => Math.min(1, 1.001 - Math.pow(2, -10 * t)) }}>
             {children}
-            <BookingSheet />
-            <CookieBanner />
-            <Toaster 
-              position="bottom-center"
-              toastOptions={{
-                style: {
-                  background: 'var(--surface-2)',
-                  color: 'var(--text-primary)',
-                  border: '1px solid var(--border)',
-                },
-                success: {
-                  iconTheme: {
-                    primary: 'var(--success)',
-                    secondary: 'white',
-                  },
-                },
-              }}
-            />
-          </BookingProvider>
-        </ThemeProvider>
+            <WhatsAppButton />
+          </LenisProvider>
+        </PostHogProvider>
       </body>
     </html>
   );
