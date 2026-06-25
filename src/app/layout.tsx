@@ -17,6 +17,7 @@ export default function RootLayout({ children }: Readonly<{ children: React.Reac
       <body className="font-sans cursor-none md:cursor-none cursor-auto">
         <PostHogProvider>
           <div className="noise-overlay" />
+          {/* @ts-ignore */}
           <LenisProvider root options={{ duration: 1.2, smoothWheel: true, easing: (t) => Math.min(1, 1.001 - Math.pow(2, -10 * t)) }}>
             {children}
             <WhatsAppButton />
