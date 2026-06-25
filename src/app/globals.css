@@ -27,8 +27,14 @@
   -webkit-font-smoothing: antialiased;
 }
 
-html {
-  cursor: none;
+/* Hide default cursor ONLY on non-touch desktop screens */
+@media (hover: hover) and (pointer: fine) {
+  html, body {
+    cursor: none;
+  }
+  a, button, input, textarea, select, [role="button"] {
+    cursor: none;
+  }
 }
 
 html.lenis { height: auto; }
@@ -40,7 +46,6 @@ body {
   color: var(--text);
   overflow-x: hidden;
   transition: background-color 0.4s ease, color 0.4s ease;
-  cursor: none;
 }
 
 ::-webkit-scrollbar { width: 0px; }
@@ -58,16 +63,6 @@ body {
   z-index: 0;
   pointer-events: none;
   will-change: transform;
-}
-
-.noise-overlay {
-  position: fixed;
-  inset: 0;
-  pointer-events: none;
-  z-index: 9999;
-  opacity: 0.05;
-  background-image: url("/noise.png");
-  background-repeat: repeat;
 }
 
 @keyframes marquee {

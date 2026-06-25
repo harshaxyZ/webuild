@@ -49,7 +49,6 @@ export default function Home() {
           <div className="flex gap-6 text-[var(--muted)]">
             <a href="/privacy-policy" className="hover:text-[var(--text)] transition-colors text-sm">Privacy</a>
             <a href="/terms-of-service" className="hover:text-[var(--text)] transition-colors text-sm">Terms</a>
-            <a href="https://github.com/harshaxyZ/webuild" target="_blank" className="hover:text-[var(--text)] transition-colors text-sm">GitHub</a>
           </div>
         </div>
       </footer>

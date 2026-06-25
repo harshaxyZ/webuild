@@ -15,9 +15,8 @@ export const metadata: Metadata = {
 export default function RootLayout({ children }: Readonly<{ children: React.ReactNode }>) {
   return (
     <html lang="en" data-theme="dark" className={outfit.variable} suppressHydrationWarning>
-      <body className="font-sans cursor-none md:cursor-none cursor-auto">
+      <body className="font-sans">
         <SmoothScrolling>
-          <div className="noise-overlay" />
           {children}
           <WhatsAppButton />
         </SmoothScrolling>

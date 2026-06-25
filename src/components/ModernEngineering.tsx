@@ -1,168 +1,310 @@
 "use client";
-import { useRef } from "react";
-import { motion, useInView } from "framer-motion";
+import { motion } from "framer-motion";
 
-const frameworks = [
-  { name: "React", svg: <path d="M12 2c5.52 0 10 4.48 10 10s-4.48 10-10 10S2 17.52 2 12 6.48 2 12 2zm0 1.5c-4.69 0-8.5 3.81-8.5 8.5s3.81 8.5 8.5 8.5 8.5-3.81 8.5-8.5-3.81-8.5-8.5-8.5zm0 2.5c3.31 0 6 2.69 6 6s-2.69 6-6 6-6-2.69-6-6 2.69-6 6-6z" fill="#61DAFB"/> }, 
-  { name: "Next.js", svg: <path d="M12 2L2 22h20L12 2zm0 4.5l6.5 13h-13l6.5-13z" fill="#fff"/> },
-  { name: "TypeScript", svg: <path d="M4 4h16v16H4V4zm9 11h2v-4h3v-2h-8v2h3v4zM7 9v2h4v2H7v4h2v-6H7z" fill="#3178C6"/> },
-  { name: "Tailwind", svg: <path d="M12 4c-3 0-5 2.5-5 6 0 3.5 3.5 4.5 5 7 3 0 5-2.5 5-6 0-3.5-3.5-4.5-5-7z" fill="#38B2AC"/> },
-  { name: "Node.js", svg: <path d="M12 2L3 7v10l9 5 9-5V7l-9-5zm0 2.3l6.8 3.8-6.8 3.8-6.8-3.8L12 4.3zm0 15.4l-7-3.9V9.1l7 3.9 7-3.9v6.7l-7 3.9z" fill="#339933"/> },
-  { name: "GSAP", svg: <circle cx="12" cy="12" r="8" fill="#88CE02"/> },
-  { name: "Supabase", svg: <path d="M12 2L2 12h8v10l10-10h-8V2z" fill="#3ECF8E"/> },
-  { name: "Framer", svg: <path d="M4 2h16v8h-8l8 8H4V2z" fill="#0055FF"/> },
-  { name: "Vercel", svg: <path d="M24 22.525H0l12-21.05 12 21.05z" fill="#fff"/> },
-  { name: "PostgreSQL", svg: <path d="M21.1 19.5c-.8 1.4-2.1 2.5-3.6 3.1-1.7.7-3.6.9-5.5.9-1.9 0-3.8-.2-5.5-.9-1.5-.6-2.8-1.7-3.6-3.1-.9-1.5-1.3-3.2-1.3-4.9 0-1.7.4-3.4 1.3-4.9.8-1.4 2.1-2.5 3.6-3.1 1.7-.7 3.6-.9 5.5-.9 1.9 0 3.8.2 5.5.9 1.5.6 2.8 1.7 3.6 3.1.9 1.5 1.3 3.2 1.3 4.9 0 1.7-.4 3.4-1.3 4.9zm-9.1-12c-2.3 0-4.2 1.9-4.2 4.2 0 2.3 1.9 4.2 4.2 4.2 2.3 0 4.2-1.9 4.2-4.2 0-2.3-1.9-4.2-4.2-4.2z" fill="#336791"/> },
-  { name: "Redis", svg: <path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm3.88 13.98c-1.15.54-2.5.83-3.88.83-1.38 0-2.73-.29-3.88-.83-.41-.19-.59-.68-.4-1.09.19-.41.68-.59 1.09-.4 1.01.48 2.11.72 3.19.72s2.18-.24 3.19-.72c.41-.19.9-.01 1.09.4.19.41.01.9-.4 1.09zM15 11c-.55 0-1-.45-1-1s.45-1 1-1 1 .45 1 1-.45 1-1 1zm-6 0c-.55 0-1-.45-1-1s.45-1 1-1 1 .45 1 1-.45 1-1 1z" fill="#DC382D"/> },
-  { name: "Docker", svg: <path d="M21.9 11.2c-.2-.7-.9-1.2-1.7-1.2h-1v-2c0-.5-.4-.9-.9-.9h-2v-2c0-.5-.4-.9-.9-.9h-6c-.5 0-.9.4-.9.9v2h-2c-.5 0-.9.4-.9.9v2h-2c-.5 0-.9.4-.9.9v1.2c-1.4.3-2.5 1.5-2.5 3 0 1.7 1.3 3 3 3h16.2c1.7 0 3-1.3 3-3 0-1-.5-1.9-1.4-2.4zm-14.9-6h4.2v1.8h-4.2v-1.8zm-4.2 3.8h4.2v1.8h-4.2v-1.8zm8.4 0h4.2v1.8h-4.2v-1.8zm4.2 3.8h-4.2v-1.8h4.2v1.8zm-8.4 0h-4.2v-1.8h4.2v1.8z" fill="#2496ED"/> },
+/* ─────────────────── Actual SVG Logo Data ─────────────────── */
+const frameworks: { name: string; color: string; logo: JSX.Element }[] = [
+  {
+    name: "React",
+    color: "#61DAFB",
+    logo: (
+      <g fill="none" stroke="#61DAFB" strokeWidth="1">
+        <ellipse cx="12" cy="12" rx="10" ry="4" />
+        <ellipse cx="12" cy="12" rx="10" ry="4" transform="rotate(60 12 12)" />
+        <ellipse cx="12" cy="12" rx="10" ry="4" transform="rotate(120 12 12)" />
+        <circle cx="12" cy="12" r="2" fill="#61DAFB" />
+      </g>
+    ),
+  },
+  {
+    name: "Next.js",
+    color: "#fff",
+    logo: (
+      <g>
+        <circle cx="12" cy="12" r="10" fill="none" stroke="#fff" strokeWidth="1" />
+        <path d="M8 8l10 12M8 8v8" stroke="#fff" strokeWidth="1.5" strokeLinecap="round" />
+      </g>
+    ),
+  },
+  {
+    name: "TypeScript",
+    color: "#3178C6",
+    logo: (
+      <g>
+        <rect x="2" y="2" width="20" height="20" rx="3" fill="#3178C6" />
+        <text x="7" y="17" fontSize="13" fontWeight="bold" fontFamily="Arial" fill="#fff">TS</text>
+      </g>
+    ),
+  },
+  {
+    name: "Tailwind",
+    color: "#06B6D4",
+    logo: (
+      <g fill="#06B6D4">
+        <path d="M12 6C9.33 6 7.67 7.33 7 10c1-1.33 2.17-1.83 3.5-1.5.76.19 1.3.74 1.9 1.35C13.35 10.82 14.5 12 17 12c2.67 0 4.33-1.33 5-4-1 1.33-2.17 1.83-3.5 1.5-.76-.19-1.3-.74-1.9-1.35C15.65 7.18 14.5 6 12 6zM7 12C4.33 12 2.67 13.33 2 16c1-1.33 2.17-1.83 3.5-1.5.76.19 1.3.74 1.9 1.35C8.35 16.82 9.5 18 12 18c2.67 0 4.33-1.33 5-4-1 1.33-2.17 1.83-3.5 1.5-.76-.19-1.3-.74-1.9-1.35C10.65 13.18 9.5 12 7 12z" />
+      </g>
+    ),
+  },
+  {
+    name: "Node.js",
+    color: "#339933",
+    logo: (
+      <g fill="#339933">
+        <path d="M12 1.85l8.69 5.02v10.04L12 21.93l-8.69-5.02V6.87L12 1.85zm0 1.73L4.81 8.02v7.74L12 20.2l7.19-4.44V8.02L12 3.58z" />
+        <path d="M12 7.5v9" stroke="#339933" strokeWidth="1.5" />
+      </g>
+    ),
+  },
+  {
+    name: "Supabase",
+    color: "#3ECF8E",
+    logo: (
+      <g>
+        <path d="M13.7 21.15c-.44.56-1.36.15-1.35-.6l.15-7.05H4.82c-.87 0-1.34-1.01-.78-1.68L10.3 2.85c.44-.56 1.36-.15 1.35.6l-.15 7.05h7.68c.87 0 1.34 1.01.78 1.68l-6.26 6.97z" fill="#3ECF8E" />
+      </g>
+    ),
+  },
+  {
+    name: "Vercel",
+    color: "#fff",
+    logo: <polygon points="12,2 22,20 2,20" fill="#fff" />,
+  },
+  {
+    name: "Framer",
+    color: "#05F",
+    logo: (
+      <g fill="#05F">
+        <path d="M4 0h16v8H12l8 8H4V8h8L4 0z" transform="translate(0,4) scale(0.83)" />
+      </g>
+    ),
+  },
+  {
+    name: "Figma",
+    color: "#F24E1E",
+    logo: (
+      <g>
+        <circle cx="15" cy="8" r="3" fill="#1ABCFE" />
+        <circle cx="15" cy="12" r="3" fill="#0ACF83" />
+        <rect x="9" y="5" width="6" height="6" rx="3" fill="#FF7262" />
+        <rect x="9" y="11" width="6" height="6" rx="3" fill="#A259FF" />
+        <path d="M9 17a3 3 0 106 0V14H9v3z" fill="#0ACF83" />
+      </g>
+    ),
+  },
+  {
+    name: "PostgreSQL",
+    color: "#336791",
+    logo: (
+      <g>
+        <circle cx="12" cy="12" r="9" fill="none" stroke="#336791" strokeWidth="1.5" />
+        <text x="6.5" y="16" fontSize="10" fontWeight="bold" fontFamily="Arial" fill="#336791">P</text>
+      </g>
+    ),
+  },
 ];
 
-const RingSystem = ({ isFront }: { isFront: boolean }) => (
-  <div 
-    className="absolute top-1/2 left-1/2 w-[900px] h-[900px] -translate-x-1/2 -translate-y-1/2 pointer-events-none"
-    style={{
-      transform: "translate(-50%, -50%) scaleY(0.35)", 
-      clipPath: isFront ? "polygon(0 50%, 100% 50%, 100% 100%, 0 100%)" : "polygon(0 0, 100% 0, 100% 50%, 0 50%)",
-      zIndex: isFront ? 30 : 10
-    }}
-  >
-    {/* Thick, Bright, Realistic Rings */}
-    <div className="absolute top-1/2 left-1/2 w-[460px] h-[460px] -translate-x-1/2 -translate-y-1/2 rounded-full border-[20px] border-[#c49c71]/40 shadow-[0_0_40px_rgba(196,156,113,0.5)]" />
-    <div className="absolute top-1/2 left-1/2 w-[540px] h-[540px] -translate-x-1/2 -translate-y-1/2 rounded-full border-[40px] border-[#e6b981]/50 shadow-[0_0_60px_rgba(230,185,129,0.6)]" />
-    <div className="absolute top-1/2 left-1/2 w-[620px] h-[620px] -translate-x-1/2 -translate-y-1/2 rounded-full border-[8px] border-[#f4dfc4]/60 shadow-[0_0_20px_rgba(244,223,196,0.8)]" />
-    <div className="absolute top-1/2 left-1/2 w-[720px] h-[720px] -translate-x-1/2 -translate-y-1/2 rounded-full border-[60px] border-[#916b45]/30 shadow-[0_0_80px_rgba(145,107,69,0.4)]" />
-    <div className="absolute top-1/2 left-1/2 w-[840px] h-[840px] -translate-x-1/2 -translate-y-1/2 rounded-full border-[2px] border-[#f4dfc4]/30" />
-    
-    {/* Animated Ring Textures (Dashed lines to show rotation) */}
-    <div className="absolute top-1/2 left-1/2 w-[540px] h-[540px] -translate-x-1/2 -translate-y-1/2 rounded-full border-[40px] border-black/10 border-dashed animate-spin-slow" />
-    <div className="absolute top-1/2 left-1/2 w-[720px] h-[720px] -translate-x-1/2 -translate-y-1/2 rounded-full border-[60px] border-black/10 border-dashed animate-spin-reverse" />
+/* ─────────────────── Glowing Stars (CSS only) ─────────────────── */
+function Stars() {
+  // Generate 80 random stars using seeded positions
+  const stars = Array.from({ length: 80 }, (_, i) => {
+    const seed = (i * 7919 + 104729) % 100;
+    const seed2 = (i * 6271 + 32749) % 100;
+    const size = (i % 5 === 0) ? 3 : (i % 3 === 0) ? 2 : 1;
+    const delay = (i * 0.37) % 5;
+    const opacity = 0.3 + (seed % 70) / 100;
+    return (
+      <div
+        key={i}
+        className="absolute rounded-full"
+        style={{
+          left: `${seed}%`,
+          top: `${seed2}%`,
+          width: size,
+          height: size,
+          backgroundColor: `rgba(255,255,255,${opacity})`,
+          boxShadow: size > 1 ? `0 0 ${size * 3}px ${size}px rgba(255,255,255,${opacity * 0.6})` : 'none',
+          animation: `twinkle ${2 + delay}s ease-in-out infinite`,
+          animationDelay: `${delay}s`,
+        }}
+      />
+    );
+  });
+  return <div className="absolute inset-0 overflow-hidden">{stars}</div>;
+}
 
-    {/* Orbiting Framework Logos */}
-    {frameworks.map((fw, i) => {
-      // 12 logos, 60s total orbit -> perfectly spread out by exactly 5s intervals.
-      // This guarantees they will never bunch up!
-      const delay = (i * -5) + "s";
-      const radius = 280 + (i % 3) * 50; 
-      
-      return (
-        <div 
-          key={fw.name}
-          className="absolute top-1/2 left-1/2 w-0 h-0 animate-orbit"
-          style={{ animationDelay: delay }}
-        >
-          <div className="absolute" style={{ transform: `translateX(${radius}px)` }}>
-            <div 
-              className="flex flex-col items-center justify-center animate-anti-orbit"
-              style={{ animationDelay: delay }}
+/* ─────────────────── Ring System ─────────────────── */
+function RingSystem({ isFront }: { isFront: boolean }) {
+  return (
+    <div
+      className="absolute pointer-events-none"
+      style={{
+        width: 900,
+        height: 900,
+        top: "50%",
+        left: "50%",
+        /* The key fix: rotateX gives the TILT angle (not flat) */
+        transform: "translate(-50%, -50%) rotateX(65deg)",
+        clipPath: isFront
+          ? "polygon(0 50%, 100% 50%, 100% 100%, 0 100%)"
+          : "polygon(0 0, 100% 0, 100% 50%, 0 50%)",
+        zIndex: isFront ? 30 : 10,
+      }}
+    >
+      {/* Ring bands — thick, glowing, layered */}
+      <div className="absolute top-1/2 left-1/2 w-[440px] h-[440px] -translate-x-1/2 -translate-y-1/2 rounded-full border-[16px] border-[#c49c71]/35" />
+      <div className="absolute top-1/2 left-1/2 w-[520px] h-[520px] -translate-x-1/2 -translate-y-1/2 rounded-full border-[35px] border-[#e6b981]/40 shadow-[0_0_50px_rgba(230,185,129,0.3)]" />
+      <div className="absolute top-1/2 left-1/2 w-[600px] h-[600px] -translate-x-1/2 -translate-y-1/2 rounded-full border-[6px] border-[#f4dfc4]/50" />
+      <div className="absolute top-1/2 left-1/2 w-[680px] h-[680px] -translate-x-1/2 -translate-y-1/2 rounded-full border-[50px] border-[#916b45]/25 shadow-[0_0_60px_rgba(145,107,69,0.2)]" />
+      <div className="absolute top-1/2 left-1/2 w-[790px] h-[790px] -translate-x-1/2 -translate-y-1/2 rounded-full border-[1px] border-[#f4dfc4]/20" />
+
+      {/* Orbiting logos — using CSS animation, perfectly spaced */}
+      {frameworks.map((fw, i) => {
+        const totalLogos = frameworks.length;
+        const angleDeg = (360 / totalLogos) * i;
+        const radius = 310;
+
+        return (
+          <div
+            key={fw.name}
+            className="absolute top-1/2 left-1/2"
+            style={{
+              width: 0,
+              height: 0,
+              animation: `orbit 80s linear infinite`,
+              /* Initial spread: each logo starts at a different angle */
+              transform: `rotate(${angleDeg}deg)`,
+            }}
+          >
+            <div
+              className="absolute flex flex-col items-center"
+              style={{ left: radius, top: -28 }}
             >
-              {/* Counter-scale the 0.35 squash (1 / 0.35 = 2.857) */}
-              <div className="flex flex-col items-center gap-4" style={{ transform: "scaleY(2.857)" }}>
-                <div className="w-14 h-14 rounded-full bg-[#080808] border border-white/20 shadow-[0_10px_30px_rgba(0,0,0,0.9)] flex items-center justify-center text-white relative group overflow-hidden">
-                  <div className="absolute inset-0 bg-gradient-to-tr from-white/10 to-transparent opacity-40" />
-                  <svg viewBox="0 0 24 24" className="w-6 h-6 z-10" fill="currentColor">
-                    {fw.svg}
-                  </svg>
+              <div
+                style={{
+                  /* Counter-rotate to stay upright, and un-tilt from rotateX(65deg) */
+                  animation: `anti-orbit 80s linear infinite`,
+                  transform: `rotateX(-65deg) rotate(-${angleDeg}deg)`,
+                }}
+              >
+                <div className="flex flex-col items-center gap-2">
+                  <div
+                    className="w-12 h-12 md:w-14 md:h-14 rounded-full flex items-center justify-center relative"
+                    style={{
+                      background: `radial-gradient(circle at 30% 30%, #1a1a1a 0%, #0a0a0a 100%)`,
+                      border: `1px solid ${fw.color}33`,
+                      boxShadow: `0 0 20px ${fw.color}22, inset 0 1px 0 rgba(255,255,255,0.1)`,
+                    }}
+                  >
+                    <svg viewBox="0 0 24 24" className="w-6 h-6">
+                      {fw.logo}
+                    </svg>
+                  </div>
+                  <span className="text-white/70 text-[10px] font-medium tracking-widest uppercase whitespace-nowrap">
+                    {fw.name}
+                  </span>
                 </div>
-                <span className="text-white/80 text-[11px] font-semibold tracking-wider drop-shadow-lg uppercase bg-black/50 px-2 py-1 rounded-md">
-                  {fw.name}
-                </span>
               </div>
             </div>
           </div>
-        </div>
-      );
-    })}
-  </div>
-);
+        );
+      })}
+    </div>
+  );
+}
 
+/* ─────────────────── Main Component ─────────────────── */
 export default function ModernEngineering() {
-  const ref = useRef(null);
-
   return (
-    <section 
-      ref={ref} 
-      className="relative min-h-[140vh] w-full bg-black flex flex-col items-center pt-32 pb-40 overflow-hidden"
-    >
-      {/* ONE Single Background: Pitch black with minimal stars */}
-      <div className="absolute inset-0 bg-black">
-        <div className="absolute inset-0 bg-[url('/minimal-stars.webp')] bg-cover bg-center opacity-60" />
+    <section className="relative w-full bg-black overflow-hidden">
+      {/* Aspect-ratio container for responsiveness */}
+      <div className="relative w-full min-h-[100vh] md:min-h-[120vh] flex flex-col items-center pt-24 md:pt-32 pb-32 md:pb-40">
+
+        {/* Single background: pure black + CSS stars */}
+        <div className="absolute inset-0 bg-black" />
+        <Stars />
+
+        {/* Copy */}
+        <div className="relative z-40 max-w-[650px] mx-auto text-center px-6">
+          <motion.div
+            initial={{ opacity: 0, y: 20 }}
+            whileInView={{ opacity: 1, y: 0 }}
+            viewport={{ once: true }}
+            transition={{ duration: 0.8, ease: "easeOut" }}
+          >
+            <span className="text-[10px] tracking-[0.2em] font-medium text-white/50 uppercase mb-4 block">
+              HOW WE WORK
+            </span>
+            <h2 className="text-3xl md:text-5xl font-semibold tracking-tighter text-white mb-6">
+              Powered by modern engineering.
+            </h2>
+            <p className="text-white/60 text-base md:text-lg leading-relaxed font-light max-w-lg mx-auto">
+              We use the best tools and technologies to build scalable, high-performance products that stand the test of time.
+            </p>
+          </motion.div>
+        </div>
+
+        {/* Saturn System — scales down on mobile */}
+        <div className="relative w-full flex-1 flex items-center justify-center mt-16 md:mt-24" style={{ perspective: 1200 }}>
+          <motion.div
+            initial={{ opacity: 0, scale: 0.85 }}
+            whileInView={{ opacity: 1, scale: 1 }}
+            viewport={{ once: true }}
+            transition={{ duration: 1.2, ease: [0.16, 1, 0.3, 1] }}
+            className="relative flex items-center justify-center"
+            style={{ width: 900, height: 700, maxWidth: "100vw" }}
+          >
+            {/* Scale wrapper for mobile */}
+            <div className="absolute inset-0 flex items-center justify-center origin-center scale-[0.38] sm:scale-[0.5] md:scale-[0.65] lg:scale-[0.85] xl:scale-100">
+              
+              {/* Back Rings */}
+              <RingSystem isFront={false} />
+
+              {/* Planet */}
+              <div
+                className="absolute rounded-full overflow-hidden z-20"
+                style={{
+                  width: 300,
+                  height: 300,
+                  top: "50%",
+                  left: "50%",
+                  transform: "translate(-50%, -50%)",
+                  boxShadow: "0 0 80px rgba(196,156,113,0.25), 0 0 200px rgba(196,156,113,0.1)",
+                }}
+              >
+                <img
+                  src="/saturn-transparent.webp"
+                  alt="Planet"
+                  width={330}
+                  height={330}
+                  className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 object-cover max-w-none"
+                  style={{ width: "110%", height: "110%" }}
+                  loading="eager"
+                />
+              </div>
+
+              {/* Front Rings */}
+              <RingSystem isFront={true} />
+            </div>
+          </motion.div>
+        </div>
       </div>
 
-      {/* Copy */}
-      <div className="relative z-40 max-w-[650px] mx-auto text-center px-6">
-        <motion.div
-          initial={{ opacity: 0, y: 20 }}
-          whileInView={{ opacity: 1, y: 0 }}
-          viewport={{ once: true }}
-          transition={{ duration: 0.8, ease: "easeOut" }}
-        >
-          <span className="text-[10px] tracking-[0.2em] font-medium text-white/50 uppercase mb-4 block">
-            HOW WE WORK
-          </span>
-          <h2 className="text-4xl md:text-5xl font-semibold tracking-tighter text-white mb-6">
-            Powered by modern engineering.
-          </h2>
-          <p className="text-white/60 text-lg leading-relaxed font-light">
-            We use the best tools and technologies to build scalable, high-performance products that stand the test of time.
-          </p>
-        </motion.div>
-      </div>
-
-      {/* Flawless 2D Split-Ring System */}
-      <div className="relative w-full h-[700px] mt-32 flex items-center justify-center">
-        
-        <motion.div 
-          initial={{ opacity: 0, scale: 0.8 }}
-          whileInView={{ opacity: 1, scale: 1 }}
-          viewport={{ once: true }}
-          transition={{ duration: 1.5, ease: [0.16, 1, 0.3, 1] }}
-          className="relative w-full h-full flex items-center justify-center"
-        >
-          {/* Back Rings (Z: 10) */}
-          <RingSystem isFront={false} />
-
-          {/* Planet Body (Z: 20) */}
-          <div className="absolute top-1/2 left-1/2 w-[340px] h-[340px] -translate-x-1/2 -translate-y-1/2 rounded-full overflow-hidden z-20 shadow-[0_0_80px_rgba(196,156,113,0.3)] bg-black border border-white/5">
-             {/* The true transparent planet image forced into a perfect circular mask */}
-             <img 
-               src="/saturn-transparent.webp" 
-               alt="Planet" 
-               className="absolute top-1/2 left-1/2 w-[110%] h-[110%] max-w-none -translate-x-1/2 -translate-y-1/2 object-cover" 
-             />
-          </div>
-
-          {/* Front Rings (Z: 30) */}
-          <RingSystem isFront={true} />
-        </motion.div>
-      </div>
-
-      <style dangerouslySetInnerHTML={{ __html: `
-        @keyframes orbit {
-          from { transform: rotate(0deg); }
-          to { transform: rotate(360deg); }
-        }
-        
-        @keyframes anti-orbit {
-          from { transform: rotate(0deg); }
-          to { transform: rotate(-360deg); }
-        }
-
-        .animate-orbit {
-          animation: orbit 60s linear infinite;
-        }
-
-        .animate-anti-orbit {
-          animation: anti-orbit 60s linear infinite;
-        }
-
-        .animate-spin-slow {
-          animation: orbit 100s linear infinite;
-        }
-        
-        .animate-spin-reverse {
-          animation: anti-orbit 120s linear infinite;
-        }
-      `}} />
+      {/* Keyframe animations — pure CSS, zero JS overhead */}
+      <style dangerouslySetInnerHTML={{
+        __html: `
+          @keyframes orbit {
+            from { transform: rotate(var(--start-angle, 0deg)); }
+            to { transform: rotate(calc(var(--start-angle, 0deg) + 360deg)); }
+          }
+          @keyframes anti-orbit {
+            from { transform: rotateX(-65deg) rotate(var(--counter-start, 0deg)); }
+            to { transform: rotateX(-65deg) rotate(calc(var(--counter-start, 0deg) - 360deg)); }
+          }
+          @keyframes twinkle {
+            0%, 100% { opacity: 0.3; }
+            50% { opacity: 1; }
+          }
+        `,
+      }} />
     </section>
   );
 }
