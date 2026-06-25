@@ -3,7 +3,7 @@ import Navbar from "@/components/Navbar";
 export default function TermsOfService() {
   return (
     <main className="min-h-screen pt-32 pb-20 px-6">
-      <Navbar onOpenPanel={() => {}} />
+      <Navbar />
       <div className="max-w-4xl mx-auto">
         <h1 className="text-5xl font-semibold tracking-tighter mb-8">Terms of Service</h1>
         <div className="prose prose-invert max-w-none text-[var(--muted)]">

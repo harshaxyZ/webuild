@@ -17,7 +17,7 @@ export default function AdminPanel() {
 
   return (
     <main className="min-h-screen bg-[var(--bg)] text-[var(--text)]">
-      <Navbar onOpenPanel={() => {}} />
+      <Navbar />
       
       <div className="pt-32 pb-20 px-6 max-w-7xl mx-auto">
         <h1 className="text-4xl font-semibold tracking-tighter mb-10">Admin Dashboard</h1>
