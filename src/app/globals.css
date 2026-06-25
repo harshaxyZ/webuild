@@ -41,6 +41,7 @@ body {
   font-family: var(--font-outfit), sans-serif;
   background-color: var(--bg);
   color: var(--text);
+  position: relative;
   overflow-x: hidden;
   transition: background-color 0.4s ease, color 0.4s ease;
 }
