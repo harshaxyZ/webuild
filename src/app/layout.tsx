@@ -6,6 +6,7 @@ import SmoothScrolling from "@/components/SmoothScrolling";
 import WhatsAppButton from "@/components/WhatsAppButton";
 import { CookieBanner } from "@/components/CookieBanner";
 import CustomCursor from "@/components/CustomCursor";
+import Script from "next/script";
 const outfit = Outfit({ subsets: ["latin"], variable: "--font-outfit" });
 
 export const metadata: Metadata = {
@@ -44,6 +45,22 @@ export default function RootLayout({ children }: Readonly<{ children: React.Reac
   return (
     <html lang="en" data-theme="dark" className={outfit.variable} suppressHydrationWarning>
       <body className="font-sans">
+        {process.env.NEXT_PUBLIC_GA_ID && (
+          <>
+            <Script
+              src={`https://www.googletagmanager.com/gtag/js?id=${process.env.NEXT_PUBLIC_GA_ID}`}
+              strategy="afterInteractive"
+            />
+            <Script id="google-analytics" strategy="afterInteractive">
+              {`
+                window.dataLayer = window.dataLayer || [];
+                function gtag(){dataLayer.push(arguments);}
+                gtag('js', new Date());
+                gtag('config', '${process.env.NEXT_PUBLIC_GA_ID}');
+              `}
+            </Script>
+          </>
+        )}
         <CustomCursor />
         <div className="global-grid" />
         <SmoothScrolling>
