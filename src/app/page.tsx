@@ -1,3 +1,4 @@
+// Trigger build: Google Search Console verification
 "use client";
 import { useState } from "react";
 import { motion } from "framer-motion";
