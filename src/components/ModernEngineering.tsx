@@ -220,7 +220,7 @@ export default function ModernEngineering() {
             className="relative flex items-center justify-center w-full max-w-[900px] h-[320px] md:h-[520px]"
           >
             {/* Scale wrapper for responsive and tilted rings */}
-            <div className="absolute inset-0 flex items-center justify-center origin-center scale-[0.38] sm:scale-[0.58] md:scale-[0.78] lg:scale-[0.9] xl:scale-100 rotate-[-18deg]">
+            <div className="absolute inset-0 flex items-center justify-center origin-center scale-[0.55] sm:scale-[0.66] md:scale-[0.8] lg:scale-[0.9] xl:scale-100 rotate-[-18deg]">
               {/* Back ring bands */}
               <RingBands isFront={false} />
 
