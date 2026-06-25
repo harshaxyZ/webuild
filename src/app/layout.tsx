@@ -1,9 +1,8 @@
-// @ts-nocheck
 import type { Metadata } from "next";
 import { Outfit } from "next/font/google";
 import "./globals.css";
-import { ReactLenis as LenisProvider } from "@studio-freight/react-lenis";
-import { PostHogProvider } from "@/components/PostHogProvider";
+import { Analytics } from "@vercel/analytics/react";
+import SmoothScrolling from "@/components/SmoothScrolling";
 import WhatsAppButton from "@/components/WhatsAppButton";
 const outfit = Outfit({ subsets: ["latin"], variable: "--font-outfit" });
 
@@ -16,14 +15,12 @@ export default function RootLayout({ children }: Readonly<{ children: React.Reac
   return (
     <html lang="en" data-theme="dark" className={outfit.variable} suppressHydrationWarning>
       <body className="font-sans cursor-none md:cursor-none cursor-auto">
-        <PostHogProvider>
+        <SmoothScrolling>
           <div className="noise-overlay" />
-          {/* @ts-ignore */}
-          <LenisProvider root options={{ duration: 1.2, smoothWheel: true, easing: (t) => Math.min(1, 1.001 - Math.pow(2, -10 * t)) }}>
-            {children}
-            <WhatsAppButton />
-          </LenisProvider>
-        </PostHogProvider>
+          {children}
+          <WhatsAppButton />
+        </SmoothScrolling>
+        <Analytics />
       </body>
     </html>
   );
