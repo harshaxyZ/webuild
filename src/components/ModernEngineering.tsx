@@ -23,8 +23,8 @@ export default function ModernEngineering() {
       className="relative min-h-[120vh] w-full bg-[#080808] flex flex-col items-center pt-32 overflow-hidden"
     >
       {/* Background Ambience */}
-      <div className="absolute inset-0 bg-[radial-gradient(ellipse_at_top,#1a1a1a_0%,#080808_70%)] opacity-50" />
-      <div className="absolute inset-0 noise-overlay opacity-[0.03]" />
+      <div className="absolute inset-0 bg-[url('/starry-bg.png')] bg-cover bg-center opacity-40" />
+      <div className="absolute inset-0 bg-[radial-gradient(ellipse_at_top,transparent_0%,#080808_100%)] opacity-80" />
 
       {/* Copy */}
       <div className="relative z-20 max-w-[650px] mx-auto text-center px-6">
@@ -35,7 +35,7 @@ export default function ModernEngineering() {
           transition={{ duration: 0.8, ease: "easeOut" }}
         >
           <span className="text-[10px] tracking-[0.2em] font-medium text-white/50 uppercase mb-4 block">
-            Built on Modern Engineering
+            HOW WE WORK
           </span>
           <h2 className="text-4xl md:text-5xl font-semibold tracking-tighter text-white mb-6">
             Powered by modern engineering.
@@ -58,10 +58,7 @@ export default function ModernEngineering() {
           style={{ transform: "rotateX(75deg)" }}
         >
           
-          {/* Rings */}
-          <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[480px] h-[480px] rounded-full border border-white/20 preserve-3d" />
-          <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[600px] h-[600px] rounded-full border border-white/10 preserve-3d" />
-          <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[720px] h-[720px] rounded-full border border-white/5 preserve-3d" />
+
 
           {/* Orbit Tracks & Logos */}
           {frameworks.map((fw, i) => {
@@ -95,8 +92,8 @@ export default function ModernEngineering() {
                       className="flex flex-col items-center gap-3 preserve-3d"
                       style={{ transform: "rotateX(-75deg)" }}
                     >
-                      <div className="w-14 h-14 rounded-full bg-white/5 backdrop-blur-md border border-white/10 shadow-[0_4px_24px_rgba(0,0,0,0.4)] flex items-center justify-center text-white relative group overflow-hidden">
-                        <div className="absolute inset-0 bg-gradient-to-tr from-white/5 to-transparent opacity-50" />
+                      <div className="w-14 h-14 rounded-full bg-[#1a1a1a] border border-white/10 shadow-[0_4px_24px_rgba(0,0,0,0.4)] flex items-center justify-center text-white relative group overflow-hidden">
+                        <div className="absolute inset-0 bg-gradient-to-tr from-white/10 to-transparent opacity-50" />
                         <svg viewBox="0 0 24 24" className="w-6 h-6 z-10" fill="currentColor">
                           {fw.svg}
                         </svg>
@@ -111,21 +108,56 @@ export default function ModernEngineering() {
             );
           })}
 
-          {/* Saturn Body */}
+          {/* Saturn Body (Realistic Image) */}
           <div 
-            className="absolute top-1/2 left-1/2 w-[380px] h-[380px] -translate-x-1/2 -translate-y-1/2 rounded-full"
-            style={{ 
-              transform: "translate(-50%, -50%) rotateX(-75deg)",
-              background: "radial-gradient(circle at 40% 30%, #4a4036 0%, #1e1915 50%, #0a0807 100%)",
-              boxShadow: "inset -40px -40px 80px rgba(0,0,0,0.9), 0 0 100px rgba(74, 64, 54, 0.2)"
-            }} 
+            className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[900px] h-[900px]"
+            style={{ transform: "translate(-50%, -50%) rotateX(-75deg)" }} 
           >
-            {/* Inner texture / glow */}
-            <div className="absolute inset-0 rounded-full opacity-30 bg-[url('/noise.png')] mix-blend-overlay" />
-            <div className="absolute inset-0 rounded-full shadow-[inset_0_2px_10px_rgba(255,255,255,0.1)]" />
+            {/* Blocker to hide stars behind the planet body */}
+            <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[340px] h-[340px] rounded-full bg-[#080808]" />
+            {/* The actual realistic planet with blend mode to remove the black background but keep rings translucent */}
+            <img 
+              src="/saturn-realistic.png" 
+              alt="Saturn" 
+              className="absolute inset-0 w-full h-full object-contain mix-blend-screen pointer-events-none"
+            />
           </div>
 
         </motion.div>
+      </div>
+
+      {/* Stats Section */}
+      <div className="relative z-20 max-w-5xl mx-auto w-full px-6 pb-20 mt-10">
+        <div className="grid grid-cols-2 md:grid-cols-4 gap-8 bg-white/[0.03] backdrop-blur-md border border-white/5 rounded-2xl p-8">
+          <div className="flex flex-col items-center text-center">
+            <svg className="w-6 h-6 text-white/50 mb-3" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={1.5} d="M17 20h5v-2a3 3 0 00-5.356-1.857M17 20H7m10 0v-2c0-.656-.126-1.283-.356-1.857M7 20H2v-2a3 3 0 015.356-1.857M7 20v-2c0-.656.126-1.283.356-1.857m0 0a5.002 5.002 0 019.288 0M15 7a3 3 0 11-6 0 3 3 0 016 0zm6 3a2 2 0 11-4 0 2 2 0 014 0zM7 10a2 2 0 11-4 0 2 2 0 014 0z" />
+            </svg>
+            <div className="text-3xl font-semibold text-white mb-1">25+</div>
+            <div className="text-xs text-white/50 tracking-wider">Projects Delivered</div>
+          </div>
+          <div className="flex flex-col items-center text-center">
+            <svg className="w-6 h-6 text-white/50 mb-3" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={1.5} d="M13 10V3L4 14h7v7l9-11h-7z" />
+            </svg>
+            <div className="text-3xl font-semibold text-white mb-1">2–6 weeks</div>
+            <div className="text-xs text-white/50 tracking-wider">Average Delivery</div>
+          </div>
+          <div className="flex flex-col items-center text-center">
+            <svg className="w-6 h-6 text-white/50 mb-3" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={1.5} d="M14.828 14.828a4 4 0 01-5.656 0M9 10h.01M15 10h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z" />
+            </svg>
+            <div className="text-3xl font-semibold text-white mb-1">15+</div>
+            <div className="text-xs text-white/50 tracking-wider">Happy Clients</div>
+          </div>
+          <div className="flex flex-col items-center text-center">
+            <svg className="w-6 h-6 text-white/50 mb-3" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={1.5} d="M13 7h8m0 0v8m0-8l-8 8-4-4-6 6" />
+            </svg>
+            <div className="text-3xl font-semibold text-white mb-1">98%</div>
+            <div className="text-xs text-white/50 tracking-wider">Client Satisfaction</div>
+          </div>
+        </div>
       </div>
 
       <style dangerouslySetInnerHTML={{ __html: `
