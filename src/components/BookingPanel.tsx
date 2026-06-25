@@ -18,7 +18,6 @@ export default function BookingPanel({ isOpen, onClose }: { isOpen: boolean; onC
     const phone = formData.get("phone");
     const email = formData.get("email");
     const projectType = formData.get("projectType");
-    const preferredTime = formData.get("preferredTime");
     const description = formData.get("description");
 
     try {
@@ -30,7 +29,7 @@ export default function BookingPanel({ isOpen, onClose }: { isOpen: boolean; onC
           whatsapp: `+91${phone}`,
           email,
           projectType,
-          preferredTime,
+          preferredTime: "Not specified",
           description,
         }),
       });
@@ -103,18 +102,18 @@ export default function BookingPanel({ isOpen, onClose }: { isOpen: boolean; onC
               </div>
 
               <div>
-                <label className="text-xs uppercase tracking-wider text-[var(--muted)]">Preferred Time to Call</label>
-                <input required name="preferredTime" type="datetime-local" className={inputClass} />
-              </div>
-
-              <div>
                 <label className="text-xs uppercase tracking-wider text-[var(--muted)]">Project Description</label>
                 <textarea required name="description" rows={3} className={inputClass} placeholder="Tell us about your project goals..." />
               </div>
 
-              <button type="submit" disabled={loading} className="w-full bg-[var(--text)] text-[var(--bg)] py-4 rounded-xl text-sm font-medium hover:opacity-80 transition-opacity disabled:opacity-50 mt-2">
-                {loading ? "Processing..." : "Submit Booking Request"}
-              </button>
+              <div className="flex flex-col gap-3 pt-4">
+                <button type="submit" disabled={loading} className="w-full bg-[var(--text)] text-[var(--bg)] py-4 rounded-xl text-sm font-medium hover:opacity-80 transition-opacity disabled:opacity-50">
+                  {loading ? "Processing..." : "Submit Booking Request"}
+                </button>
+                <button type="button" onClick={onClose} className="w-full py-4 border border-[var(--border)] rounded-xl text-sm font-medium hover:bg-[var(--border)]/10 transition-colors text-[var(--text)]">
+                  Cancel / Go Back
+                </button>
+              </div>
             </form>
           </motion.div>
         </>

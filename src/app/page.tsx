@@ -2,7 +2,6 @@
 import { useState } from "react";
 import { motion } from "framer-motion";
 import { ArrowRight } from "lucide-react";
-import CustomCursor from "@/components/CustomCursor";
 import Navbar from "@/components/Navbar";
 import Hero from "@/components/Hero";
 import Marquee from "@/components/Marquee";
@@ -17,7 +16,6 @@ export default function Home() {
 
   return (
     <main className="relative">
-      <CustomCursor />
       <Navbar onOpenPanel={() => setIsPanelOpen(true)} />
       
       <Hero onOpenPanel={() => setIsPanelOpen(true)} />

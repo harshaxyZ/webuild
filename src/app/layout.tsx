@@ -5,6 +5,7 @@ import { Analytics } from "@vercel/analytics/react";
 import SmoothScrolling from "@/components/SmoothScrolling";
 import WhatsAppButton from "@/components/WhatsAppButton";
 import { CookieBanner } from "@/components/CookieBanner";
+import CustomCursor from "@/components/CustomCursor";
 const outfit = Outfit({ subsets: ["latin"], variable: "--font-outfit" });
 
 export const metadata: Metadata = {
@@ -43,6 +44,7 @@ export default function RootLayout({ children }: Readonly<{ children: React.Reac
   return (
     <html lang="en" data-theme="dark" className={outfit.variable} suppressHydrationWarning>
       <body className="font-sans">
+        <CustomCursor />
         <SmoothScrolling>
           {children}
           <WhatsAppButton />

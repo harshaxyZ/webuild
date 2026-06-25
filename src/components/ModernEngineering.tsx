@@ -122,38 +122,33 @@ function generateOrbitKeyframes(): string {
 
 /* ─── Glowing Stars (pure CSS, no images) ─── */
 function Stars() {
-  const stars = Array.from({ length: 150 }, (_, i) => {
+  const stars = Array.from({ length: 30 }, (_, i) => {
     // Deterministic pseudo-random positions
     const x = ((i * 7919 + 104729) % 10000) / 100;
     const y = ((i * 6271 + 32749) % 10000) / 100;
-    const isBright = i % 7 === 0;
-    const isMedium = i % 4 === 0;
-    const size = isBright ? 3 : isMedium ? 2 : 1;
-    const delay = ((i * 137) % 500) / 100;
-    const duration = 2.5 + ((i * 311) % 300) / 100;
-    const baseOpacity = isBright ? 0.9 : isMedium ? 0.6 : 0.35;
+    const isBright = i % 6 === 0;
+    const size = isBright ? 2 : 1;
+    const opacity = isBright ? 0.95 : 0.45;
+    const duration = 3 + (i % 3);
+    const delay = (i % 5) * 0.5;
     return (
       <div
         key={i}
-        className="absolute rounded-full"
+        className="absolute rounded-full bg-white"
         style={{
           left: `${x}%`,
           top: `${y}%`,
           width: size,
           height: size,
-          backgroundColor: `rgba(255,255,255,${baseOpacity})`,
-          boxShadow: isBright
-            ? `0 0 6px 2px rgba(200,220,255,0.8), 0 0 12px 4px rgba(180,200,255,0.4)`
-            : isMedium
-              ? `0 0 4px 1px rgba(220,230,255,0.5)`
-              : "none",
-          animation: `twinkle ${duration}s ease-in-out infinite`,
-          animationDelay: `${delay}s`,
+          opacity: opacity,
+          boxShadow: isBright ? "0 0 4px #ffffff" : "none",
+          animation: isBright ? `twinkle ${duration}s ease-in-out infinite` : "none",
+          animationDelay: isBright ? `${delay}s` : "0s",
         }}
       />
     );
   });
-  return <div className="absolute inset-0 overflow-hidden pointer-events-none">{stars}</div>;
+  return <div className="absolute inset-0 overflow-hidden pointer-events-none opacity-80">{stars}</div>;
 }
 
 /* ─── Ring visuals (just the decorative bands) ─── */
@@ -166,7 +161,7 @@ function RingBands({ isFront }: { isFront: boolean }) {
         height: 900,
         top: "50%",
         left: "50%",
-        transform: "translate(-50%, -50%) scaleY(0.35)",
+        transform: "translate(-50%, -50%) scaleY(0.35) rotate(-15deg)",
         clipPath: isFront
           ? "polygon(0 50%, 100% 50%, 100% 100%, 0 100%)"
           : "polygon(0 0, 100% 0, 100% 50%, 0 50%)",
@@ -226,7 +221,7 @@ export default function ModernEngineering() {
             style={{ width: 900, height: 600 }}
           >
             {/* Scale wrapper for responsive and tilted rings */}
-            <div className="absolute inset-0 flex items-center justify-center origin-center scale-[0.68] sm:scale-[0.75] md:scale-[0.85] lg:scale-[0.9] xl:scale-100 rotate-[-18deg]">
+            <div className="absolute inset-0 flex items-center justify-center origin-center scale-[0.38] sm:scale-[0.58] md:scale-[0.78] lg:scale-[0.9] xl:scale-100 rotate-[-18deg]">
               {/* Back ring bands */}
               <RingBands isFront={false} />
 

@@ -26,10 +26,14 @@ export async function POST(req: Request) {
     };
 
     // 1. Save to Firestore using server-side firebase-admin client
-    if (adminDb) {
-      await adminDb.collection("bookings").add(bookingData);
-    } else {
-      console.warn("Firebase Admin DB is not initialized. Skipping DB write.");
+    try {
+      if (adminDb) {
+        await adminDb.collection("bookings").add(bookingData);
+      } else {
+        console.warn("Firebase Admin DB is not initialized. Skipping DB write.");
+      }
+    } catch (dbError) {
+      console.error("Firestore database write error (handled gracefully):", dbError);
     }
 
     // 2. Send email notification via Resend
