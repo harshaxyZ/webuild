@@ -2,6 +2,9 @@
 import { useRef } from "react";
 import { motion, useScroll, useTransform } from "framer-motion";
 import { ArrowRight } from "lucide-react";
+import dynamic from "next/dynamic";
+
+const SaturnScene = dynamic(() => import("./SaturnScene"), { ssr: false });
 
 export default function Hero({ onOpenPanel }: { onOpenPanel: () => void }) {
   const ref = useRef(null);
@@ -16,6 +19,9 @@ export default function Hero({ onOpenPanel }: { onOpenPanel: () => void }) {
     <section ref={ref} className="relative min-h-screen flex flex-col justify-center px-6 pt-32 pb-20 z-10 overflow-hidden">
       {/* Parallax Grid */}
       <motion.div style={{ y: gridY }} className="grid-bg" />
+      
+      {/* 3D Saturn Scene */}
+      <SaturnScene />
 
       <motion.div style={{ y, opacity }} className="max-w-7xl mx-auto w-full relative z-20">
         <motion.div 

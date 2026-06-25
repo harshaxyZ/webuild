@@ -110,10 +110,8 @@ export function CherryBlossomParticles() {
     const animate = (time: number) => {
       animationFrameId = requestAnimationFrame(animate);
       
-      // Frame capping ~60fps
-      const delta = time - lastTime;
-      if (delta < 16) return;
-      lastTime = time - (delta % 16);
+      // No frame cap, run at monitor refresh rate (120hz+)
+      lastTime = time;
 
       ctx.clearRect(0, 0, canvas.width, canvas.height);
       

@@ -4,6 +4,7 @@ import "./globals.css";
 import { Analytics } from "@vercel/analytics/react";
 import SmoothScrolling from "@/components/SmoothScrolling";
 import WhatsAppButton from "@/components/WhatsAppButton";
+import { CookieBanner } from "@/components/CookieBanner";
 const outfit = Outfit({ subsets: ["latin"], variable: "--font-outfit" });
 
 export const metadata: Metadata = {
@@ -21,6 +22,7 @@ export default function RootLayout({ children }: Readonly<{ children: React.Reac
           <WhatsAppButton />
         </SmoothScrolling>
         <Analytics />
+        <CookieBanner />
       </body>
     </html>
   );

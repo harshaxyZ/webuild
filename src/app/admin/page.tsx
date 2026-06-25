@@ -5,14 +5,31 @@ import Navbar from "@/components/Navbar";
 
 export default function AdminPanel() {
   const [bookings, setBookings] = useState<any[]>([]);
+  const [analytics, setAnalytics] = useState<any>(null);
+  const [analyticsError, setAnalyticsError] = useState<string | null>(null);
   
   useEffect(() => {
-    // In a real app, this would fetch from Firebase Firestore.
-    // For demonstration of the UI, we're mocking the data.
+    // Fetch mock bookings
     setBookings([
       { id: 1, name: "Alice Johnson", whatsapp: "9876543210", description: "Need a FinTech dashboard.", date: "Today, 10:45 AM" },
       { id: 2, name: "Bob Smith", whatsapp: "9876543211", description: "Looking for an e-commerce mobile app.", date: "Yesterday, 2:30 PM" },
     ]);
+
+    // Fetch Analytics
+    async function fetchAnalytics() {
+      try {
+        const res = await fetch('/api/admin/analytics');
+        const data = await res.json();
+        if (res.ok) {
+          setAnalytics(data);
+        } else {
+          setAnalyticsError(data.error);
+        }
+      } catch (err) {
+        setAnalyticsError('Failed to load analytics.');
+      }
+    }
+    fetchAnalytics();
   }, []);
 
   return (
@@ -25,40 +42,46 @@ export default function AdminPanel() {
         {/* Analytics Section */}
         <section className="mb-16">
           <div className="flex items-center justify-between mb-6">
-            <h2 className="text-2xl font-medium">Analytics Overview</h2>
-            <a href="https://app.posthog.com" target="_blank" className="flex items-center gap-2 text-sm text-[var(--muted)] hover:text-[var(--text)] transition-colors">
-              View full report in PostHog <ExternalLink size={14} />
+            <h2 className="text-2xl font-medium">Vercel Web Analytics</h2>
+            <a href="https://vercel.com/dashboard" target="_blank" className="flex items-center gap-2 text-sm text-[var(--muted)] hover:text-[var(--text)] transition-colors">
+              View full report in Vercel <ExternalLink size={14} />
             </a>
           </div>
           
-          <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
-            <div className="p-6 rounded-2xl bg-[var(--surface)] border border-[var(--border)]">
-              <div className="flex items-center gap-4 mb-4 text-[var(--muted)]">
-                <Users2 size={24} />
-                <h3 className="font-medium">Total Visitors</h3>
-              </div>
-              <p className="text-4xl font-semibold">1,248</p>
-              <p className="text-sm text-green-500 mt-2">+12% this week</p>
+          {analyticsError ? (
+            <div className="p-6 rounded-2xl bg-[var(--surface)] border border-yellow-500/30 text-yellow-500/80">
+              <p className="font-medium">⚠️ {analyticsError}</p>
+              <p className="text-sm mt-1">Please add VERCEL_ACCESS_TOKEN and VERCEL_PROJECT_ID to your environment variables to view live analytics.</p>
             </div>
+          ) : !analytics ? (
+            <div className="p-6 rounded-2xl bg-[var(--surface)] border border-[var(--border)] animate-pulse h-32"></div>
+          ) : (
+            <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
+              <div className="p-6 rounded-2xl bg-[var(--surface)] border border-[var(--border)]">
+                <div className="flex items-center gap-4 mb-4 text-[var(--muted)]">
+                  <Users2 size={24} />
+                  <h3 className="font-medium">Total Visitors</h3>
+                </div>
+                <p className="text-4xl font-semibold">{analytics?.visitors || "0"}</p>
+              </div>
 
-            <div className="p-6 rounded-2xl bg-[var(--surface)] border border-[var(--border)]">
-              <div className="flex items-center gap-4 mb-4 text-[var(--muted)]">
-                <MapPin size={24} />
-                <h3 className="font-medium">Top Location</h3>
+              <div className="p-6 rounded-2xl bg-[var(--surface)] border border-[var(--border)]">
+                <div className="flex items-center gap-4 mb-4 text-[var(--muted)]">
+                  <MapPin size={24} />
+                  <h3 className="font-medium">Top Location</h3>
+                </div>
+                <p className="text-4xl font-semibold">{analytics?.topLocation || "N/A"}</p>
               </div>
-              <p className="text-4xl font-semibold">New York</p>
-              <p className="text-sm text-[var(--muted)] mt-2">245 active sessions</p>
-            </div>
 
-            <div className="p-6 rounded-2xl bg-[var(--surface)] border border-[var(--border)]">
-              <div className="flex items-center gap-4 mb-4 text-[var(--muted)]">
-                <Clock size={24} />
-                <h3 className="font-medium">Avg. Time on Site</h3>
+              <div className="p-6 rounded-2xl bg-[var(--surface)] border border-[var(--border)]">
+                <div className="flex items-center gap-4 mb-4 text-[var(--muted)]">
+                  <Clock size={24} />
+                  <h3 className="font-medium">Total Page Views</h3>
+                </div>
+                <p className="text-4xl font-semibold">{analytics?.pageViews || "0"}</p>
               </div>
-              <p className="text-4xl font-semibold">2m 45s</p>
-              <p className="text-sm text-green-500 mt-2">+30s this week</p>
             </div>
-          </div>
+          )}
         </section>
 
         {/* Bookings Section */}

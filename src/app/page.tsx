@@ -8,6 +8,7 @@ import Hero from "@/components/Hero";
 import Marquee from "@/components/Marquee";
 import Approach from "@/components/Approach";
 import Services from "@/components/Services";
+import Testimonials from "@/components/Testimonials";
 import BookingPanel from "@/components/BookingPanel";
 import ScrollReveal from "@/components/ScrollReveal";
 
@@ -23,6 +24,7 @@ export default function Home() {
       <Marquee />
       <Approach />
       <Services />
+      <Testimonials />
 
       {/* Final CTA */}
       <section className="py-40 md:py-60 px-6 relative z-10 border-t border-[var(--border)] text-center">
@@ -45,8 +47,8 @@ export default function Home() {
         <div className="max-w-7xl mx-auto flex flex-col md:flex-row justify-between items-center gap-4">
           <p className="text-xs font-light text-[var(--muted)]">© {new Date().getFullYear()} We Build. All rights reserved.</p>
           <div className="flex gap-6 text-[var(--muted)]">
-            <a href="#" className="hover:text-[var(--text)] transition-colors text-sm">Privacy</a>
-            <a href="#" className="hover:text-[var(--text)] transition-colors text-sm">Terms</a>
+            <a href="/privacy-policy" className="hover:text-[var(--text)] transition-colors text-sm">Privacy</a>
+            <a href="/terms-of-service" className="hover:text-[var(--text)] transition-colors text-sm">Terms</a>
             <a href="https://github.com/harshaxyZ/webuild" target="_blank" className="hover:text-[var(--text)] transition-colors text-sm">GitHub</a>
           </div>
         </div>
