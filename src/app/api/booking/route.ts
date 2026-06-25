@@ -8,11 +8,12 @@ const resend = new Resend(process.env.RESEND_API_KEY || "re_123456789");
 export async function GET(req: Request) {
   try {
     const { searchParams } = new URL(req.url);
-    const email = searchParams.get("email");
+    const rawEmail = searchParams.get("email");
 
-    if (!email) {
+    if (!rawEmail) {
       return NextResponse.json({ error: "Missing email parameter" }, { status: 400 });
     }
+    const email = rawEmail.toLowerCase().trim();
 
     if (!adminDb) {
       console.warn("Firebase Admin not initialized, returning mock bookings for simulator or empty.");
@@ -83,12 +84,14 @@ export async function GET(req: Request) {
 export async function POST(req: Request) {
   try {
     const body = await req.json();
-    const { name, whatsapp, email, projectType, description } = body;
+    const { name, whatsapp, email: rawEmail, projectType, description } = body;
 
     // Validate the core required fields
-    if (!name || !whatsapp || !email || !description) {
+    if (!name || !whatsapp || !rawEmail || !description) {
       return NextResponse.json({ error: "Missing required fields (name, whatsapp, email, or description)" }, { status: 400 });
     }
+
+    const email = rawEmail.toLowerCase().trim();
 
     const bookingData = {
       name,
