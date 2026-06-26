@@ -29,7 +29,7 @@ export default function Hero() {
     hidden: { y: "110%" },
     visible: {
       y: 0,
-      transition: { duration: 1.1, ease: [0.16, 1, 0.3, 1] }
+      transition: { duration: 1.1, ease: [0.16, 1, 0.3, 1] as const }
     }
   };
 
