@@ -87,33 +87,12 @@ export default function Navbar({ onOpenPanel }: { onOpenPanel?: () => void }) {
             <Link href="/#approach" className="hover:text-[var(--text)] transition-colors">Approach</Link>
             <Link href="/#services" className="hover:text-[var(--text)] transition-colors">Services</Link>
             <Link href="/#work" className="hover:text-[var(--text)] transition-colors">Work</Link>
-            {user && (
-              <Link href="/dashboard" className="hover:text-[var(--text)] transition-colors font-medium text-[var(--text)] flex items-center gap-1.5">
-                <LayoutDashboard size={14} /> Dashboard
-              </Link>
-            )}
           </div>
 
           <div className="flex items-center gap-4">
             <button onClick={toggleTheme} className="p-2 rounded-full border border-[var(--border)] hover:border-[var(--text)] transition-colors">
               {isDark ? <Sun size={18} /> : <Moon size={18} />}
             </button>
-            
-            {user ? (
-              <button 
-                onClick={handleSignOut} 
-                className="hidden md:flex items-center gap-2 border border-[var(--border)] text-[var(--text)] px-5 py-2.5 rounded-full text-sm font-medium hover:bg-[var(--border)]/30 transition-colors"
-              >
-                Sign Out
-              </button>
-            ) : (
-              <Link 
-                href="/login" 
-                className="hidden md:flex items-center gap-2 border border-[var(--border)] text-[var(--text)] px-5 py-2.5 rounded-full text-sm font-medium hover:bg-[var(--border)]/30 transition-colors"
-              >
-                Sign In
-              </Link>
-            )}
 
             <button 
               onClick={() => {
@@ -144,43 +123,9 @@ export default function Navbar({ onOpenPanel }: { onOpenPanel?: () => void }) {
           >
             <button onClick={() => setMenuOpen(false)} className="absolute top-8 right-6 text-[var(--text)] hover:opacity-75 transition-opacity"><X size={32} /></button>
             
-            {/* User Profile Summary in Hamburger Menu */}
-            {user && (
-              <motion.div 
-                initial={{ opacity: 0, scale: 0.95 }}
-                animate={{ opacity: 1, scale: 1 }}
-                transition={{ delay: 0.2 }}
-                className="flex flex-col items-center gap-2 mb-6 bg-[var(--surface)] border border-[var(--border)] p-6 rounded-2xl w-full max-w-[280px] text-center"
-              >
-                <div className="w-12 h-12 rounded-full bg-[var(--text)] text-[var(--bg)] flex items-center justify-center font-bold text-lg">
-                  {user.email?.charAt(0).toUpperCase() || <User size={20} />}
-                </div>
-                <div>
-                  <div className="text-sm font-medium text-[var(--text)] truncate max-w-[240px]">{user.displayName || "Client"}</div>
-                  <div className="text-[11px] text-[var(--muted)] truncate max-w-[240px] mt-0.5">{user.email}</div>
-                </div>
-              </motion.div>
-            )}
-
             <Link href="/#approach" onClick={() => setMenuOpen(false)} className="text-3xl font-medium tracking-tighter text-[var(--text)] hover:opacity-85 transition-opacity">Approach</Link>
             <Link href="/#services" onClick={() => setMenuOpen(false)} className="text-3xl font-medium tracking-tighter text-[var(--text)] hover:opacity-85 transition-opacity">Services</Link>
             <Link href="/#work" onClick={() => setMenuOpen(false)} className="text-3xl font-medium tracking-tighter text-[var(--text)] hover:opacity-85 transition-opacity">Work</Link>
-            
-            {user ? (
-              <>
-                <Link href="/dashboard" onClick={() => setMenuOpen(false)} className="text-3xl font-semibold text-[var(--text)] tracking-tighter hover:opacity-85 transition-opacity flex items-center gap-2">
-                  <LayoutDashboard size={24} /> My Dashboard
-                </Link>
-                <button 
-                  onClick={() => { setMenuOpen(false); handleSignOut(); }} 
-                  className="mt-6 text-red-500 font-medium hover:opacity-80 transition-opacity text-lg flex items-center gap-2"
-                >
-                  <LogOut size={18} /> Sign Out
-                </button>
-              </>
-            ) : (
-              <Link href="/login" onClick={() => setMenuOpen(false)} className="text-3xl font-medium tracking-tighter text-[var(--text)] hover:opacity-85 transition-opacity">Client Sign In</Link>
-            )}
 
             <button 
               onClick={() => { 

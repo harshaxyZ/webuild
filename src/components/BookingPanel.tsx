@@ -125,15 +125,9 @@ export default function BookingPanel({ isOpen, onClose }: { isOpen: boolean; onC
                     </p>
                   </div>
 
-                  {isLoggedIn ? (
-                    <div className="p-4 bg-[var(--surface)] border border-[var(--border)] rounded-2xl w-full text-left text-xs text-neutral-400">
-                      ℹ️ Since you are logged in, you can now monitor the request status, timeline updates, and chat log directly inside your client dashboard.
-                    </div>
-                  ) : (
-                    <div className="p-4 bg-[var(--surface)] border border-[var(--border)] rounded-2xl w-full text-left text-xs text-neutral-400">
-                      💡 Tip: Create a free account or log in with the same email used in this booking to track active milestones and view project specifications.
-                    </div>
-                  )}
+                  <div className="p-4 bg-[var(--surface)] border border-[var(--border)] rounded-2xl w-full text-center text-xs text-neutral-400">
+                    🚀 We will reach out to you within the next 24 hours. Keep an eye on your WhatsApp or Email!
+                  </div>
                 </motion.div>
               ) : (
                 <form onSubmit={handleSubmit} className="space-y-4">
@@ -192,28 +186,7 @@ export default function BookingPanel({ isOpen, onClose }: { isOpen: boolean; onC
             <div className="pt-6 border-t border-[var(--border)] mt-6">
               {isSuccess ? (
                 <div className="flex flex-col gap-2">
-                  {isLoggedIn ? (
-                    <button 
-                      onClick={() => {
-                        onClose();
-                        router.push("/dashboard");
-                      }} 
-                      className="w-full py-4 bg-[var(--text)] text-[var(--bg)] rounded-xl text-sm font-medium hover:opacity-85 transition-opacity"
-                    >
-                      Go to Dashboard
-                    </button>
-                  ) : (
-                    <button 
-                      onClick={() => {
-                        onClose();
-                        router.push("/login");
-                      }} 
-                      className="w-full py-4 bg-[var(--text)] text-[var(--bg)] rounded-xl text-sm font-medium hover:opacity-85 transition-opacity"
-                    >
-                      Track Progress (Sign In)
-                    </button>
-                  )}
-                  <button onClick={onClose} className="w-full py-4 border border-[var(--border)] rounded-xl text-sm font-medium hover:bg-[var(--border)]/10 transition-colors text-[var(--text)]">
+                  <button onClick={onClose} className="w-full py-4 bg-[var(--text)] text-[var(--bg)] rounded-xl text-sm font-medium hover:opacity-85 transition-opacity">
                     Close Window
                   </button>
                 </div>
