@@ -1,6 +1,4 @@
-// Trigger build: Google Search Console verification
 "use client";
-import { useState, useEffect } from "react";
 import { motion } from "framer-motion";
 import { ArrowRight } from "lucide-react";
 import Navbar from "@/components/Navbar";
@@ -9,27 +7,16 @@ import Marquee from "@/components/Marquee";
 import Approach from "@/components/Approach";
 import Services from "@/components/Services";
 import ModernEngineering from "@/components/ModernEngineering";
-import BookingPanel from "@/components/BookingPanel";
 import ScrollReveal from "@/components/ScrollReveal";
 
 export default function Home() {
-  const [isPanelOpen, setIsPanelOpen] = useState(false);
-
-  useEffect(() => {
-    if (typeof window !== "undefined") {
-      const params = new URLSearchParams(window.location.search);
-      if (params.get("book") === "true") {
-        setIsPanelOpen(true);
-        // Clear the query parameters from URL state
-        const newUrl = window.location.pathname;
-        window.history.replaceState({}, document.title, newUrl);
-      }
-    }
-  }, []);
+  const openWhatsApp = () => {
+    window.open("https://wa.me/917899214458?text=Hi,%20I'd%20like%20to%20discuss%20a%20project.", "_blank");
+  };
 
   return (
     <main className="relative">
-      <Navbar onOpenPanel={() => setIsPanelOpen(true)} />
+      <Navbar />
       
       {/* Structured Schema.org Data for SEO */}
       <script
@@ -56,7 +43,7 @@ export default function Home() {
         }}
       />
       
-      <Hero onOpenPanel={() => setIsPanelOpen(true)} />
+      <Hero />
       <Marquee />
       <Approach />
       <Services />
@@ -71,7 +58,7 @@ export default function Home() {
             </span>
           </h2>
           <ScrollReveal>
-            <button onClick={() => setIsPanelOpen(true)} className="group flex items-center gap-2 bg-[var(--text)] text-[var(--bg)] px-10 py-5 rounded-full text-lg font-medium hover:opacity-80 transition-opacity mx-auto">
+            <button onClick={openWhatsApp} className="group flex items-center gap-2 bg-[var(--text)] text-[var(--bg)] px-10 py-5 rounded-full text-lg font-medium hover:opacity-80 transition-opacity mx-auto">
               Start Your Project Now <ArrowRight size={18} className="group-hover:translate-x-1 transition-transform" />
             </button>
           </ScrollReveal>
@@ -88,8 +75,6 @@ export default function Home() {
           </div>
         </div>
       </footer>
-
-      <BookingPanel isOpen={isPanelOpen} onClose={() => setIsPanelOpen(false)} />
     </main>
   );
 }

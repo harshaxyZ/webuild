@@ -3,7 +3,7 @@ import { useRef } from "react";
 import { motion, useScroll, useTransform } from "framer-motion";
 import { ArrowRight } from "lucide-react";
 
-export default function Hero({ onOpenPanel }: { onOpenPanel: () => void }) {
+export default function Hero() {
   const ref = useRef(null);
   const { scrollYProgress } = useScroll({ target: ref, offset: ["start start", "end start"] });
   
@@ -11,6 +11,10 @@ export default function Hero({ onOpenPanel }: { onOpenPanel: () => void }) {
   const y = useTransform(scrollYProgress, [0, 1], ["0%", "50%"]);
   const opacity = useTransform(scrollYProgress, [0, 0.8], [1, 0]);
   const gridY = useTransform(scrollYProgress, [0, 1], [0, 250]);
+
+  const openWhatsApp = () => {
+    window.open("https://wa.me/917899214458?text=Hi,%20I'd%20like%20to%20discuss%20a%20project.", "_blank");
+  };
 
   return (
     <section ref={ref} className="relative min-h-screen flex flex-col justify-center items-center px-6 pt-32 pb-20 z-10 overflow-hidden text-center">
@@ -43,7 +47,7 @@ export default function Hero({ onOpenPanel }: { onOpenPanel: () => void }) {
           <p className="text-lg md:text-xl font-light leading-relaxed text-[var(--muted)]">
             We aren't bogged down by legacy code. As a premium web development agency, we engineer custom Next.js websites, React web apps, and scalable digital products from scratch with modern precision.
           </p>
-          <button onClick={onOpenPanel} className="group flex items-center gap-2 bg-[var(--text)] text-[var(--bg)] px-8 py-4 rounded-full text-base font-medium hover:opacity-80 transition-opacity">
+          <button onClick={openWhatsApp} className="group flex items-center gap-2 bg-[var(--text)] text-[var(--bg)] px-8 py-4 rounded-full text-base font-medium hover:opacity-80 transition-opacity">
             Start Your Project <ArrowRight size={16} className="group-hover:translate-x-1 transition-transform" />
           </button>
         </motion.div>

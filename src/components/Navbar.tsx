@@ -1,61 +1,19 @@
 "use client";
 import { useState, useEffect } from "react";
 import { motion, AnimatePresence } from "framer-motion";
-import { Moon, Sun, Menu, X, ArrowRight, LogOut, LayoutDashboard, User } from "lucide-react";
+import { Moon, Sun, Menu, X } from "lucide-react";
 import Link from "next/link";
-import { useRouter } from "next/navigation";
-import { supabase } from "@/lib/supabase";
 
-export default function Navbar({ onOpenPanel }: { onOpenPanel?: () => void }) {
+export default function Navbar() {
   const [scrolled, setScrolled] = useState(false);
   const [isDark, setIsDark] = useState(true);
   const [menuOpen, setMenuOpen] = useState(false);
-  const [user, setUser] = useState<any>(null);
-  const router = useRouter();
 
   useEffect(() => {
     const handleScroll = () => setScrolled(window.scrollY > 80);
     window.addEventListener("scroll", handleScroll, { passive: true });
-    
-    // Subscribe to Supabase Auth and check local simulated session
-    let unsubscribe = () => {};
-    if (supabase) {
-      const { data: { subscription } } = supabase.auth.onAuthStateChange((event, session) => {
-        if (session?.user) {
-          setUser(session.user);
-        } else {
-          // Check for simulated local storage session
-          const localSession = localStorage.getItem("webuild_session");
-          if (localSession) {
-            setUser(JSON.parse(localSession));
-          } else {
-            setUser(null);
-          }
-        }
-      });
-      unsubscribe = () => subscription.unsubscribe();
-    } else {
-      const localSession = localStorage.getItem("webuild_session");
-      if (localSession) {
-        setUser(JSON.parse(localSession));
-      }
-    }
-
-    // Listener to sync session across tabs
-    const handleStorageChange = () => {
-      const localSession = localStorage.getItem("webuild_session");
-      if (localSession) {
-        setUser(JSON.parse(localSession));
-      } else {
-        setUser(null);
-      }
-    };
-    window.addEventListener("storage", handleStorageChange);
-
     return () => {
       window.removeEventListener("scroll", handleScroll);
-      unsubscribe();
-      window.removeEventListener("storage", handleStorageChange);
     };
   }, []);
 
@@ -63,15 +21,6 @@ export default function Navbar({ onOpenPanel }: { onOpenPanel?: () => void }) {
     const newTheme = isDark ? "light" : "dark";
     document.documentElement.setAttribute("data-theme", newTheme);
     setIsDark(!isDark);
-  };
-
-  const handleSignOut = async () => {
-    if (supabase) {
-      await supabase.auth.signOut();
-    }
-    localStorage.removeItem("webuild_session");
-    setUser(null);
-    window.location.href = "/";
   };
 
   return (
@@ -93,19 +42,6 @@ export default function Navbar({ onOpenPanel }: { onOpenPanel?: () => void }) {
             <button onClick={toggleTheme} className="p-2 rounded-full border border-[var(--border)] hover:border-[var(--text)] transition-colors">
               {isDark ? <Sun size={18} /> : <Moon size={18} />}
             </button>
-
-            <button 
-              onClick={() => {
-                if (onOpenPanel) {
-                  onOpenPanel();
-                } else {
-                  router.push("/?book=true");
-                }
-              }} 
-              className="hidden md:flex items-center gap-2 bg-[var(--text)] text-[var(--bg)] px-5 py-2.5 rounded-full text-sm font-medium hover:opacity-80 transition-opacity group"
-            >
-              Book a Call <ArrowRight size={14} className="group-hover:translate-x-1 transition-transform" />
-            </button>
             <button onClick={() => setMenuOpen(true)} className="md:hidden p-2"><Menu size={24} /></button>
           </div>
         </nav>
@@ -126,23 +62,10 @@ export default function Navbar({ onOpenPanel }: { onOpenPanel?: () => void }) {
             <Link href="/#approach" onClick={() => setMenuOpen(false)} className="text-3xl font-medium tracking-tighter text-[var(--text)] hover:opacity-85 transition-opacity">Approach</Link>
             <Link href="/#services" onClick={() => setMenuOpen(false)} className="text-3xl font-medium tracking-tighter text-[var(--text)] hover:opacity-85 transition-opacity">Services</Link>
             <Link href="/#work" onClick={() => setMenuOpen(false)} className="text-3xl font-medium tracking-tighter text-[var(--text)] hover:opacity-85 transition-opacity">Work</Link>
-
-            <button 
-              onClick={() => { 
-                setMenuOpen(false); 
-                if (onOpenPanel) {
-                  onOpenPanel();
-                } else {
-                  router.push("/?book=true");
-                }
-              }} 
-              className="mt-8 w-full max-w-[280px] bg-[var(--text)] text-[var(--bg)] py-4 rounded-full text-base font-medium hover:opacity-90 active:scale-98 transition-all"
-            >
-              Book a Call
-            </button>
           </motion.div>
         )}
       </AnimatePresence>
     </>
   );
 }
+
