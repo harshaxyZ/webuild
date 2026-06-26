@@ -234,11 +234,11 @@ export default function ModernEngineering() {
                   left: "50%",
                   transform: "translate(-50%, -50%) rotate(18deg)",
                   boxShadow:
-                    "0 0 60px rgba(196,156,113,0.2), 0 0 150px rgba(196,156,113,0.08)",
+                    "0 0 60px rgba(168,85,247,0.2), 0 0 150px rgba(59,130,246,0.15)",
                 }}
               >
                 <img
-                  src="/saturn-transparent.webp"
+                  src="/dark-planet.png"
                   alt="Planet"
                   width={330}
                   height={330}

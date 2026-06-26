@@ -109,65 +109,78 @@ export async function POST(req: Request) {
       console.error("Supabase database write error (handled gracefully):", dbError);
     }
 
-    // 2. Send email notification via Resend (Non-blocking background call)
+    // 2. Await Email & Webhook Notifications (Prevents serverless function from exiting prematurely)
     const recipient = process.env.ADMIN_NOTIFY_EMAIL || process.env.ADMIN_EMAIL || "hello@webuildnow.in";
-    resend.emails.send({
-      from: "WeBuild <onboarding@resend.dev>",
-      to: [recipient],
-      subject: `New Booking Request from ${name}`,
-      text: `
-        New Project Booking Request:
-        -----------------------------
-        Name: ${name}
-        WhatsApp (Phone): ${whatsapp}
-        Email: ${email}
-        Project Type: ${projectType || "Not specified"}
-        Project Description: ${description}
-      `,
-    }).catch((emailError) => {
-      console.error("Resend email notification failed in background:", emailError);
-    });
-
-    // 3. Webhook Notifications (Non-blocking background calls)
     const discordWebhookUrl = process.env.DISCORD_WEBHOOK_URL;
     const slackWebhookUrl = process.env.SLACK_WEBHOOK_URL;
 
+    const notificationPromises: Promise<any>[] = [];
+
+    // Add Resend email promise
+    notificationPromises.push(
+      resend.emails.send({
+        from: "WeBuild <onboarding@resend.dev>",
+        to: [recipient],
+        subject: `New Booking Request from ${name}`,
+        text: `
+          New Project Booking Request:
+          -----------------------------
+          Name: ${name}
+          WhatsApp (Phone): ${whatsapp}
+          Email: ${email}
+          Project Type: ${projectType || "Not specified"}
+          Project Description: ${description}
+        `,
+      }).catch((emailError) => {
+        console.error("Resend email notification failed:", emailError);
+      })
+    );
+
+    // Add Discord webhook promise
     if (discordWebhookUrl) {
-      fetch(discordWebhookUrl, {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({
-          embeds: [
-            {
-              title: "🆕 New Booking Request!",
-              color: 13802353, // Warm Gold/Beige color to match Saturn
-              fields: [
-                { name: "Name", value: name, inline: true },
-                { name: "WhatsApp Phone", value: whatsapp, inline: true },
-                { name: "Email", value: email, inline: true },
-                { name: "Project Type", value: projectType || "Not specified", inline: true },
-                { name: "Description", value: description }
-              ],
-              timestamp: new Date().toISOString()
-            }
-          ]
+      notificationPromises.push(
+        fetch(discordWebhookUrl, {
+          method: "POST",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify({
+            embeds: [
+              {
+                title: "🆕 New Booking Request!",
+                color: 13802353,
+                fields: [
+                  { name: "Name", value: name, inline: true },
+                  { name: "WhatsApp Phone", value: whatsapp, inline: true },
+                  { name: "Email", value: email, inline: true },
+                  { name: "Project Type", value: projectType || "Not specified", inline: true },
+                  { name: "Description", value: description }
+                ],
+                timestamp: new Date().toISOString()
+              }
+            ]
+          })
+        }).catch((err) => {
+          console.error("Discord Webhook post failed:", err);
         })
-      }).catch((err) => {
-        console.error("Discord Webhook post failed in background:", err);
-      });
+      );
     }
 
+    // Add Slack webhook promise
     if (slackWebhookUrl) {
-      fetch(slackWebhookUrl, {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({
-          text: `🆕 *New Booking Request Received!*\n*Name:* ${name}\n*WhatsApp:* ${whatsapp}\n*Email:* ${email}\n*Project:* ${projectType || "Not specified"}\n*Description:* ${description}`
+      notificationPromises.push(
+        fetch(slackWebhookUrl, {
+          method: "POST",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify({
+            text: `🆕 *New Booking Request Received!*\n*Name:* ${name}\n*WhatsApp:* ${whatsapp}\n*Email:* ${email}\n*Project:* ${projectType || "Not specified"}\n*Description:* ${description}`
+          })
+        }).catch((err) => {
+          console.error("Slack Webhook post failed:", err);
         })
-      }).catch((err) => {
-        console.error("Slack Webhook post failed in background:", err);
-      });
+      );
     }
+
+    // Wait for all notification services to complete
+    await Promise.all(notificationPromises);
 
     return NextResponse.json({ success: true });
   } catch (error: any) {
