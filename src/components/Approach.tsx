@@ -4,7 +4,7 @@ import ScrollReveal from "./ScrollReveal";
 const items = [
   { num: "01 / OBSESSION", title: "Zero Bloat", desc: "We don't reuse bloated templates. Every line of code is written specifically for your product, guaranteeing 90fps performance and perfect Lighthouse scores." },
   { num: "02 / ACCESS", title: "Direct Line", desc: "No project managers, no middlemen. You work directly with the engineers building your product. Agile, transparent, and brutally fast." },
-  { num: "03 / STACK", title: "Modern Core", desc: "We build exclusively on Next.js, React Native, and serverless infrastructure. If it was invented before 2020, we probably aren't using it." }
+  { num: "03 / STACK", title: "Modern Core", desc: "We build exclusively on Next.js, React Native, and serverless infrastructure to ensure future-proof scalability, peak speed, and absolute security." }
 ];
 
 export default function Approach() {
