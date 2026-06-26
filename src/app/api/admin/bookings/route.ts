@@ -1,6 +1,6 @@
 import { NextResponse } from "next/server";
 import { cookies } from "next/headers";
-import { adminDb } from "@/lib/firebaseAdmin";
+import { supabase } from "@/lib/supabase";
 
 export async function GET() {
   try {
@@ -12,20 +12,19 @@ export async function GET() {
       return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
     }
 
-    if (!adminDb) {
-      return NextResponse.json({ error: "Firebase Admin DB not initialized" }, { status: 500 });
+    const { data: bookingsData, error: dbError } = await supabase
+      .from("bookings")
+      .select("*")
+      .order("created_at", { ascending: false });
+
+    if (dbError) {
+      throw dbError;
     }
 
-    const snapshot = await adminDb.collection("bookings").orderBy("createdAt", "desc").get();
-    
-    const bookings = snapshot.docs.map((doc) => {
-      const data = doc.data();
-      
-      // Determine date string representation
+    const bookings = (bookingsData || []).map((b: any) => {
       let dateString = "N/A";
-      if (data.createdAt) {
-        // Handle Firestore timestamp
-        const date = data.createdAt.toDate ? data.createdAt.toDate() : new Date(data.createdAt._seconds * 1000);
+      if (b.created_at) {
+        const date = new Date(b.created_at);
         dateString = date.toLocaleString("en-IN", {
           day: "numeric",
           month: "short",
@@ -36,19 +35,13 @@ export async function GET() {
       }
 
       return {
-        id: doc.id,
-        name: data.name || "",
-        whatsapp: data.whatsapp || "",
-        email: data.email || "",
-        projectType: data.projectType || "Not specified",
-        preferredTime: data.preferredTime ? new Date(data.preferredTime).toLocaleString("en-IN", {
-          day: "numeric",
-          month: "short",
-          hour: "2-digit",
-          minute: "2-digit",
-          hour12: true
-        }) : "Not specified",
-        description: data.description || "",
+        id: b.id,
+        name: b.name || "",
+        whatsapp: b.whatsapp || "",
+        email: b.email || "",
+        projectType: b.project_type || b.projectType || "Not specified",
+        preferredTime: b.preferred_time || "Not specified",
+        description: b.description || "",
         date: dateString,
       };
     });
@@ -56,7 +49,7 @@ export async function GET() {
     return NextResponse.json(bookings);
   } catch (error: any) {
     console.error("Failed to fetch bookings for admin (returning fallback):", error);
-    // If the database permission is denied or fails, fallback to mock bookings so the dashboard remains functional
+    // If the database query fails, fallback to mock bookings so the dashboard remains functional
     return NextResponse.json([
       {
         id: "fallback-1",
@@ -65,7 +58,7 @@ export async function GET() {
         email: "harsha210108@gmail.com",
         projectType: "Website / Web App",
         preferredTime: "Not specified",
-        description: "Firestore Permission Denied. This entry is shown because the Firebase credentials lack Firestore permissions on this environment.",
+        description: "Supabase Connection Error. Check your environment variables NEXT_PUBLIC_SUPABASE_URL and NEXT_PUBLIC_SUPABASE_ANON_KEY.",
         date: new Date().toLocaleDateString("en-IN", { day: "numeric", month: "short" }),
       },
       {

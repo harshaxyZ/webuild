@@ -1,8 +1,7 @@
 "use client";
 
 import { useEffect, useState } from "react";
-import { auth } from "@/lib/firebase";
-import { onAuthStateChanged, signOut } from "firebase/auth";
+import { supabase } from "@/lib/supabase";
 import { useRouter } from "next/navigation";
 import Navbar from "@/components/Navbar";
 import { BackButton } from "@/components/BackButton";
@@ -35,12 +34,14 @@ export default function Dashboard() {
 
     // 1. Resolve Auth User (real or simulated)
     const resolveUser = async () => {
-      // Check Firebase first
-      if (auth) {
-        unsubscribe = onAuthStateChanged(auth, async (currentUser: any) => {
-          if (currentUser) {
-            setUser(currentUser);
-            await fetchUserBookings(currentUser.email);
+      // Check Supabase first
+      if (supabase) {
+        // Get current active session
+        const getSession = async () => {
+          const { data: { session } } = await supabase.auth.getSession();
+          if (session?.user) {
+            setUser(session.user);
+            await fetchUserBookings(session.user.email || "");
             setLoading(false);
           } else {
             // Check local storage simulated session
@@ -54,7 +55,26 @@ export default function Dashboard() {
               router.push("/login");
             }
           }
+        };
+
+        getSession();
+
+        // Subscribe to auth changes
+        const { data: { subscription } } = supabase.auth.onAuthStateChange(async (event, session) => {
+          if (session?.user) {
+            setUser(session.user);
+            await fetchUserBookings(session.user.email || "");
+            setLoading(false);
+          } else if (event === "SIGNED_OUT") {
+            const localSession = localStorage.getItem("webuild_session");
+            if (!localSession) {
+              setUser(null);
+              router.push("/login");
+            }
+          }
         });
+
+        unsubscribe = () => subscription.unsubscribe();
       } else {
         const localSession = localStorage.getItem("webuild_session");
         if (localSession) {
@@ -82,8 +102,8 @@ export default function Dashboard() {
   };
 
   const handleSignOut = async () => {
-    if (auth) {
-      await signOut(auth);
+    if (supabase) {
+      await supabase.auth.signOut();
     }
     localStorage.removeItem("webuild_session");
     setUser(null);

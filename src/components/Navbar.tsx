@@ -4,8 +4,7 @@ import { motion, AnimatePresence } from "framer-motion";
 import { Moon, Sun, Menu, X, ArrowRight, LogOut, LayoutDashboard, User } from "lucide-react";
 import Link from "next/link";
 import { useRouter } from "next/navigation";
-import { auth } from "@/lib/firebase";
-import { onAuthStateChanged, signOut } from "firebase/auth";
+import { supabase } from "@/lib/supabase";
 
 export default function Navbar({ onOpenPanel }: { onOpenPanel?: () => void }) {
   const [scrolled, setScrolled] = useState(false);
@@ -18,12 +17,12 @@ export default function Navbar({ onOpenPanel }: { onOpenPanel?: () => void }) {
     const handleScroll = () => setScrolled(window.scrollY > 80);
     window.addEventListener("scroll", handleScroll, { passive: true });
     
-    // Subscribe to Firebase Auth and check local simulated session
+    // Subscribe to Supabase Auth and check local simulated session
     let unsubscribe = () => {};
-    if (auth) {
-      unsubscribe = onAuthStateChanged(auth, (currentUser: any) => {
-        if (currentUser) {
-          setUser(currentUser);
+    if (supabase) {
+      const { data: { subscription } } = supabase.auth.onAuthStateChange((event, session) => {
+        if (session?.user) {
+          setUser(session.user);
         } else {
           // Check for simulated local storage session
           const localSession = localStorage.getItem("webuild_session");
@@ -34,6 +33,7 @@ export default function Navbar({ onOpenPanel }: { onOpenPanel?: () => void }) {
           }
         }
       });
+      unsubscribe = () => subscription.unsubscribe();
     } else {
       const localSession = localStorage.getItem("webuild_session");
       if (localSession) {
@@ -46,7 +46,7 @@ export default function Navbar({ onOpenPanel }: { onOpenPanel?: () => void }) {
       const localSession = localStorage.getItem("webuild_session");
       if (localSession) {
         setUser(JSON.parse(localSession));
-      } else if (!auth?.currentUser) {
+      } else {
         setUser(null);
       }
     };
@@ -66,8 +66,8 @@ export default function Navbar({ onOpenPanel }: { onOpenPanel?: () => void }) {
   };
 
   const handleSignOut = async () => {
-    if (auth) {
-      await signOut(auth);
+    if (supabase) {
+      await supabase.auth.signOut();
     }
     localStorage.removeItem("webuild_session");
     setUser(null);

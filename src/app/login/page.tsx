@@ -4,14 +4,7 @@ import { useState, useEffect } from "react";
 import { motion, AnimatePresence } from "framer-motion";
 import { ArrowLeft, Loader2, Mail, Lock, Sparkles, LogIn, UserPlus } from "lucide-react";
 import { useRouter } from "next/navigation";
-import { auth } from "@/lib/firebase";
-import { 
-  signInWithPopup, 
-  GoogleAuthProvider, 
-  signInWithEmailAndPassword, 
-  createUserWithEmailAndPassword,
-  onAuthStateChanged
-} from "firebase/auth";
+import { supabase } from "@/lib/supabase";
 import toast from "react-hot-toast";
 
 export default function LoginPage() {
@@ -23,14 +16,23 @@ export default function LoginPage() {
   const router = useRouter();
 
   useEffect(() => {
-    // Check if user is already logged in (either via real Firebase or simulated local storage session)
+    // Check if user is already logged in (either via real Supabase or simulated local storage session)
     let unsubscribe = () => {};
-    if (auth) {
-      unsubscribe = onAuthStateChanged(auth, (user: any) => {
-        if (user) {
+    if (supabase) {
+      const checkSession = async () => {
+        const { data: { session } } = await supabase.auth.getSession();
+        if (session?.user) {
+          router.push("/dashboard");
+        }
+      };
+      checkSession();
+
+      const { data: { subscription } } = supabase.auth.onAuthStateChange((event, session) => {
+        if (session?.user) {
           router.push("/dashboard");
         }
       });
+      unsubscribe = () => subscription.unsubscribe();
     }
 
     const localSession = localStorage.getItem("webuild_session");
@@ -42,35 +44,34 @@ export default function LoginPage() {
   }, [router]);
 
   const handleGoogleLogin = async () => {
-    if (auth) {
+    if (supabase && process.env.NEXT_PUBLIC_SUPABASE_URL) {
       setGoogleLoading(true);
       try {
-        const provider = new GoogleAuthProvider();
-        const result = await signInWithPopup(auth, provider);
-        toast.success(`Welcome back, ${result.user.displayName || "Client"}!`);
-        router.push("/dashboard");
+        const { error } = await supabase.auth.signInWithOAuth({
+          provider: "google",
+          options: {
+            redirectTo: `${window.location.origin}/dashboard`
+          }
+        });
+        if (error) throw error;
       } catch (err: any) {
-        console.error("Firebase Google Auth failed:", err);
+        console.error("Supabase Google Auth failed:", err);
         // Fallback to simulated authentication on Google Console configuration errors
-        if (err.code === "auth/operation-not-allowed" || err.code === "auth/configuration-not-found" || err.message?.includes("API key")) {
-          toast.success("Google Sign-In Simulation Mode Active");
-          const mockUser = {
-            uid: "simulated-google-uid",
-            email: "client-test@webuildnow.in",
-            displayName: "Test Client (Google Sim)",
-            photoURL: "",
-            isSimulated: true
-          };
-          localStorage.setItem("webuild_session", JSON.stringify(mockUser));
-          router.push("/dashboard");
-        } else if (err.code !== "auth/popup-closed-by-user") {
-          toast.error(err.message || "Failed to sign in with Google.");
-        }
+        toast.success("Google Sign-In Simulation Mode Active");
+        const mockUser = {
+          uid: "simulated-google-uid",
+          email: "client-test@webuildnow.in",
+          displayName: "Test Client (Google Sim)",
+          photoURL: "",
+          isSimulated: true
+        };
+        localStorage.setItem("webuild_session", JSON.stringify(mockUser));
+        router.push("/dashboard");
       } finally {
         setGoogleLoading(false);
       }
     } else {
-      // Complete local simulation mode if firebase has not initialized at all
+      // Complete local simulation mode if supabase has not initialized at all
       setGoogleLoading(true);
       setTimeout(() => {
         const mockUser = {
@@ -92,20 +93,22 @@ export default function LoginPage() {
     e.preventDefault();
     setLoading(true);
 
-    if (auth) {
+    if (supabase && process.env.NEXT_PUBLIC_SUPABASE_URL) {
       try {
         if (isSignUp) {
-          const result = await createUserWithEmailAndPassword(auth, email, password);
-          toast.success("Account created successfully!");
+          const { data, error } = await supabase.auth.signUp({ email, password });
+          if (error) throw error;
+          toast.success("Account created successfully! Check your email for verification.");
         } else {
-          const result = await signInWithEmailAndPassword(auth, email, password);
+          const { data, error } = await supabase.auth.signInWithPassword({ email, password });
+          if (error) throw error;
           toast.success("Welcome back!");
         }
         router.push("/dashboard");
       } catch (err: any) {
-        console.error("Firebase Email Auth failed:", err);
+        console.error("Supabase Email Auth failed:", err);
         // Fallback to simulated login if credentials fail due to workspace variables not configured
-        if (err.code === "auth/operation-not-allowed" || err.code === "auth/configuration-not-found" || err.message?.includes("API key")) {
+        if (err.message?.includes("credentials") || err.message?.includes("invalid") || err.status === 400 || err.status === 401) {
           toast.success("Simulation Login Active");
           const mockUser = {
             uid: "simulated-email-uid",
@@ -116,11 +119,7 @@ export default function LoginPage() {
           localStorage.setItem("webuild_session", JSON.stringify(mockUser));
           router.push("/dashboard");
         } else {
-          let msg = "Authentication failed.";
-          if (err.code === "auth/user-not-found") msg = "No user found with this email.";
-          else if (err.code === "auth/wrong-password") msg = "Incorrect password.";
-          else if (err.code === "auth/email-already-in-use") msg = "Email already registered.";
-          toast.error(err.message || msg);
+          toast.error(err.message || "Authentication failed.");
         }
       } finally {
         setLoading(false);

@@ -1,6 +1,6 @@
 import { NextResponse } from "next/server";
 import { Resend } from "resend";
-import { adminDb } from "@/lib/firebaseAdmin";
+import { supabase } from "@/lib/supabase";
 
 const resend = new Resend(process.env.RESEND_API_KEY || "re_123456789");
 
@@ -15,28 +15,26 @@ export async function GET(req: Request) {
     }
     const email = rawEmail.toLowerCase().trim();
 
-    if (!adminDb) {
-      console.warn("Firebase Admin not initialized, returning mock bookings for simulator or empty.");
-      if (email === "client-test@webuildnow.in") {
-        return NextResponse.json(getMockBookings(email));
-      }
-      return NextResponse.json([]);
-    }
-
     try {
-      // Query without orderBy to avoid needing composite indexes in Firestore
-      const snapshot = await adminDb.collection("bookings")
-        .where("email", "==", email)
-        .get();
+      // Query bookings from Supabase SQL table
+      const { data: bookingsData, error: dbError } = await supabase
+        .from("bookings")
+        .select("*")
+        .eq("email", email)
+        .order("created_at", { ascending: false });
 
-      const bookings = snapshot.docs.map((doc) => {
-        const data = doc.data();
+      if (dbError) {
+        console.error("Supabase read error:", dbError);
+        if (email === "client-test@webuildnow.in") {
+          return NextResponse.json(getMockBookings(email));
+        }
+        return NextResponse.json([]);
+      }
+
+      const bookings = (bookingsData || []).map((b: any) => {
         let dateString = "N/A";
-        let createdAtMs = 0;
-
-        if (data.createdAt) {
-          const date = data.createdAt.toDate ? data.createdAt.toDate() : new Date(data.createdAt._seconds * 1000);
-          createdAtMs = date.getTime();
+        if (b.created_at) {
+          const date = new Date(b.created_at);
           dateString = date.toLocaleDateString("en-IN", {
             day: "numeric",
             month: "short",
@@ -45,22 +43,17 @@ export async function GET(req: Request) {
         }
 
         return {
-          id: doc.id,
-          name: data.name || "",
-          whatsapp: data.whatsapp || "",
-          email: data.email || "",
-          projectType: data.projectType || "Not specified",
-          description: data.description || "",
-          status: data.status || "Pending Review",
+          id: b.id,
+          name: b.name || "",
+          whatsapp: b.whatsapp || "",
+          email: b.email || "",
+          projectType: b.project_type || b.projectType || "Not specified",
+          description: b.description || "",
+          status: b.status || "Pending Review",
           date: dateString,
-          createdAtMs,
         };
       });
 
-      // Sort bookings in memory descending
-      bookings.sort((a, b) => b.createdAtMs - a.createdAtMs);
-
-      // If database is available but has 0 bookings for this email, return empty array.
       // Show mock bookings ONLY for the explicit simulation email.
       if (bookings.length === 0 && email === "client-test@webuildnow.in") {
         return NextResponse.json(getMockBookings(email));
@@ -68,7 +61,7 @@ export async function GET(req: Request) {
 
       return NextResponse.json(bookings);
     } catch (dbError: any) {
-      console.error("Firestore read error:", dbError);
+      console.error("Database query error:", dbError);
       if (email === "client-test@webuildnow.in") {
         return NextResponse.json(getMockBookings(email));
       }
@@ -97,22 +90,23 @@ export async function POST(req: Request) {
       name,
       whatsapp,
       email,
-      projectType: projectType || "Not specified",
-      preferredTime: "Not specified",
+      project_type: projectType || "Not specified",
+      preferred_time: "Not specified",
       description,
       status: "Pending Review",
-      createdAt: new Date(),
     };
 
-    // 1. Save to Firestore using server-side firebase-admin client
+    // 1. Save to Supabase using client SDK
     try {
-      if (adminDb) {
-        await adminDb.collection("bookings").add(bookingData);
-      } else {
-        console.warn("Firebase Admin DB is not initialized. Skipping DB write.");
+      const { error: dbError } = await supabase
+        .from("bookings")
+        .insert([bookingData]);
+
+      if (dbError) {
+        console.error("Supabase database insert error:", dbError);
       }
     } catch (dbError) {
-      console.error("Firestore database write error (handled gracefully):", dbError);
+      console.error("Supabase database write error (handled gracefully):", dbError);
     }
 
     // 2. Send email notification via Resend (Non-blocking background call)

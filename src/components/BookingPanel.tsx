@@ -2,7 +2,7 @@ import { useState, useEffect } from "react";
 import { motion, AnimatePresence } from "framer-motion";
 import { X, Check } from "lucide-react";
 import { useRouter } from "next/navigation";
-import { auth } from "@/lib/firebase";
+import { supabase } from "@/lib/supabase";
 import toast from "react-hot-toast";
 
 export default function BookingPanel({ isOpen, onClose }: { isOpen: boolean; onClose: () => void }) {
@@ -24,12 +24,23 @@ export default function BookingPanel({ isOpen, onClose }: { isOpen: boolean; onC
           setIsLoggedIn(true);
           setUserEmail(parsed.email || "");
         } catch (e) {}
-      } else if (auth?.currentUser) {
-        setIsLoggedIn(true);
-        setUserEmail(auth.currentUser.email || "");
       } else {
-        setIsLoggedIn(false);
-        setUserEmail("");
+        const checkSession = async () => {
+          if (supabase) {
+            const { data: { session } } = await supabase.auth.getSession();
+            if (session?.user) {
+              setIsLoggedIn(true);
+              setUserEmail(session.user.email || "");
+            } else {
+              setIsLoggedIn(false);
+              setUserEmail("");
+            }
+          } else {
+            setIsLoggedIn(false);
+            setUserEmail("");
+          }
+        };
+        checkSession();
       }
     }
   }, [isOpen]);
