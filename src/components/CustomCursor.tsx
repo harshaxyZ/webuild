@@ -1,53 +1,76 @@
 "use client";
-import { useEffect, useState } from "react";
-import { motion, useMotionValue, useSpring } from "framer-motion";
+import { useEffect, useRef } from "react";
 
 export default function CustomCursor() {
-  const cursorX = useMotionValue(-100);
-  const cursorY = useMotionValue(-100);
-  const [isVisible, setIsVisible] = useState(false);
-  const springConfig = { damping: 30, stiffness: 500, mass: 0.4 };
-  const cursorXSpring = useSpring(cursorX, springConfig);
-  const cursorYSpring = useSpring(cursorY, springConfig);
-
+  const cursorRef = useRef<HTMLDivElement>(null);
+  
   useEffect(() => {
-    // Only run on client-side
     if (typeof window === "undefined") return;
 
-    const moveCursor = (e: MouseEvent) => {
-      cursorX.set(e.clientX);
-      cursorY.set(e.clientY);
-      setIsVisible(true);
+    const cursor = cursorRef.current;
+    if (!cursor) return;
+
+    let mouseX = -100;
+    let mouseY = -100;
+    let currentX = -100;
+    let currentY = -100;
+    let isVisible = false;
+
+    const onMouseMove = (e: MouseEvent) => {
+      mouseX = e.clientX;
+      mouseY = e.clientY;
+      if (!isVisible) {
+        isVisible = true;
+        cursor.style.opacity = "1";
+      }
     };
 
-    const handleTouchStart = () => {
-      setIsVisible(false);
+    const onMouseLeave = () => {
+      isVisible = false;
+      cursor.style.opacity = "0";
     };
 
-    window.addEventListener("mousemove", moveCursor);
-    window.addEventListener("touchstart", handleTouchStart, { passive: true });
+    const onTouchStart = () => {
+      cursor.style.display = "none";
+    };
+
+    window.addEventListener("mousemove", onMouseMove, { passive: true });
+    document.addEventListener("mouseleave", onMouseLeave, { passive: true });
+    window.addEventListener("touchstart", onTouchStart, { passive: true });
+
+    // Smooth LERP (Linear Interpolation) loop
+    let animationFrameId: number;
+    const render = () => {
+      // Adjust speed of interpolation (0.15 is smooth and responsive)
+      currentX += (mouseX - currentX) * 0.15;
+      currentY += (mouseY - currentY) * 0.15;
+
+      cursor.style.transform = `translate3d(calc(${currentX}px - 50%), calc(${currentY}px - 50%), 0)`;
+
+      animationFrameId = requestAnimationFrame(render);
+    };
+    render();
 
     return () => {
-      window.removeEventListener("mousemove", moveCursor);
-      window.removeEventListener("touchstart", handleTouchStart);
+      window.removeEventListener("mousemove", onMouseMove);
+      document.removeEventListener("mouseleave", onMouseLeave);
+      window.removeEventListener("touchstart", onTouchStart);
+      cancelAnimationFrame(animationFrameId);
     };
-  }, [cursorX, cursorY]);
-
-  if (!isVisible) return null;
+  }, []);
 
   return (
-    <motion.div
-      className="fixed top-0 left-0 w-8 h-8 rounded-full border border-white pointer-events-none z-[9999] hidden md:block shadow-sm mix-blend-difference"
+    <div
+      ref={cursorRef}
+      className="fixed top-0 left-0 w-8 h-8 rounded-full border border-white pointer-events-none z-[9999] hidden md:block shadow-sm mix-blend-difference transition-opacity duration-300 opacity-0"
       style={{
-        x: cursorXSpring,
-        y: cursorYSpring,
-        translateX: "-50%",
-        translateY: "-50%",
+        willChange: "transform",
+        backfaceVisibility: "hidden",
       }}
     >
       <div 
         className="absolute top-1/2 left-1/2 w-2 h-2 bg-white rounded-full -translate-x-1/2 -translate-y-1/2"
       />
-    </motion.div>
+    </div>
   );
 }
