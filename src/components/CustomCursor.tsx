@@ -41,9 +41,9 @@ export default function CustomCursor() {
     // Smooth LERP (Linear Interpolation) loop
     let animationFrameId: number;
     const render = () => {
-      // Adjust speed of interpolation (0.15 is smooth and responsive)
-      currentX += (mouseX - currentX) * 0.15;
-      currentY += (mouseY - currentY) * 0.15;
+      // Adjust speed of interpolation (0.22 is highly responsive and smooth)
+      currentX += (mouseX - currentX) * 0.22;
+      currentY += (mouseY - currentY) * 0.22;
 
       cursor.style.transform = `translate3d(calc(${currentX}px - 50%), calc(${currentY}px - 50%), 0)`;
 
@@ -62,14 +62,14 @@ export default function CustomCursor() {
   return (
     <div
       ref={cursorRef}
-      className="fixed top-0 left-0 w-8 h-8 rounded-full border border-white pointer-events-none z-[9999] hidden md:block shadow-sm mix-blend-difference transition-opacity duration-300 opacity-0"
+      className="fixed top-0 left-0 w-8 h-8 rounded-full border border-white/30 bg-white/5 pointer-events-none z-[9999] hidden md:block shadow-sm transition-opacity duration-300 opacity-0"
       style={{
         willChange: "transform",
         backfaceVisibility: "hidden",
       }}
     >
       <div 
-        className="absolute top-1/2 left-1/2 w-2 h-2 bg-white rounded-full -translate-x-1/2 -translate-y-1/2"
+        className="absolute top-1/2 left-1/2 w-1.5 h-1.5 bg-white rounded-full -translate-x-1/2 -translate-y-1/2"
       />
     </div>
   );
